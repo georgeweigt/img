@@ -1,0 +1,17 @@
+
+    SaveSize = 256;
+
+    MaxTitleStr = 12;
+    MaxItemStr = 12;
+    MaxNumItems = 7;
+    MaxMenus = 3;
+
+    No_Event = 0;
+    Button_down = 1;
+    Button_up = 2;
+    Key_down = 3;
+    Drag = 4;
+    Apple_Key = 5;
+    Update_Event =6;
+
+    MaxTextLength = 80;

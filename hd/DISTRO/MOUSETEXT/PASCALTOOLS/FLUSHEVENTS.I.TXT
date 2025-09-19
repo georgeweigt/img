@@ -1,0 +1,13 @@
+
+procedure FlushEvents;
+begin
+#A
+ LDA #0
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 7
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

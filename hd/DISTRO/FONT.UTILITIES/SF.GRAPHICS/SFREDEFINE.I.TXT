@@ -1,0 +1,69 @@
+                                (* sfredefine.i *)
+(* this file contains functions and procedures nessecary to redefine *)
+(* small font characters               *)
+(* written by Kevin Neelands           *)
+(* Senior programmer, Acumen Software  *)
+
+(* returns 2 raised to power *)
+
+function tworaised (power : integer) : integer;
+
+var
+   count : integer;
+    temp : integer;
+
+begin
+temp:=1;
+for count := 1 to power-1 do
+   temp := temp*2;
+tworaised := temp;
+end;
+
+(* used in converting a str7 to a value 1-255 *)
+
+function byte ( word7 : str7 ) : integer;
+
+var
+   count : integer;
+    temp : integer;
+
+begin
+temp:=128;
+for count:= 1 to 7 do
+   if word7[count] <> chr(32) then temp := temp + tworaised(count);
+byte:=temp;
+end;
+
+(* plain old POKE procedure *)
+
+procedure poke (loc , val : integer);
+
+begin
+#a
+   ldy #7
+   lda (_sp),y
+   sta _t
+   iny
+   lda (_sp),y
+   sta _t+1
+   ldy #5
+   lda (_sp),y
+   ldy #0
+   sta (_t),y
+#
+end;
+
+(* this procedure replaces a part of the font file in memory with bytes *)
+(* generated from the charslc representation of the character           *)
+
+procedure redefine (ch : char);
+
+var
+  address : integer; 
+    count : integer;
+
+begin
+address := (ord(ch)-32)*8 - 30208;
+for count := 0 to 7 do
+   poke (address+count , byte (charslc[count]));
+end;

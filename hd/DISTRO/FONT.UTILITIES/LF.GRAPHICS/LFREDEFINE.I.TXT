@@ -1,0 +1,92 @@
+                                (* lfredefine.i *)
+(* this file contains functions and procedures nessecary to redefine *)
+(* large font characters              *)
+(* written by Kevin Neelands          *)
+(* Senior programmer, Acumen Software *)
+
+
+(* returns 2 raised to power*)
+
+function tworaised (power : integer) : integer;
+
+var
+   count : integer;
+    temp : integer;
+
+begin
+temp:=1;
+if power>1 then
+   for count := 1 to power-1 do
+      temp := temp*2;
+tworaised := temp;
+end;
+
+(* used in converting a str14 to two values 1-255 *)
+
+function leftbyte ( word14 : str14 ) : integer;
+
+var
+   count : integer;
+    temp : integer;
+
+begin
+temp:=128;
+for count:= 1 to 7 do
+   if word14[count] <> chr(32) then temp := temp + tworaised(count);
+leftbyte:=temp;
+end;
+
+(* used in converting a str14 to two values 1-255 *)
+
+function ritebyte ( word14 : str14 ) : integer;
+
+var
+   count : integer;
+    temp : integer;
+
+begin
+temp:=128;
+for count:= 8 to 14 do
+   if word14[count] <> chr(32) then temp := temp + tworaised(count-7);
+ritebyte:=temp;
+end;
+
+(* plain old POKE procedure *)
+
+procedure poke (loc , val : integer);
+
+begin
+#a
+   ldy #7
+   lda (_sp),y
+   sta _t
+   iny
+   lda (_sp),y
+   sta _t+1
+   ldy #5
+   lda (_sp),y
+   ldy #0
+   sta (_t),y
+#
+end;
+
+(* this procedure replaces a part of the font file in memory with bytes *)
+(* generated from the charslc representation of the character *)
+
+procedure redefine (ch : char);
+
+var
+  address : integer; 
+    count : integer;
+
+begin
+address := (ord(ch)-32)*32 - 31786;
+for count := 0 to 7 do
+   poke (address+count , leftbyte (charslc[count]));
+for count := 8 to 15 do
+   poke (address+count , ritebyte (charslc[count-8]));
+for count := 16 to 23 do
+   poke (address+count , leftbyte (charslc[count-8]));
+for count := 24 to 31 do
+   poke (address+count , ritebyte (charslc[count-16]));
+end;

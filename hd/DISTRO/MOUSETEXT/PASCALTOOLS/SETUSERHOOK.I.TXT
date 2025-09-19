@@ -1,0 +1,22 @@
+
+Procedure SetUserHook (HookId, HookAdr:integer);
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ LDY #7
+ LDA (_SP),Y
+ STA CMDLIST+1
+ DEY
+ LDA (_SP),Y
+ STA CMDLIST+3
+ DEY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ JSR TOOLKIT
+ DB 47
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

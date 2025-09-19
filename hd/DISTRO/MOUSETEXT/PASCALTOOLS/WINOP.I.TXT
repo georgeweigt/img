@@ -1,0 +1,32 @@
+
+procedure WinOp ( WindowId, WindowX, WindowY: integer;
+                  OpCode: Char );
+begin
+#A
+ LDA #4
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+6
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+4
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+5
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 37
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

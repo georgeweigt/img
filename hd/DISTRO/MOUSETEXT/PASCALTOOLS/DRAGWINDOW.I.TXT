@@ -1,0 +1,24 @@
+
+procedure DragWindow ( WindowId, MouseX, MouseY: integer );
+begin
+#A
+ LDA #3
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 30
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

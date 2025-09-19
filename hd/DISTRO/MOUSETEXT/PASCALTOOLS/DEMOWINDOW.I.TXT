@@ -1,0 +1,155 @@
+
+function initialize_window1:winfo_ptr;
+ begin
+ initialize_window1:=nil;
+#a
+ ldy #5
+ lda #>wind1
+ sta (_sp),y
+ iny
+ lda #<wind1
+ sta (_sp),y
+#
+end;
+
+function initialize_window2:winfo_ptr;
+ begin
+ initialize_window2:=nil;
+#a
+ ldy #5
+ lda #>wind2
+ sta (_sp),y
+ iny
+ lda #<wind2
+ sta (_sp),y
+#
+end;
+
+function initialize_window3:winfo_ptr;
+ begin
+ initialize_window3:=nil;
+#a
+ ldy #5
+ lda #>wind3
+ sta (_sp),y
+ iny
+ lda #<wind3
+ sta (_sp),y
+#
+end;
+
+#a
+wind1 equ * ; window #1
+ db 1 ; id #1
+ db 6 ; window option byte (goaway and grow box present)
+ dw w1.title.str 
+ dw 3 ; cont x
+ dw 3 ; cont y
+ db 24 ; width
+ db 5 ; length
+ db 10 ; min width
+ db 26 ; max width
+ db 5 ; min length (restricting growth to width only)
+ db 6 ; max length
+ dw dinfo1
+ db $C1 ; hor scroll bar with thumb
+ db $C1 ; ver scroll bar with thumb
+ db 2 ; max hor scroll
+ db 0 ; cur hor scroll
+ db 1 ; max ver scroll
+ db 0 ; cur ver scroll
+ ds 10 ; window mgr needs 10 bytes here
+dinfo1 equ *
+ dw win1.conts
+ db 0 ;reserved
+ db 24 ; width of document
+ dw 0 ; we are at upper left of document
+ dw 0
+ dw 5 ; length of document
+ dw 0 ; reserved
+;
+w1.title.str str 'Small Window'
+
+wind2 equ * ; window #2
+ db 2 ; id #2
+ db 6 ; window option byte (goaway and grow box present)
+ dw w2.title.str 
+ dw 10 ; cont x
+ dw 6 ; cont y
+ db 50 ; width
+ db 10 ; length
+ db 3 ; min width
+ db 77 ; max width
+ db 5 ; min length
+ db 18 ; max length
+ dw dinfo2
+ db $C1 ; no hor scroll bar 
+ db $C1 ; ver scroll bar with thumb
+ db 29 ; max hor scroll
+ db 0 ; cur hor scroll
+ db 9 ; max ver scroll
+ db 0 ; cur ver scroll
+ ds 10 ; window mgr needs 10 bytes here
+dinfo2 equ *
+ dw win2.conts
+ db 0 ;reserved
+ db 77 ; width of document
+ dw 0 ; we are at upper left of document
+ dw 0
+ dw 18 ; length of document
+ dw 0 ; reserved
+;
+w2.title.str str 'Big Window'
+
+
+wind3 equ * ; window #3
+ db 3 ; id #3
+ db 2 ; window option byte (only goaway box present, window cannot grow)
+ dw w3.title.str 
+ dw 20 ; cont x
+ dw 9 ; cont y
+ db 17 ; width
+ db 9 ; length
+ db 17 ; min width
+ db 17 ; max width
+ db 9 ; min length
+ db 9 ; max length
+ dw 0 ; update by update event
+ db $00 ; no hor scroll bar
+ db $00 ; no ver scroll bar 
+ db $00 ; max hor scroll
+ db 00 ; cur hor scroll
+ db $00 ; max ver scroll
+ db 00 ; cur ver scroll
+ ds 10 ; window mgr needs 10 bytes here
+;
+w3.title.str str 'Mouse Chars'
+;
+;
+win1.conts equ *
+ asc 'This is the contents    '
+ asc 'for a very small window.'
+ asc 'This is just a test...  '
+ asc 'If this were an actual  '
+ asc 'emergency ...           '
+;
+win2.conts equ *
+ asc "AppleMouse // is a handheld cursor-control device for your Apple // computer." 
+ asc "Smaller and lighter than a deck of playing cards, the sophisticated          "
+ asc "AppleMouse // lets you move the cursor on your screen with intuitive ease.   "
+ asc "What's more, it eliminates the need to type complicated keyboard commands in "
+ asc "many new software programs.                                                  "
+ asc "                                                                             "
+ asc "This box contains everything you need to connect the mouse to your Apple     "
+ asc "//e, ][ Plus, or ][ computer:  the mouse itself, mouse interface card, and   "
+ asc "user's manual.  It also includes MousePaint(tm), a powerful software program "
+ asc "that will let you draw with th AppleMouse //.                                "
+ asc "                                                                             "
+ asc "Mouse Paint allows you to create, load, save,modify, and print               "
+ asc "high-resolution designs by moving the AppleMouse // on your desktop.  You    " 
+ asc "activate each MousePaint command by simply sliding the moue across your      "
+ asc "desktop--the cursor on your display screen will move accordingly.  When the  "
+ asc "cursor is on the picture of the command you want, select the picture by      "
+ asc "pressing the AppleMouse button.                                              "
+ asc "                                                                             "
+#

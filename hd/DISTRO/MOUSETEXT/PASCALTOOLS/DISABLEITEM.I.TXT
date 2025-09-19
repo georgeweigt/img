@@ -1,0 +1,23 @@
+
+procedure DisableItem (MenuId, ItemNum : integer; Disable : boolean);
+begin
+#A
+ LDA #3
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 15
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

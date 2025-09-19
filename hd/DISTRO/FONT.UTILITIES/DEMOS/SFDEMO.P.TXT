@@ -1,0 +1,245 @@
+
+#a
+_useshires
+#
+
+program sfdemo (input , output);
+
+(* this program demonstrates the small font graphics routines               *)
+(* developed by Kevin Neelands (me)                                         *)
+(* prior to compiling this program, issue the command: % cd /font.utilities *)
+
+type
+#i SF.graphics/sftypes.i
+ 
+var
+#i SF.graphics/sfvars.i
+       ch : char;
+    word8 : str8;
+   word19 : str19;
+        x : integer;
+        y : integer;
+
+
+#i Misc.Utils/Bload.i
+
+#i SF.graphics/SFgraphics.i
+
+#i SF.graphics/SFredefine.i
+
+(* simply waits for a keypress *)
+
+procedure keypress;
+
+begin
+#a
+   stx _t
+   jsr $fd35
+   ldx _t
+#
+end;
+
+(* short delay routine- needed to slow graphics down to be seen *)
+
+procedure delay ( time : integer);
+
+begin
+#a
+      stx _t
+      ldy #5
+      lda (_sp),y
+      jsr $fca8
+      ldx _t
+#
+end;
+
+(* clears screen and sets cursor *)
+
+procedure setscreen;
+
+begin
+#a
+   stx _t
+   jsr $fc58 
+   lda #0
+   sta $24
+   lda #23
+   sta $25
+   lda #00
+   jsr $fded
+   ldx _t
+#
+end;
+
+(* main program body *)
+
+begin
+
+(* first, load in character file *)
+fontset_pathname := 'Demos/Normal.sts                                                 ';
+x:=bload (fontset_pathname , 0 , -30208);
+
+cleanhires;
+setscreen;
+initat;
+
+writeln(' ');
+writeln(' ');
+
+writeln('   putchar (''A'', at[0,0])  ');
+putchar ('A' , at[0,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln('   putchar (''B'', at[39,0])     ');
+putchar ('B' , at[39,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln('   putchar (''C'', at[0,18])   ');
+putchar ('C' , at[0,18]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln('   putchar (''D'', at[39,18])   ');
+putchar ('D' , at[39,18]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln('   word8:=''abcdefgh''     ');
+writeln('   putstr8 (word8 , at[0,1])   ');
+word8:='abcdefgh';
+putstr8 (word8 , at[0,1]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln('   word19:=''1234567890123456789''     ');
+writeln('   putstr19 (word19 , at[0,2])         ');
+word19:='1234567890123456789';
+putstr19 (word19 , at[0,2]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   invert (8, at[0,1])    ');
+invert (8, at[0,1]); 
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   movechar (at[0,0] , at[1,0])   ');
+movechar (at[0,0] , at[1,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   movechar (at[1,0] , at[2,0])   ');
+movechar (at[1,0] , at[2,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   movechar (at[2,0] , at[3,0])   ');
+movechar (at[2,0] , at[3,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+(* this following section shows how characters can be redefined to *)
+(* create animation                                                *)
+
+writeln ('   redefining characters');
+
+charslc[0]:='       ';
+charslc[1]:='       ';
+charslc[2]:='       ';
+charslc[3]:='  ##   ';
+charslc[4]:='  ##   ';
+charslc[5]:='       ';
+charslc[6]:='       ';
+charslc[7]:='       ';
+
+redefine ('A');
+
+charslc[0]:='       ';
+charslc[1]:='       ';
+charslc[2]:=' ####  ';
+charslc[3]:=' ####  ';
+charslc[4]:=' ####  ';
+charslc[5]:=' ####  ';
+charslc[6]:='       ';
+charslc[7]:='       ';
+
+redefine ('B');
+
+charslc[0]:='       ';
+charslc[1]:='###### ';
+charslc[2]:='###### ';
+charslc[3]:='###### ';
+charslc[4]:='###### ';
+charslc[5]:='###### ';
+charslc[6]:='###### ';
+charslc[7]:='       ';
+
+redefine ('C');
+
+charslc[0]:='#######';
+charslc[1]:='#######';
+charslc[2]:='#######';
+charslc[3]:='#######';
+charslc[4]:='#######';
+charslc[5]:='#######';
+charslc[6]:='#######';
+charslc[7]:='#######';
+
+redefine ('D');
+
+
+writeln (' ');
+writeln (' ');
+writeln ('   animation sequence 1');
+for x:= 1 to 10 do
+   begin
+   putchar (' ', at[20,10]);
+   delay (150);
+   putchar ('A', at[20,10]);
+   delay (150);
+   putchar ('B', at[20,10]);
+   delay (150);
+   putchar ('C', at[20,10]);
+   delay (150);
+   putchar ('D', at[20,10]);
+   delay (150);
+   end;
+keypress;
+
+(* this section show how to use simple loops to create animation *)
+
+writeln (' ');
+writeln (' ');
+writeln ('   animation sequence 2');
+ 
+for y:= 1 to 3 do
+   begin
+   putchar ('>' , at[0,10] );
+   for x:= 1 to 39 do
+      begin
+      movechar (at[x-1,10] , at[x,10]);
+      delay (75);
+      end;
+   putchar ('<' , at[39,10]);
+   for x:= 38 downto 0 do
+      begin
+      movechar (at[x+1,10] , at[x,10]);
+      delay (75);
+      end;
+   end;
+
+keypress;
+txt;
+end.

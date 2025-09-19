@@ -1,0 +1,4 @@
+       at : array [0..19 , 0..11] of integer;
+       word14 : str14;
+       charslc : array14;
+       fontset_pathname : pathstring;

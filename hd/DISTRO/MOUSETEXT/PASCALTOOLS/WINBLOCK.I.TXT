@@ -1,0 +1,47 @@
+
+procedure WinBlock ( WindowId: integer;  MyDinfoPtr: dinfo_ptr;
+                     StartX, StartY, StopX, StopY: integer );
+begin
+#A
+ LDA #6
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+10
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+11
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+8
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+9
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+6
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+7
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+4
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+5
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 36
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

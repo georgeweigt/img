@@ -1,0 +1,25 @@
+
+procedure InitWindowMgr ( Var Save : SaveBuffer; SaveSize : integer );
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+4
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ JSR TOOLKIT
+ DB 22
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

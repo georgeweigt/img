@@ -1,0 +1,216 @@
+#a
+_UsesHires
+#
+
+{ The main loop program }
+program testl2;
+
+const
+#i mtxkit.con
+
+type
+#i mtxkit.typ
+
+{ The global variables needed must match in all chained programs }
+var MyBuffer: SaveBuffer;
+    MyBar: MenuBar;
+    Menu1,Menu2,Menu3:MenuData;
+    Menu1str1,Menu2str1,Menu2Str2,Menu2Str3,Menu2Str5,Menu2Str6,Menu2Str7,
+    Menu3Str1,Menu3Str3,Menu3Str4,Menu3Str5,
+    Title1,Title2,Title3:TitleStr;
+    Window1_info_addr,Window2_info_addr,Window3_info_addr: winfo_ptr;
+    x,y,z,Topwindow,Window,quitflag:integer;
+    event:type_event;
+    My_Area:Type_area;
+    Menu_ident,Menu_selection:integer;
+    status:boolean;
+    Mydinfoptr:dinfo_ptr;
+
+#i DemoWindow.i
+#i startdesktop.i
+#i getevent.i
+#i Closeall.i
+#i FindWindow.i
+#i MenuSelect.i
+#i HiliteMenu.i
+#i Openwindow.i
+#i CloseWindow.i
+#i FrontWindow.i
+#i DisableItem.i
+#i DragWindow.i
+#i GrowWindow.i
+#i WinBlock.i
+#i SelectWindow.i
+#i Winop.i
+#i Winchar.i
+
+{ disable an option on the menu }
+procedure disableoption(disable:boolean);
+ var i:integer;
+ begin
+ for i:=1 to 3 do
+ disableitem(32,i,disable);
+ end;
+
+{ Open a window }
+procedure dowindow;
+begin
+
+ { Turn the highlight off on the menu bar }
+ HiliteMenu(0);
+
+ case Menu_selection of
+ 0: ;
+ 1: ;
+ 2: ;
+
+ { The 'hide window' was selected so close the top window }
+ 3: begin
+     CloseWindow(0);
+     FrontWindow(window);
+     If window = 0 then Disableoption(true);
+    end;
+
+ 4:;
+
+ { Open the small window }
+ 5: begin
+     Openwindow(Window1_info_addr);
+     Disableoption(false);
+    end;
+
+ { Open the large window }
+ 6: begin
+     Openwindow(Window2_info_addr);
+     Disableoption(false);
+    end;
+
+ { Open a blank window }
+ 7: begin
+     Openwindow(Window3_info_addr);
+     Disableoption(false);
+    end;
+ end
+end;
+
+procedure editcommands;
+ begin
+ { Add code here to do something with the menu selection }
+ HiliteMenu(0);
+ end;
+
+
+begin
+ 
+ { used to terminate the program }
+ quitflag :=0;
+ 
+ { The assembly language routines return pointers to initialized windows }
+ window1_info_addr:= initialize_window1;
+ window2_info_addr:= initialize_window2;
+ window3_info_addr:= initialize_window3;
+
+ { main loop - if quit flag = 1 then exit the main loop}
+ while quitflag <>1 do
+  begin
+
+    { see if the mouse has been clicked or keyboard pressed }
+    getevent(event);
+
+    case ord(event.evtkind) of
+
+     button_down:
+      begin
+
+       { The button was clicked; now find where }
+       findwindow(ord(event.char1), ord(event.char2), My_Area, Window);
+
+       case My_Area of
+
+         InMenuBar: 
+
+              begin
+                { In menu bar, now get a menu selection and take action } 
+                MenuSelect(Menu_ident,Menu_selection);
+                case Menu_ident of
+                  0: ;
+                 16: quitflag:=1;
+                 32: dowindow;
+                 48: editcommands;
+                end
+              end;
+
+         InDrag: 
+
+              { In drag, so drag the window }
+              DragWindow(window,ord(event.char1),ord(event.char2));
+
+         InGrow:
+
+              begin
+                { Grow the window, but do not redisplay it }
+                GrowWindow(status);
+                If status = true then 
+                  begin
+                    Mydinfoptr:=nil;
+                    { Redisplay the window }
+                    WinBlock(0,Mydinfoptr,0,0,79,23);
+                  end 
+              end;
+
+         Indesktop: ;
+
+         InContent:
+
+              begin
+                 { If the cursor is over a window make it the top window }
+                 Frontwindow (Topwindow);
+                 if window <> topwindow then
+                    SelectWindow(window);
+              end;
+         InGoAway: 
+
+               { Then close the window }
+               CloseWindow(Window);
+
+       end {case}
+     end; {button down}
+
+    key_down:
+     { If the event were a key press, I'll just quit }
+     quitflag:=1;    
+
+    no_event: ;
+
+    button_up: ;
+
+    drag: ;
+
+    apple_key: ;
+
+    update_event: { Is selected when winfo has 0 for dinfo } 
+
+      begin
+        winop(3,0,0,chr(28)); { clear screen }
+        z:=128;
+        for y:= 1 to 4 do begin
+          for x:= 1 to 8 do begin 
+            Winchar(3,2*x,2*y,chr(z)); { draw some characters }
+            z:=z+1; 
+         end
+        end
+  
+      end;
+
+   end {case}
+
+ end; {while}
+ 
+  { Clean up and exit }
+  Closeall;
+  Stopdesktop;
+
+#a
+ jsr $FC58 ; home clears the screen
+#
+end.

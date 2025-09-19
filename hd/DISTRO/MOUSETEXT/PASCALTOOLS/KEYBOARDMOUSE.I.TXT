@@ -1,0 +1,13 @@
+
+procedure KeyBoardMouse;
+begin
+#A
+ LDA #0
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 48
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

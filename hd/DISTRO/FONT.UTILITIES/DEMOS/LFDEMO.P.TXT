@@ -1,0 +1,348 @@
+
+#a
+_useshires
+#
+
+program lfdemo (input , output);
+
+(* this program demonstrates the large font graphics routines                *)
+(* developed by Kevin Neelands                                               *)
+(* prior to compiling this program, issue this command: % cd /font.utilities *)
+
+type
+#i LF.Graphics/LFtypes.i
+
+var
+#i LF.Graphics/LFvars.i
+       ch : char;
+    word8 : str8;
+   word19 : str19;
+        x : integer;
+        y : integer;
+
+
+#i Misc.Utils/Bload.i
+
+#i LF.Graphics/LFgraphics.i
+
+#i LF.Graphics/LFredefine.i
+
+(* simply waits for a keypress *)
+
+procedure keypress;
+
+begin
+#a
+   stx _t
+   jsr $fd35
+   ldx _t
+#
+end;
+
+(* short delay routine- needed to slow graphics down to be seen *)
+
+procedure delay ( time : integer);
+
+begin
+#a
+      stx _t
+      ldy #5
+      lda (_sp),y
+      jsr $fca8
+      ldy #5
+      lda (_sp),y
+      jsr $fca8
+      ldy #5
+      lda (_sp),y
+      jsr $fca8
+      ldx _t
+#
+end;
+
+(* clears screen and places cursor *)
+
+procedure setscreen;
+
+begin
+#a
+   stx _t
+   jsr $fc58    ; clear screen
+   lda #0
+   sta $24
+   lda #22
+   sta $25
+   lda #00
+   jsr $fded 
+   ldx _t
+#
+end;
+
+(* this procedure simply lets us put a str19 (19 character string) on    *)
+(* the hires screen as a literal                                         *)
+(* all the routines in lfgraphics.i require that strings be passed as    *)
+(* variables. this routine saves us from having to assign what we want   *)
+(* to write to a variable                                                *)
+
+procedure putlit19 ( word19 : str19 ; scrnad : integer);
+
+begin
+putstr19 (word19 , scrnad );
+end;
+
+(* main program body *)
+
+begin
+
+(* first, load in character fonts *)
+fontset_pathname := 'Demos/Large.lts                                                  ';
+x:=bload (fontset_pathname , 3072 , -31786);
+
+
+cleanhires;
+initat;
+setscreen;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''A'',at[0,0]) ');
+putchar ('A',at[0,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''B'',at[19,0]) ');
+putchar ('B',at[19,0]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''C'',at[0,8]) ');
+putchar ('C',at[0,8]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''D'',at[19,8]) ');
+putchar ('D',at[19,8]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''E'', 8882)   ');
+putchar ('E', 8882);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''F'', 8883)   ');
+putchar ('F', 8883);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''G'', 9010)   ');
+putchar ('G', 9010);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   putchar (''H'', 9011)   ');
+putchar ('H', 9011);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   word8:=''stuvwxyz''    ');
+writeln ('   putstr8 (word8, at[0,1])   ');
+word8:='stuvwxyz';
+putstr8 (word8 , at[0,1]);
+keypress;
+writeln(' ');
+
+writeln ('   word19:=''1234567890123456789''    ');
+writeln ('   putstr19 (word19, at[0,2]) ');
+word19:='1234567890123456789';
+putstr19 ( word19 , at[0,2]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   invert (16 , at[0,1])   ');
+invert (16 , at[0,1]);
+keypress;
+writeln(' ');
+writeln(' ');
+
+writeln ('   movechar (at[0,0] , at[1,0])    ');
+movechar (at[0,0] , at[1,0] );
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   movechar (at[1,0] , at[2,0])     ');
+movechar (at[1,0] , at[2,0]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   movechar (at[2,0] , at[3,0])     ');
+movechar (at[2,0] , at[3,0]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   putlit19 (''This is only a test'' , at[0,3])    ');
+putlit19 ('This is only a test' , at[0,3]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   word8:=''  ONE   ''      ');
+writeln ('   slidein (word8 , at[0,4])   ');
+word8:='  ONE   ';
+slidein (word8 , at[0,4]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   word8:=''  TWO   ''      ');
+writeln ('   slidein (word8 , at[0,4])   ');
+word8:='  TWO   ';
+slidein (word8 , at[0,4]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+writeln ('   word8:='' THREE  ''      ');
+writeln ('   slidein (word8 , at[0,4])   ');
+word8:=' THREE  ';
+slidein (word8 , at[0,4]);
+keypress;
+writeln (' ');
+writeln (' ');
+
+(* the following sections shows how characters can be redefined to *)
+(* create animation                                                *)
+
+
+writeln ('   redefining characters ');
+
+charslc[0]:= '              ';
+charslc[1]:= '              ';
+charslc[2]:= '     ###      ';
+charslc[3]:= '     ###    ##';
+charslc[4]:= '      #     ##';
+charslc[5]:= '      #    ## ';
+charslc[6]:= '##    #   ##  ';
+charslc[7]:= '##   ### ##   ';
+charslc[8]:= ' ## # # ##    ';
+charslc[9]:= '  ##  #       ';
+charslc[10]:='      #       ';
+charslc[11]:='     #######  ';
+charslc[12]:='    ##    ##  ';
+charslc[13]:='   ##     ##  ';
+charslc[14]:='  ##          ';
+charslc[15]:=' ##           ';
+ 
+redefine ( chr(29) );
+
+charslc[0]:= '              ';
+charslc[1]:= '              ';
+charslc[2]:= '              ';
+charslc[3]:= '     ###      ';
+charslc[4]:= '     ###    ##';
+charslc[5]:= '##    #    ## ';
+charslc[6]:= '##    #   ##  ';
+charslc[7]:= '##  #### ##   ';
+charslc[8]:= '  ## ## ##    ';
+charslc[9]:= '     ##       ';
+charslc[10]:='     ##       ';
+charslc[11]:='     ####     ';
+charslc[12]:='   ##    ##   ';
+charslc[13]:='  ##      ##  ';
+charslc[14]:=' ##       ##  ';
+charslc[15]:='              ';
+
+
+redefine ( chr(30) );
+
+charslc[0]:= '              ';
+charslc[1]:= '              ';
+charslc[2]:= '              ';
+charslc[3]:= '              ';
+charslc[4]:= '##   ###      ';
+charslc[5]:= '##   ###    ##';
+charslc[6]:= ' ##   #    ## ';
+charslc[7]:= '  ######  ##  ';
+charslc[8]:= '     ## ##    ';
+charslc[9]:= '     ##       ';
+charslc[10]:='     ##       ';
+charslc[11]:='    ####      ';
+charslc[12]:='  ##    ##    ';
+charslc[13]:=' ##      ##   ';
+charslc[14]:=' ##       ##  ';
+charslc[15]:='           ## ';
+
+redefine ( chr(31) );
+
+
+charslc[0]:= '              ';
+charslc[1]:= '              ';
+charslc[2]:= '              ';
+charslc[3]:= '##            ';
+charslc[4]:= '##            ';
+charslc[5]:= ' ##  ###      ';
+charslc[6]:= '  ## ###    ##';
+charslc[7]:= '    #####  ## ';
+charslc[8]:= '     ##  ##   ';
+charslc[9]:= '     ##       ';
+charslc[10]:='     ##       ';
+charslc[11]:='   #####      ';
+charslc[12]:='  ##   ##     ';
+charslc[13]:=' ##     ##    ';
+charslc[14]:=' ##      ##   ';
+charslc[15]:='          ##  ';
+
+
+redefine ( chr(32) );
+
+writeln(' ');
+writeln(' ');
+writeln('   animation example 1');
+for x:= 1 to 10 do
+   begin
+   putchar ( chr(29), at[10,6]);
+   delay (150);
+   putchar ( chr(30), at[10,6]);
+   delay (150);
+   putchar ( chr(31), at[10,6]);
+   delay (150);
+   putchar ( chr(32), at[10,6]);
+   delay (150);
+   end;
+keypress;
+
+(* this section shows how simple loops can create animation *)
+
+writeln(' ');
+writeln(' ');
+writeln('   animation sequence 2');
+for y:= 1 to 3 do
+   begin
+   putchar ('>' , at[0,6]);
+   for x:= 1 to 19 do
+      begin
+      movechar (at[x-1,6] , at[x,6]);
+      delay (75);
+      end;
+   putchar ('<' , at[19,6]);
+   for x:=18 downto 0 do
+      begin
+      movechar (at[x+1,6] , at[x,6]);
+      delay (75);
+      end;
+   end;
+
+keypress;
+txt;
+end.

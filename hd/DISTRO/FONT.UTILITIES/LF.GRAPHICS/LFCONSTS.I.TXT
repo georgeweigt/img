@@ -1,0 +1,2 @@
+     fontset_length = 3072;
+     fontset_start  = -31786;

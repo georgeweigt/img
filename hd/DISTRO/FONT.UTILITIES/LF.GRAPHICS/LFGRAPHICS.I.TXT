@@ -1,0 +1,503 @@
+(*            lfgraphics.i                           *)
+(* large font graphics routines                      *)
+(* developed by Kevin Neelands                       *)
+(* senior programmer for Acumen Software development *)
+
+(* this 'cleans' the hires page *)
+
+procedure cleanhires;
+
+begin
+#a
+   jsr $f3e2
+#
+end;
+
+(* this switches display to the hires screen *)
+
+procedure hires;
+
+begin
+#a
+   lda $c057
+   lda $c050
+   lda $c054
+   lda $c052
+#
+end;
+
+(* this switches display to the text screen *)
+
+procedure txt;
+
+begin
+#a
+   lda $c054
+   lda $c051
+#
+end;
+
+(* this initializes the AT array ( a global variable) *)
+
+procedure initat;
+
+var
+   x,y : integer;
+
+begin
+at[0,0]:=8192;
+at[0,1]:=8448;
+at[0,2]:=8704;
+at[0,3]:=8960;
+at[0,4]:=8232;
+at[0,5]:=8488;
+at[0,6]:=8744;
+at[0,7]:=9000;
+at[0,8]:=8272;
+at[0,9]:=8528;
+at[0,10]:=8784;
+at[0,11]:=9040;
+for y:= 0 to 11 do
+   for x:= 1 to 19 do
+      at[x,y]:=at[0,y]+2*x;
+end;
+
+(* transfers a character onto hires screen *)
+(* ch is character to be displayed         *)
+(* scrnad is 'base' hires screen address   *)
+ 
+procedure putchar (ch : char ; scrnad : integer);
+
+begin
+#a
+        stx _t
+        ldy #5
+        lda (_sp),y
+        sta lfscrn      ; lfscrn has screen address (lo byte / hi byte)
+        iny
+        lda (_sp),y
+        sta lfscrn+1
+        iny
+        lda (_sp),y
+        sta _t+3      ; _t+3 has char
+        jmp lfpcex
+
+lfscrn  ds 2
+
+;       the lftabl table is a 'correction factor' and makes up the
+;       difference between the way bytes are stored on the font file
+;       and the way bytes are displayed on the hires screen
+
+;          9         1023      2016      3069
+lftabl db $00, $00, $ff, $03, $fe, $07, $fd, $0b
+
+;          4092      5115      6138      7161
+       db $fc, $0f, $fb, $13, $fa, $17, $f9, $1b
+
+;          -7        1016      2039      3062
+       db $f9, $ff, $f8, $03, $f7, $07, $f6, $0b
+
+;          4085      5108      6131      7154
+       db $f5, $0f, $f4, $13, $f3, $17, $f2, $1b
+
+;          112       1135      2158      3181
+       db $70, $00, $6f, $04, $6e, $08, $6d, $0c
+
+;          4204      5227      6250      7273
+       db $6c, $10, $6b, $14, $6a, $18, $69, $1c
+
+;          105       1128      2151      3174
+       db $69, $00, $68, $04, $67, $08, $66, $0c
+
+;          4197      5220      6243      7266
+       db $65, $10, $64, $14, $63, $18, $62, $1c
+
+;        routine to place a character on hires screen
+;        lfscrn must have "base" hires address
+;        _t+3 must have asci value of char
+;        uses up to _t+6 for workspace
+;        call using JSR LFPCAS
+
+;        first, use asci value of char to calculate address of character image
+
+lfpcas  lda #0
+        sta _t+4
+
+        asl _t+3    ; now multiply by 32
+        rol _t+4    ; (32 bytes per character)
+        asl _t+3
+        rol _t+4
+        asl _t+3
+        rol _t+4
+        asl _t+3
+        rol _t+4
+        asl _t+3
+        rol _t+4
+
+        clc        ; add $7fd6
+        lda _t+3   ; (start address of font file  minus $0400)
+        adc #$d6
+        sta _t+3
+        lda _t+4
+        adc #$7f
+        sta _t+4   ; _t+3 now has address of character image
+
+;       actual transfer loop
+    
+        ldy #0
+lfpclp  tya             ; multiply Y by 2 to get pctb index
+        asl
+        tay
+        clc
+        lda lfscrn        ; get lsb of 'base' memory value
+        adc lftabl,y      ; add lsb of pctb
+        sta _t+1
+        iny
+        lda lfscrn+1      ; repeat above steps for msb
+        adc lftabl,y
+        sta _t+2          ; _t+1 now has "destination"
+        dey               ; restore Y value
+        tya
+        lsr
+        tay 
+
+        lda (_t+3),y      ; actual transfer
+        sta (_t+1),y
+        iny
+        cpy #$20
+        bcc lfpclp
+        rts
+
+lfpcex  jsr lfpcas
+        ldx _t
+#
+end;
+
+(* places an eight character string on hires screen *)
+
+procedure putstr8 ( var word8 : str8 ; scrnad : integer);
+
+begin
+#a
+        stx _t
+        ldy #5
+        lda (_sp),y
+        sta lfscst      ; lfscst will have screen start address
+        iny
+        lda (_sp),y
+        sta lfscst+1
+        iny
+        lda (_sp),y
+        sta _t+7      ; _t+7 will have address of word8
+        iny
+        lda (_sp),y
+        sta _t+8
+        lda #8
+        sta lfleng     ; lfleng will have length
+        jmp lfps9x
+
+lfscst  ds 2          ; SCreen STart - start address for displaying string
+lfleng  ds 1          ; length of string to be displayed
+lfsty   ds 1          ; will hold Y temporarily
+
+;       string-screen display routine
+;       _t+7 has string address
+;       lfscst has screen start address
+;       lfleng has length
+;       call using JSR LFPSAS
+
+lfpsas  ldy #0
+lfpslp  tya
+        asl
+        clc
+        adc lfscst       ; calculate base of each letter
+        sta lfscrn       ; and store at lfscrn
+        lda lfscst+1
+        adc #$00
+        sta lfscrn+1
+
+        lda (_t+7),y     ; get asci value of each letter
+        sta _t+3
+        sty lfsty        ; store Y
+        jsr lfpcas       ; put character on screen
+        ldy lfsty
+        iny
+        cpy lfleng      ; at end of string ?
+        bcc lfpslp
+        rts
+
+lfps9x  jsr lfpsas
+        ldx _t
+#
+end;
+
+
+
+(* places a nineten character string on hires screen *)
+
+procedure putstr19 (var word19 : str19 ; scrnad : integer);
+
+begin
+#a
+      stx _t
+      ldy #5
+      lda (_sp),y
+      sta lfscst      ; lfscst will have screen start address
+      iny
+      lda (_sp),y
+      sta lfscst+1
+      iny
+      lda (_sp),y
+      sta _t+7      ; _t+7 will have address of str19
+      iny
+      lda (_sp),y
+      sta _t+8
+      lda #19         ; TO WRITE SIMILAR PROCEDURES FOR DIFFERENT
+      sta lfleng      ; LENGTH STRINGS, USE A DIFFERENT VALUE HERE
+      jsr lfpsas      
+      ldx _t
+#
+end;
+
+(* move a character from one block to another, and erases source *)
+
+procedure movechar (source, dest : integer);
+
+begin
+#a
+        stx _t
+        ldy #5
+        lda (_sp),y
+        sta lfdest       ; lfdest will have destination "base"
+        iny
+        lda (_sp),y
+        sta lfdest+1
+        iny
+        lda (_sp),y
+        sta lfsorc       ; lfsorc will have source "base"
+        iny
+        lda (_sp),y
+        sta lfsorc+1
+        jmp lfmcex
+
+lfdest  ds 2
+lfsorc  ds 2
+
+;       move character routine
+;       lfdest has destination
+;       lfsorc has source
+;       uses up to _t+8
+;       call using JSR LFMCAS
+
+lfmcas  ldy #0
+lfmclp  tya       ; multiply Y by 2
+        asl
+        tay
+
+        clc         ; calculate source
+        lda lfsorc
+        adc lftabl,y
+        sta _t+7    ; _t+7 will have source
+        iny
+        lda lfsorc+1
+        adc lftabl,y
+        sta _t+8
+        dey
+
+        clc          ; calculate destination
+        lda lfdest
+        adc lftabl,y
+        sta _t+5     ; _t+5 will have destination
+        iny
+        lda lfdest+1
+        adc lftabl,y
+        sta _t+6
+        dey
+
+        tya         ; divide Y by 2
+        lsr
+        tay
+
+        lda (_t+7),y  ; actual transfer
+        sta (_t+5),y
+
+        lda #00       ; erase source
+        sta (_t+7),y
+   
+        iny
+        cpy #$20
+        bcc lfmclp
+        rts
+
+lfmcex  jsr lfmcas
+        ldx _t
+#
+end;
+
+(* inverts characters starting at scrnad                *)
+(* NOTE: len is number of characters to by inverted * 2 *)
+
+procedure invert ( len , scrnad : integer);
+
+begin
+#a
+          stx _t
+          ldy #5
+          lda (_sp),y
+          sta _t+1     ; _t+1 has hires address
+          iny
+          lda (_sp),y
+          sta _t+2
+          iny
+          sec
+          lda (_sp),y
+          sbc #1
+          sta lflen    ; lflen has len to be inverted
+          jmp lfinrt
+
+lflen     ds 1
+
+;       inversing routine
+;       _t+1 has 'base' hires address
+;       lflen has length of area to be inversed
+;       alters locations _t+3 and _t+4
+;       call using JSR lfINAS
+
+lfinas  clc          ; calculate the hires address just below memloc by 128
+        lda _t+1
+        adc #$80
+        sta _t+3     ; _t+3 has the second hires address
+        lda _t+2
+        adc #$0
+        sta _t+4
+
+;       inversing loop
+
+        ldx #$00
+lfinol  ldy #$ff
+lfinil  iny
+        lda #$ff
+        eor (_t+1),y
+        sta (_t+1),y
+        lda #$ff
+        eor (_t+3),y
+        sta (_t+3),y
+        cpy lflen
+        bcc lfinil
+
+;       check to see if all done
+
+        inx
+        cpx #$08
+        beq lfinax
+
+;       if not done, increment addresses by 1024 ( $0400 )
+
+        clc
+        lda _t+2
+        adc #$04
+        sta _t+2
+        lda _t+4
+        adc #$04
+        sta _t+4
+        jmp lfinol
+lfinax  rts
+
+lfinrt  jsr lfinas
+        ldx _t
+#
+end;
+
+
+
+
+(* the following procedure is not a "standard" procedure , it is here to    *)
+(* demonstrate how the above routines can be accessed via assembly language *)
+
+
+
+(*  moves an 8 character word onto the screen from the left side             *)
+(*  NOTE: scrnad, the screen address, must be on the extreme left of the     *)
+(*  hires screen ( use only AT[0,x] values for scrnad )                      *)
+
+procedure slidein (var word8:str8 ; scrnad : integer);
+
+begin
+#a
+        stx _t
+        ldy #5
+        lda (_sp),y
+        sta lfstlc        ; stlc has hires base address
+        iny
+        lda (_sp),y
+        sta lfstlc+1
+        iny
+        lda (_sp),y
+        sta _t+9        ; _t+9 has equ address
+        iny
+        lda (_sp),y
+        sta _t+10
+
+        jsr lflssr       ; start off with a line shift
+        ldy #8
+        jmp lfeel1
+
+lfstlc  ds 2
+lfstyt  ds 2
+
+;       this subroutine shifts a line of hires text to the right one
+;       'base' memory location must be at stlc
+
+lflssr  ldy #36
+
+lflslp  tya
+        clc
+        adc lfstlc
+        sta lfdest      ; destination
+        dey
+        dey
+        tya
+        adc lfstlc
+        sta lfsorc      ; source
+        lda lfstlc+1    ; this is MSB of dest and source
+        sta lfdest+1
+        sta lfsorc+1
+        sty lfstyt
+        jsr lfmcas      ; character move - LOOKY HERE !!!!!!!!!!!!!
+        ldy lfstyt
+        cpy #$0
+        bne lflslp
+        rts
+
+;      first, perform 8 shifts followed by new char at base
+
+lfeel1  dey
+        sty lfstyt+1
+        jsr lflssr      ; line shift subroutine
+        ldy lfstyt+1
+
+;       get next char, place on screen at memloc
+
+        lda (_t+9),y   ; get char of equ
+        sta _t+3
+        lda lfstlc       ; get address to put character
+        sta lfscrn
+        lda lfstlc+1
+        sta lfscrn+1
+        jsr lfpcas       ; put character on screen - LOOKY HERE !!!!!!!!!!!!!!!
+        ldy lfstyt+1
+        cpy #$0
+        bne lfeel1
+
+;       secondly, perform 4 line shifts
+
+lfeel2  sty lfstyt+1
+        jsr lflssr
+        ldy lfstyt+1
+        iny
+        cpy #$05
+        bne lfeel2
+
+        ldx _t
+#
+end;

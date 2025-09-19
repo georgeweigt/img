@@ -1,0 +1,19 @@
+
+procedure DisableMenu ( MenuId : integer; disable : boolean );
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 14
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

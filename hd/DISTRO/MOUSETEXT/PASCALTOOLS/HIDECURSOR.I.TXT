@@ -1,0 +1,13 @@
+
+procedure HideCursor;
+begin
+#A
+ LDA #0
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 4
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

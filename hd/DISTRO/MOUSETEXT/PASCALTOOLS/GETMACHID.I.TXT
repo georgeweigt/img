@@ -1,0 +1,28 @@
+
+procedure GetMachId (var machid, machsid: integer);
+
+begin
+#a
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+ LDY #0
+ LDA $FBC0
+ STA (_T),Y
+ LDA $FBB3
+ STA (_T+2),Y
+ LDA #0
+ INY
+ STA (_T),Y
+ STA (_T+2),Y
+#
+end;

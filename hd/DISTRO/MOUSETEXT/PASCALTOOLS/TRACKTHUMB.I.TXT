@@ -1,0 +1,37 @@
+
+procedure TrackThumb (WhichCtl: CtlArea; var ThumbPos: integer;
+                      var ThumbMoved: boolean);
+begin
+#A
+ LDA #3
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 41
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #0
+ LDA CMDLIST+3
+ STA (_T),Y
+ LDA CMDLIST+2
+ STA (_T+2),Y
+ LDA #0
+ INY
+ STA (_T+2),Y
+#
+end;

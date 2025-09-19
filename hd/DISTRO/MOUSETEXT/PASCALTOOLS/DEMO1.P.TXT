@@ -1,0 +1,254 @@
+#a
+_UsesHires ; must have this for toolkit - also must be in chained programs 
+#
+
+{ This is a simple demonstration program to get you started.              }
+
+{ This program initializes the menus and uses global variables to pass    }
+{ the data structure to the next program.  Remember variable declarations }
+{ must be in the same order in chained programs.                          }
+
+{ Note that with the toolkit installed at $6100, there is 8.25 left for   }
+{ the program.  See other toolkits to increase available space.           }
+
+program testl;  
+
+const
+#i mtxkit.con
+
+type
+ BloadString = array [1..11] of char;
+#i mtxkit.typ
+
+var MyBuffer: SaveBuffer;
+    MyBar: MenuBar;
+    Menu1,Menu2,Menu3:MenuData;
+    Menu1str1,Menu2str1,Menu2Str2,Menu2Str3,Menu2Str5,Menu2Str6,Menu2Str7,
+    Menu3Str1,Menu3Str3,Menu3Str4,Menu3Str5,
+    Title1,Title2,Title3:TitleStr;
+    int:boolean;
+    machid,machsid,slot: integer;
+    MyMenuItem:MenuItem;
+    MyMenu:MenuTitle;
+
+#i bload.i
+#i getmachid.i
+#i startdesktop.i
+#i InitMenu.i
+#i SetMenu.i
+#i ShowCursor.i
+#i InitWindowMgr.i
+
+begin
+
+ { load in the mouse text tool kit }
+ bload('mtxkit.abs ');
+
+ { Clear the screen }
+#a
+ jsr $FC58 ; home
+#
+
+ { Tell the tool kit to find the mouse }
+ slot:=0;
+
+ { We do not need interrupts for this example }
+ int:=false;
+
+ {Get the machine type, //e or //c}
+ GetMachId(machid,machsid);
+
+ { Start the desk top }
+ startdesktop(machid,machsid,slot,int,true{col80});
+
+ { Allocate screen save space }
+ InitMenu(MyBuffer,SaveSize);
+
+ { Initialize the menus - this example uses assignments  }
+ { which are somewhat inefficient.  Another way is to    }
+ { initialize the menus using assembler define           }
+ { directives such as define bytes, words and strings.   }
+ { An example of this is the way windows are initialized.}
+    
+ MyBar.NumMenus:=chr(3);
+
+ MyMenu.menuId:=chr(16);
+ MyMenu.Disabled:=chr(0);
+ MyMenu.TitlePtr:=pointer(address(Title1));
+ MyMenu.MDataPtr:=pointer(address(Menu1));
+
+ MyBar.Menus[1]:=MyMenu;
+
+ MyMenu.menuId:=chr(32);
+{ MyMenu.Disabled:=chr(0);  doesn't change }
+ MyMenu.TitlePtr:=pointer(address(Title2));
+ MyMenu.MDataPtr:=pointer(address(Menu2));
+
+ MyBar.Menus[2]:=MyMenu;
+
+ MyMenu.menuId:=chr(48);
+{ MyMenu.Disabled:=chr(0);  doesn't change }
+ MyMenu.TitlePtr:=pointer(address(Title3));
+ MyMenu.MDataPtr:=pointer(address(Menu3));
+
+ MyBar.Menus[3]:=MyMenu;
+
+ Title1:=' Quit       ';
+ Title1[1]:=chr(4);
+ Title2:=' Window     ';
+ Title2[1]:=chr(6);
+ Title3:=' Edit       ';
+ Title3[1]:=chr(4);
+
+ Menu1.NumItems:=chr(1);
+
+ MyMenuItem.ItemOptB:=chr(3);
+ MyMenuItem.Markchar:=chr(0);
+ MyMenuItem.char1:='Q';
+ MyMenuItem.char1:='q';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu1Str1));
+
+ Menu1.Items[1]:=MyMenuItem;
+
+ Menu2.NumItems:=chr(7);
+
+ MyMenuItem.ItemOptB:=chr(131);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:='D';
+ MyMenuItem.char1:='d';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str1));
+
+ Menu2.Items[1]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(131);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:='G';
+ MyMenuItem.char1:='g';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str2));
+
+ Menu2.Items[2]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(131);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:='H';
+ MyMenuItem.char1:='h';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str3));
+ 
+ Menu2.Items[3]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(64);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:=chr(19);
+{ MyMenuItem.char1:=chr(0); }
+{ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str4)); }
+ 
+ Menu2.Items[4]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(0);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:=chr(0); 
+ MyMenuItem.char1:=chr(0);
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str5));
+ 
+ Menu2.Items[5]:=MyMenuItem;
+
+{ MyMenuItem.ItemOptB:=chr(0); }
+{ MyMenuItem.Markchar:=chr(0); }
+{ MyMenuItem.char1:=chr(0); }
+{ MyMenuItem.char1:=chr(0); }
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str6));
+ 
+ Menu2.Items[6]:=MyMenuItem;
+
+{ MyMenuItem.ItemOptB:=chr(0); }
+{ MyMenuItem.Markchar:=chr(0); }
+{ MyMenuItem.char1:=chr(0); }
+{ MyMenuItem.char1:=chr(0); }
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu2Str7));
+
+ Menu2.Items[7]:=MyMenuItem;
+ 
+ Menu3.NumItems:=chr(5);
+
+ MyMenuItem.ItemOptB:=chr(128);
+{ MyMenuItem.Markchar:=chr(0);} 
+{ MyMenuItem.char1:=chr(0); }
+{ MyMenuItem.char1:=chr(0); }
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu3Str1));
+ 
+ Menu3.Items[1]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(64);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:=chr(19);
+{ MyMenuItem.char1:=chr(0); }
+{ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu3Str2));}
+
+ Menu3.Items[2]:=MyMenuItem;
+ 
+ MyMenuItem.ItemOptB:=chr(132);
+ MyMenuItem.Markchar:=chr(0);
+ MyMenuItem.char1:='X';
+ MyMenuItem.char2:='x';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu3Str3));
+
+ Menu3.Items[3]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(132);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:='C';
+ MyMenuItem.char2:='c';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu3Str4));
+
+ Menu3.Items[4]:=MyMenuItem;
+
+ MyMenuItem.ItemOptB:=chr(132);
+{ MyMenuItem.Markchar:=chr(0); }
+ MyMenuItem.char1:='V';
+ MyMenuItem.char2:='v';
+ MyMenuItem.ItemStrPtr:=Pointer(Address(Menu3Str5));
+
+ Menu3.Items[5]:=MyMenuItem;
+
+
+
+
+
+ Menu1Str1:=' Quit       ';
+ Menu1Str1[1]:=chr(4);
+
+ Menu2Str1:=' Drag window';
+ Menu2Str1[1]:=chr(12);
+ Menu2Str2:=' Grow Top   ';
+ Menu2Str2[1]:=chr(8);
+ Menu2Str3:=' Hide Top   ';
+ Menu2Str3[1]:=chr(8);
+ Menu2Str5:=' Show Small ';
+ Menu2Str5[1]:=chr(10);
+ Menu2Str6:=' Show Large ';
+ Menu2Str6[1]:=chr(10);
+ Menu2Str7:=' Mouse Char ';
+ Menu2Str7[1]:=chr(10);
+
+ Menu3Str1:=' Undo last  ';
+ Menu3Str1[1]:=chr(9);
+ Menu3Str3:=' Cut        ';
+ Menu3Str3[1]:=chr(3);
+ Menu3Str4:=' Copy       ';
+ Menu3Str4[1]:=chr(4);
+ Menu3Str5:=' Paste      ';
+ Menu3Str5[1]:=chr(5);
+
+ { Set up the menus }
+ SetMenu(MyBar);
+
+ { turn on the cursor }
+ showCursor;
+
+ { allocate screen save space for windows }
+ InitWindowmgr(Mybuffer,Savesize);
+
+ { The menus are all set; now chain to the main loop }
+ chain('demo1a');
+
+end.

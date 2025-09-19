@@ -1,0 +1,25 @@
+
+procedure Frontwindow ( var WindowId: integer );
+begin
+#A
+ LDA #1
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 27
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA CMDLIST+1
+ LDY #0
+ STA (_T),Y
+ LDA #0
+ INY
+ STA (_T),Y
+#
+end;

@@ -1,0 +1,37 @@
+
+procedure WinString ( WindowId, WindowX, WindowY: integer;
+                      var MyString: string );
+begin
+#A
+ LDA #5
+ CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+6
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+7
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+4
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+5
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ LDA #0
+ STA CMDLIST+8
+ JSR TOOLKIT
+ DB 35
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

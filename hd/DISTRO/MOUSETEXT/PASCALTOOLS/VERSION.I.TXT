@@ -1,0 +1,31 @@
+
+Procedure Version (var VarNum, RevNum: integer);
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 19
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA CMDLIST+1
+ LDY #0
+ STA (_T),Y
+ LDY #7
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA CMDLIST+2
+ LDY #0
+ STA (_T),Y
+#
+end;

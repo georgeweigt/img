@@ -1,0 +1,21 @@
+procedure CheckItem ( MenuId, ItemNum : integer; check : boolean);
+begin
+#A
+ LDA #3
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ LDY #8
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 16
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

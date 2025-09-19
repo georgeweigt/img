@@ -1,0 +1,40 @@
+
+procedure FindWindow ( PointX, PointY: integer; var Area: Type_Area;
+                       var WindowId: integer );
+begin
+#A
+ LDA #4
+ STA CMDLIST
+ LDY #9
+ LDA (_SP),Y
+ STA CMDLIST+2
+ LDY #11
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 26
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+ LDY #0
+ LDA CMDLIST+3
+ STA (_T+2),Y
+ LDA CMDLIST+4
+ STA (_T),Y
+ INY
+ LDA #0
+ STA (_T),Y
+#
+end;

@@ -1,0 +1,35 @@
+
+procedure MenuSelect (Var Menu_Id, Menu_Choice : integer);
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 11
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+;
+ LDY #0
+ LDA CMDLIST+1
+ STA (_T+2),Y
+ LDA CMDLIST+2
+ STA (_T),Y
+ LDA #0
+ INY
+ STA (_T+2),Y
+ STA (_T),Y
+#
+end;

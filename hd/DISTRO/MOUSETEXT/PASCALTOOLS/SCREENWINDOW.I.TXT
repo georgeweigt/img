@@ -1,0 +1,51 @@
+
+procedure ScreenWindow ( WindowId, ScreenX, ScreenY: integer;
+                         var WindowX, WindowY: integer );
+begin
+#A
+ LDA #5
+ STA CMDLIST
+ LDY #9
+ LDA (_SP),Y
+ STA CMDLIST+4
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+5
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+2
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+3
+ INY
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 33
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+ LDY #0
+ LDA CMDLIST+8
+ STA (_T),Y
+ LDA CMDLIST+6
+ STA (_T+2),Y
+ INY
+ LDA CMDLIST+9
+ STA (_T),Y
+ LDA CMDLIST+7
+ STA (_T+2),Y
+#
+end;

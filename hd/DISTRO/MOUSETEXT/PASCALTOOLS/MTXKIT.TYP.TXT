@@ -1,0 +1,118 @@
+
+     byte = char;
+
+     string = array [1..80] of char; 
+
+     SaveBuffer = Array [1..SaveSize] of byte;
+
+     TextBuffer = Array [1..MaxTextLength] of byte;
+
+     Type_Event = Record
+                   EvtKind : byte;
+                   char1 : byte;
+                   char2 : byte;
+                   reserve1 : byte
+                  end;
+
+     TitleStr = Array [1..MaxTitleStr] of char;
+
+     ItemStr = Array [1..MaxItemStr] of char;
+
+     MenuItem = Record
+                 ItemOptB : byte;
+                 MarkChar : byte;
+                 Char1 : byte;
+                 Char2 : byte;
+                 ItemStrPtr : ^ItemStr
+                end;
+
+     MenuData = Record
+                 NumItems : byte;
+                 reserve1 : byte;
+                 reserve2 : byte;
+                 reserve3 : byte;
+                 Items : array [1..MaxNumItems] of MenuItem
+                end;
+
+     MenuTitle = Record
+                  MenuId : byte;
+                  Disabled : byte;
+                  TitlePtr : ^TitleStr;
+                  MDataPtr : ^MenuData;
+                  reserve1 : array [1..4] of byte
+                 end;
+
+     MenuBarPtr = ^MenuBar;
+
+     MenuBar = Record
+                NumMenus : byte;
+                reserve1 : byte;
+                Menus : array [1..MaxMenus] of MenuTitle
+               end;
+
+     Winfo_ptr = ^Winfo;
+
+     Winfo = Record
+              WindowId : byte;
+              WinOpt : byte;
+              TitlePtr : ^TitleStr;
+              WindowX : integer;
+              WindowY : integer;
+              ContWidth : byte;
+              ContLength : byte;
+              MinContWidth : byte;
+              MaxContWidth : byte;
+              MinContLength : byte;
+              MaxContLength : byte;
+              DinfoPtr : ^Dinfo;
+              HorContOpt : byte;
+              VertContOpt : byte;
+              HThumbMax : byte;
+              HThumbPos : byte;
+              VThumbMax : byte;
+              VThumbPos : byte;
+              WinStatus : byte;
+              Reserve1 : byte;
+              NextWinfo : ^Winfo;
+              Reserve2 : byte;
+              Reserve3 : byte;
+              Reserve4 : byte;
+              Reserve5 : byte;
+              Reserve6 : byte;
+              reserve7 : byte
+             end;
+
+     Dinfo_ptr = ^Dinfo;
+
+     Dinfo = Record
+              DocPtr : integer;
+              Reserve1 : byte;
+              DocWidth : byte;
+              DocX : integer;
+              DocY : integer;
+              DocLength : integer;
+              Reserve2 : integer;
+              Reserve3 : integer
+             end;
+
+
+     Type_Area = (InDeskTop,
+                 InMenuBar,
+                 InContent,
+                 InDrag,
+                 InGrow,
+                 InGoAway);
+
+     CtlArea = (NotCtl,
+                Verscroll,
+                HorScroll,
+                DeadZone);
+
+     CtlPart = (CtlInactive,
+                ScrollUpLeft,
+                ScrollDownRight,
+                PageUpLeft,
+                PageDownRight,
+                Thumb);
+
+   

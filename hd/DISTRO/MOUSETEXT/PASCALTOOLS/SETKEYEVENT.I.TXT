@@ -1,0 +1,16 @@
+
+procedure SetKeyEvent (ChkKeyboard: boolean);
+begin
+#A
+ LDA #1
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 8
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

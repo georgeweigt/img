@@ -1,0 +1,13 @@
+
+procedure CloseAll;
+begin
+#A
+ LDA #0
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 25
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

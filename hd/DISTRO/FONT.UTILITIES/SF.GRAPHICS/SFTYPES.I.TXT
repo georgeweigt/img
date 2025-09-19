@@ -1,0 +1,5 @@
+  pathstring = array [1..65] of char;
+        str7 = array [1..7] of char;
+        str8 = array [1..8] of char;
+       str19 = array [1..19] of char;
+      array7 = array [0..7] of str7;

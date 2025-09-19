@@ -1,0 +1,19 @@
+
+procedure UpdateThumb (WhichCtl: CtlArea; ThumbPos: integer);
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+2
+ LDY #7
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 42
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

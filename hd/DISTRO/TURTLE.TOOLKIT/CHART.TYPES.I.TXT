@@ -1,0 +1,8 @@
+   GRTAGTYPE    = (INTDATA,REALDATA);
+   GRRECPTR     = ^GRDATAREC;
+   GRDATAREC    = RECORD
+                     NEXTGRREC  :  GRRECPTR;
+                     CASE GRTAG : GRTAGTYPE OF
+                        INTDATA :(GRNUMBER:INTEGER);
+                        REALDATA:(GRFLOAT :REAL)
+                  END;

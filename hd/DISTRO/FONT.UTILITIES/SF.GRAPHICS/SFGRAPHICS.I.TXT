@@ -1,0 +1,320 @@
+(*                 sfgraphics.i          *)
+(* small font graphics routines ,        *)
+(* written by Kevin Neelands             *)
+(* Senior programmer for Acumen Software *)
+
+(* this 'cleans' the hires page *)
+
+procedure cleanhires;
+
+begin
+#a
+   jsr $f3e2
+#
+end;
+
+(* this switches display to the text screen *)
+
+procedure hires;
+
+begin
+#a
+   lda $c057
+   lda $c050
+   lda $c054
+   lda $c052
+#
+end;
+
+(* this switches the screen to the text page *)
+
+procedure txt;
+
+begin
+#a
+   lda $c054
+   lda $c051
+#
+end;
+
+(* this initializes the AT array *)
+
+procedure initat;
+
+var
+   x,y : integer;
+
+begin
+at[0,0]:=8192;
+at[0,1]:=8320;
+at[0,2]:=8448;
+at[0,3]:=8576;
+at[0,4]:=8704;
+at[0,5]:=8832;
+at[0,6]:=8960;
+at[0,7]:=9088;
+at[0,8]:=8232;
+at[0,9]:=8360;
+at[0,10]:=8488;
+at[0,11]:=8616;
+at[0,12]:=8744;
+at[0,13]:=8872;
+at[0,14]:=9000;
+at[0,15]:=9128;
+at[0,16]:=8272;
+at[0,17]:=8400;
+at[0,18]:=8528;
+at[0,19]:=8656;
+at[0,20]:=8784;
+at[0,21]:=8912;
+at[0,22]:=9040;
+at[0,23]:=9168;
+for y:= 0 to 23 do
+   for x:= 1 to 39 do
+      at[x,y]:=at[0,y]+x;
+end;
+
+(* this puts a character on the hires screen *)
+(* ch is character                           *)
+(* scrnad is 'base' hires address            *)
+
+procedure putchar ( ch : char ; scrnad : integer);
+
+begin
+#a
+      stx _t
+      ldy #5
+      lda (_sp),y
+      sta _t+1      ; _t+1 will have screen address
+      iny
+      lda (_sp),y
+      sta _t+2
+      iny
+      lda (_sp),y
+      sta _t+3      ; _t+3 has ch
+      jmp sfpcex
+      
+;     routine to place character on hires screen
+;     _t+1 must have screen address (lo/hi)
+;     _t+3 must have character
+;     call with JSR SFPCAS
+
+sfpcas lda #0
+       sta _t+4
+        
+       asl _t+3    ; multiply by 8 , number of bytes per character
+       rol _t+4
+       asl _t+3
+       rol _t+4
+       asl _t+3
+       rol _t+4
+
+       clc          ; add address of start of character images
+       lda _t+4
+       adc #$89     ; $8a00  - $0100
+       sta _t+4
+
+;      transfer loop from (_t+3) to (_t+1)
+;      from character images to hires screen
+
+       ldy #0
+sfpclp lda (_t+3),y    ; 'get' a byte
+       sta (_t+1),y    ; 'put' the byte on the screen
+       clc
+       lda _t+1        ; increment screen address
+       adc #$ff
+       sta _t+1
+       lda _t+2
+       adc #$03
+       sta _t+2
+       iny
+       cpy #$08
+       bne sfpclp
+       rts
+
+sfpcex jsr sfpcas
+       ldx _t
+#
+end;
+  
+(* this places an 8 character string on the screen *)
+
+procedure putstr8 ( var word8 : str8 ; scrnad : integer);
+
+begin
+#a
+       stx _t
+       ldy #5
+       lda (_sp),y
+       sta sfscst    ; sfscst holds SCreen STart address
+       iny
+       lda (_sp),y
+       sta sfscst+1
+       iny
+       lda (_sp),y
+       sta _t+7      ; _t+7 will hold string address
+       iny
+       lda (_sp),y
+       sta _t+8
+       lda #8
+       sta sfleng    ; sfleng holds length of string
+       jmp sfps8x
+
+sfscst ds 2          ; SCreen STart
+sfleng ds 1          ; length of string
+sfsty  ds 1          ; this will hold Y temporarily
+
+;      string-screen display routine
+;      _t+7 has string address
+;      sfscst has screen start address
+;      sfleng has string length
+;      call with JSR SFPSAS
+
+sfpsas ldy #0
+sfpslp lda (_t+7),y    ; get asci value of next character
+       sta _t+3
+
+       clc             ; calculate next screen address
+       tya 
+       adc sfscst
+       sta _t+1        ; lsb of next screen address
+       lda sfscst+1
+       adc #$0
+       sta _t+2
+
+       sty sfsty       
+       jsr sfpcas      ; put char on screen
+       ldy sfsty
+       iny
+       cpy sfleng
+       bcc sfpslp
+       rts
+
+sfps8x jsr sfpsas
+       ldx _t
+#
+end;
+       
+(* this places a 19 character string on the screen *)
+
+procedure putstr19 ( var word19 : str19 ; scrnad : integer);
+
+begin
+#a
+       stx _t
+       ldy #5
+       lda (_sp),y
+       sta sfscst    ; sfscst holds SCreen STart address
+       iny
+       lda (_sp),y
+       sta sfscst+1
+       iny
+       lda (_sp),y
+       sta _t+7      ; _t+7 will hold string address
+       iny
+       lda (_sp),y
+       sta _t+8
+       lda #19       ; TO WRITE SIMILAR ROUTINES FOR STRINGS OF A DIFFERENT
+       sta sfleng    ; LENGTH, CHANGE THIS LENGTH VALUE
+       jsr sfpsas    ; sfpsas is in putstr8 procedure
+       ldx _t
+#
+end;
+
+(* moves a character from one spot to another, and erases source *)
+
+procedure movechar ( source, dest : integer);
+
+begin
+#a
+       stx _t
+       ldy #5
+       lda (_sp),y
+       sta _t+1      ; _t+1 has dest
+       iny
+       lda (_sp),y
+       sta _t+2
+       iny
+       lda (_sp),y
+       sta _t+3      ; _t+3 has source
+       iny
+       lda (_sp),y
+       sta _t+4
+       jmp sfmcex
+
+;      _t+1 has destination
+;      _t+3 has source
+;      call from an assembly language routine with JSR SFMCAS
+
+sfmcas ldx #0
+       ldy #0
+sfmclp lda (_t+3),y   ; 'get' a byte
+       sta (_t+1),y   ; 'put' the byte
+       lda #0
+       sta (_t+3),y   ; erase source
+       clc
+       lda _t+2
+       adc #$04
+       sta _t+2
+       lda _t+4
+       adc #$04
+       sta _t+4
+       inx
+       cpx #$08
+       bne sfmclp
+       rts
+
+sfmcex jsr sfmcas
+       ldx _t
+#
+end;
+
+(* inverts a section of hires screen *)
+
+procedure invert (len , scrnad : integer);
+
+begin
+#a
+       stx _t
+       ldy #5
+       lda (_sp),y
+       sta _t+1       ; _t+1 has hires address
+       iny
+       lda (_sp),y
+       sta _t+2
+       iny
+       lda (_sp),y
+       sta sflen      ; sflen holds length of area to be inversed
+       dec sflen
+       jmp sfinex
+
+sflen  ds 1
+  
+;      inversing routine
+;      _t+1 must have start address
+;      sflen must have length to be inverted
+;      call using JSR SFINAS
+
+sfinas ldx #0
+sfinol ldy #$ff
+sfinil iny
+       lda #$ff
+       eor (_t+1),y
+       sta (_t+1),y
+       cpy sflen
+       bcc sfinil
+
+       clc
+       lda _t+2
+       adc #$04
+       sta _t+2
+ 
+       inx
+       cpx #$08
+       bne sfinol
+       rts
+
+sfinex jsr sfinas
+       ldx _t
+#
+end;

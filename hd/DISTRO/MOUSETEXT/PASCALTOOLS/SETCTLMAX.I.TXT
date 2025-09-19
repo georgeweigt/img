@@ -1,0 +1,19 @@
+
+procedure SetCtlMax (WhichCtl: CtlArea; NewMax: integer);
+begin
+#A
+ LDA #2
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+2
+ LDY #7
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 40
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;

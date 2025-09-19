@@ -1,0 +1,16 @@
+
+procedure HiLiteMenu ( MenuId : integer);
+begin
+#A
+ LDA #1
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 13
+ DW CMDLIST
+ BEQ *+5
+ JSR GERROR
+#
+end;

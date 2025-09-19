@@ -1,0 +1,96 @@
+
+#A
+TOOLKIT EQU $6100
+CMDLIST DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+ DB 0
+#
+
+Procedure StartDeskTop (MachId:integer; SubId:integer; var SlotNum:integer;
+                        var UseInterrupts:boolean; Column80:boolean);
+begin
+#A
+ LDA #6
+ STA CMDLIST
+ LDY #5
+ LDA (_SP),Y
+ STA CMDLIST+6
+ INY
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ INY
+ LDA (_SP),Y
+ STA _T+2
+ INY
+ LDA (_SP),Y
+ STA _T+3
+ LDY #0
+ LDA (_T),Y
+ STA CMDLIST+5
+ LDA (_T+2),Y
+ STA CMDLIST+4
+ LDA #0
+ STA CMDLIST+3
+ LDY #10
+ LDA (_SP),Y
+ STA CMDLIST+2
+ LDY #12
+ LDA (_SP),Y
+ STA CMDLIST+1
+ JSR TOOLKIT
+ DB 0
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+ LDY #0
+ LDA CMDLIST+5
+ STA (_T),Y
+ LDA CMDLIST+4
+ STA (_T+2),Y
+ INY
+ LDA #0
+ STA (_T+2),Y
+#
+end;
+
+Procedure StopDeskTop;
+begin
+#A
+ LDA #0
+ STA CMDLIST
+ JSR TOOLKIT
+ DB 1
+ DW CMDLIST
+ BEQ *+5
+ JMP GERROR
+#
+end;
+#A
+GERROR JSR $FDDA
+ JSR $FD8E
+ JMP _QUIT
+#
+
+
