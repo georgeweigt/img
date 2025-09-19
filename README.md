@@ -19,3 +19,5 @@ Instructions for use with Virtual ][
 7. Press return to get to the Kix shell.
 
 8. Do `ls bin` to see available shell commands.
+
+`kix`, `menu`, and `intro` are help commands.
