@@ -1,0 +1,6 @@
+   STRING127    = ARRAY [1..127] OF CHAR;
+   STRPOINTER   = ^STRRECORD;
+   STRRECORD    = RECORD
+                     STRFOUND   : STRING127;
+                     NEXTSTR    : STRPOINTER
+                  END;

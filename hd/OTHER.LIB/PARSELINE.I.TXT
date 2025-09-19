@@ -1,0 +1,43 @@
+FUNCTION PARSELINE:STRPOINTER;
+VAR   BASE,TRAILER,LEADER : STRPOINTER;
+      LINE                : ^STRING127;
+      X,Y                 : INTEGER;
+
+PROCEDURE FIXBUFFER;
+BEGIN
+#A
+ LDY #126
+FBRZ1 EQU *
+ LDA $200,Y
+ AND #$7F
+ STA $200,Y
+ DEY
+ BPL FBRZ1
+#
+END;
+
+BEGIN
+   FIXBUFFER;
+   LINE:=POINTER(512);
+   X:=1; BASE:=NIL; TRAILER:=NIL;
+   REPEAT
+      IF LINE^[X] = ' ' THEN X:=X+1
+      ELSE
+      BEGIN
+         NEW(LEADER);
+         LEADER^.NEXTSTR:=NIL;
+         IF BASE=NIL THEN BASE:=LEADER
+                     ELSE TRAILER^.NEXTSTR:=LEADER;
+         TRAILER:=LEADER;
+         FOR Y := 1 TO 127 DO LEADER^.STRFOUND[Y]:=' ';
+         Y := 1;
+         WHILE (ORD(LINE^[X]) <> 13) AND (LINE^[X]<>' ') AND (X < 128) DO
+         BEGIN
+            LEADER^.STRFOUND[Y] := LINE^[X];
+            Y := Y + 1;
+            X := X + 1
+         END
+      END
+   UNTIL (X>127) OR (ORD(LINE^[X])=13);
+   PARSELINE:=BASE
+END;

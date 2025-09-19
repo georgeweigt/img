@@ -1,0 +1,9 @@
+PROCEDURE ON40;
+BEGIN
+#A
+ STX _T
+ LDA #21
+ JSR $FDED
+ LDX _T
+#
+END;

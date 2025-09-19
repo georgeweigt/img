@@ -1,0 +1,27 @@
+PROCEDURE SCANFILE(VAR PATH,TARGET:PATHSTRING;VAR POSITION:INTEGER);
+VAR RESULT,WHERE,I,IX,LEN  :INTEGER;
+    F:TEXT;
+BEGIN
+   WHERE:=-1;
+   LEN:=0; IX:=0;
+   REPEAT
+      LEN:=LEN+1
+   UNTIL (LEN=65) OR (TARGET[LEN]=' ');
+   IF LEN>0 THEN
+   BEGIN
+      I:=1;
+      RESET(F,PATH);
+      REPEAT
+         IF TARGET[I]=F^ THEN I:=I+1
+                         ELSE
+                BEGIN
+                   IX:=IX+I;
+                   I:=1
+                END;
+         GET(F)
+      UNTIL (EOF(F)) OR (I=LEN+1);
+      WHERE:=IX
+   END;
+   IF I<=LEN THEN WHERE:=-1;
+   POSITION:=WHERE
+END;

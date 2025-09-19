@@ -1,0 +1,19 @@
+FUNCTION INDEX(VAR A1,A2:STRING):INTEGER;
+VAR I,J,K,L:INTEGER;
+BEGIN
+ I:=MAXSTRING;
+ WHILE ((A2[I] = ' ') AND (I <> 1))
+      DO I:=I-1;
+ K:=0;
+ REPEAT
+  J:=1;
+  L:=1;
+  WHILE(J<=I) DO BEGIN
+   IF(A1[J+K] <> A2[J]) THEN L:=0; 
+   J:=J+1;
+  END;
+  K:=K+1;
+ UNTIL((L=1) OR ((I+K)>MAXSTRING));
+ IF(L=1) THEN INDEX :=K
+  ELSE INDEX :=0;
+END;

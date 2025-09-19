@@ -1,0 +1,34 @@
+Procedure Poke (Lok, Val : Integer); { Aus Kyan 2.0 Users Manual, S. V-23 }
+Begin
+#A
+        LDY #7          
+        LDA (_SP),Y     
+        STA _T          
+        INY
+        LDA (_SP),Y     
+        STA _T+1        
+        LDY #5          
+        LDA (_SP),Y             
+        LDY #10         
+        STA (_T),Y      
+#
+End;    { Poke }
+
+Function Peek (Loc : Integer) : Integer;
+Begin
+#A
+        LDY #7
+        LDA (_SP),Y
+        STA _T
+        INY
+        LDA (_SP),Y
+        STA _T+1
+        LDY #0
+        LDA (_T),Y
+        LDY #5
+        STA (_SP),Y
+        INY
+        LDA #0
+        STA (_SP),Y
+#
+End;    { Peek }

@@ -1,0 +1,8 @@
+PROCEDURE CLS;
+BEGIN
+#A
+ STX _T
+ JSR $FC58
+ LDX _T
+#
+END;
