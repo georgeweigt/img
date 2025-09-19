@@ -1,16 +1,18 @@
-Kix shell for Virtual ][ software
+Kix shell for Apple 2e machines
+
+Instructions for use with Virtual ][
 
 1. Start a virtual Apple 2e.
 
-2. Click Setup icon and put a SCSI card in Slot 7.
+2. Click the Setup icon and put a SCSI card in Slot 7.
 
-3. Add OmniDisk to SCSI card.
+3. Add an OmniDisk to the SCSI card.
 
-4. Click the Reset button.
+4. Click the Restart button.
 
 5. Drag folder `hd` to OmniDisk.
 
-6. Click Boot icon.
+6. Click the Boot icon.
 
 7. Press return to get to the Kix shell.
 
