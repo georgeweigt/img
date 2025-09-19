@@ -1,12 +1,12 @@
-Kix shell for Virtual ][
+Kix shell for Virtual ][ software
 
 1. Start a virtual Apple 2e.
 
-2. Click Setup icon and put SCSI card in Slot 7.
+2. Click Setup icon and put a SCSI card in Slot 7.
 
 3. Add OmniDisk to SCSI card.
 
-4. Click Restart button.
+4. Click the Reset button.
 
 5. Drag folder `hd` to OmniDisk.
 
