@@ -1,8 +1,0 @@
-PROCEDURE SUBSTRING(VAR A1, A2:STRING;
-                      I,J:INTEGER);
-VAR K:INTEGER;
-BEGIN
- FOR K:=1 TO MAXSTRING DO A2[K]:=' ';
- I:= I-1;
- FOR K:= 1 TO J DO A2[K] := A1[I+K]
-END;
