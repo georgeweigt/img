@@ -1,0 +1,284 @@
+
+;
+; Demo for Graphics Primitives
+;
+ org $1800
+ include equates
+MyBuffer equ $8000
+TstFont equ $800
+Bell equ $FBDD
+KeyBoard equ $c000
+Strobe equ $C010
+cr equ 13
+space equ 32
+temp equ 2
+;
+xxx macro 
+ jsr GrafMLI
+ db &1
+ dw &2
+ endm
+;
+; test stuff
+;
+ jsr tokniz
+;
+; bload prim.abs.0
+ ldx #>primstr
+ ldy #<primstr
+ jsr load
+;
+; bload test.font
+ ldx #>tststr
+ ldy #<tststr
+ jsr load
+;
+ xxx InitGraf,0
+;
+ lda #0
+ sta MyBits
+ sta MyBits+2
+;
+; set up a graf port
+;
+; Set up My port for drawing into
+; buffer at $4000
+ xxx InitPort,MyPort
+ xxx SPort,MyPort
+ xxx SPortBits,MyBits
+;
+; Now set up TestPort for drawing onto screen
+ xxx InitPort,TstPort
+ xxx SPort,TstPort
+;
+ lda #0
+ sta LoopCounter
+ jsr DrawSomething ; Test the drawing code
+ xxx MoveTo,Point4
+ xxx DrawText,ContText
+ jsr WaitForKeypress
+ inc LoopCounter
+;
+; Now tell user that we are drawing in to buffer so they will wait
+;
+MainLoop equ *
+ xxx MoveTo,Point4
+ xxx DrawText,BufText
+ xxx SPort,MyPort
+;
+; Now clear the buffer by drawing a large rect. in a pattern of black
+;
+ jsr ClearIt
+ jsr DrawSomething ; Draw into it
+ xxx SPort,TstPort
+ lda LoopCounter ; Move viewloc in MyBits
+ xxx PaintBits,MyDestBits
+;
+; Now tell user to press return to continue
+;
+ xxx MoveTo,Point4
+ xxx DrawText,ContText
+ jsr WaitForKeyPress
+;
+ inc LoopCounter ; test to see if done
+ lda LoopCounter
+;
+; Now see if we have gone through all 6 parts if not go to next part
+; If we have tell user to press return to quit then set the soft switches
+;
+ cmp #6
+ bcc MainLoop
+ xxx MoveTo,Point4
+ xxx DrawText,QuitText
+ jsr WaitForKeyPress
+ xxx SSwitches,Switch
+ lda #12
+ jsr $C300 ; reset 80 col. card
+exit jsr $BF00 ; ProDOS Quit
+ db $65
+ dw QuitParams
+ rts
+QuitParams db 4
+ dw 0,0,0,0
+;
+LoopCounter db 0
+Tst0Table db 1,1,0,0,0,0,0
+Tst1Table db 1,0,1,0,0,0,0
+Tst2Table db 1,0,0,1,0,0,0
+Tst3Table db 1,0,0,0,1,0,0
+Tst4Table db 1,0,0,0,0,1,0
+;
+; Wait for keypress
+;
+WaitForKeyPress jsr Bell
+Wait  bit Strobe
+ bpl Wait
+ lda KeyBoard
+ rts
+;
+; ClearIt
+;
+ClearIt
+ xxx SPenMode,ModeCopy
+ xxx SPattern,Black
+ xxx PaintRect,WowRect
+ xxx SPattern,White
+ rts
+WowRect dw 0,0,10000,10000
+;
+; Draw filled and unfilled rectangles
+;
+tst.0 equ *
+DrawSomething equ *
+ ldx loopcounter
+ lda Tst0Table,x
+ beq Tst.1
+;
+ xxx PaintRect,R1
+ xxx PaintRect,R2
+ xxx FrameRect,R3
+ xxx FrameRect,R4
+;
+;
+; draw a bunch of lines
+;
+tst.1 
+ ldx loopcounter
+ lda Tst1Table,x
+ beq Tst.2
+tst.1.loop 
+ xxx MoveTo,Point1
+ xxx LineTo,Point2
+;
+ lda point2+2
+ clc
+ adc #8
+ sta point2+2
+ cmp #192
+ bcc tst.1.loop
+ lda #0
+ sta point2+2
+;
+; draw some polygons and frame them
+;
+Tst.2 
+ ldx LoopCounter
+ lda Tst2Table,x
+ beq Tst.3
+;
+ xxx SPenMode,ModeCopy
+ xxx SPattern,Color1
+ xxx PaintPoly,TstPoly
+ xxx SPenMode,ModeNotOr
+ xxx FramePoly,TstPoly
+;
+; draw some text
+;
+Tst.3 
+ ldx LoopCounter
+ lda Tst3Table,x
+ beq Tst.4
+;
+ xxx SFont,TstFont
+ xxx MoveTo,Point3
+ xxx DrawText,TstText
+;
+; draw some bitmaps
+;
+Tst.4 
+ ldx LoopCounter
+ lda Tst4Table,X
+ beq Tst.5
+;
+ xxx SPenMode,ModeCopy
+ xxx PaintBits,TstBits
+;
+;
+Tst.5 
+ rts
+;
+ include load.i
+ include tokniz.i
+;
+argc ds 1
+;
+;
+; Data for rects., polygons, bitmap, and text
+;
+tstport ds portlength
+;
+tst1rect dw 30,30,95,150
+tst2rect dw 200,50,520,140
+;
+point1 dw 0,0
+point2 dw 559,0
+;
+R1 dw 10,10,30,30
+R2 dw 28,28,70,70
+R3 dw 40,40,90,90
+R4 dw 100,30,180,60
+;
+modeNotOr db 5
+modeCopy db 0
+;
+color1 db $66,$66,$66,$66,$66,$66,$66,$66,0
+color2 db $11,$11,$11,$11,$11,$11,$11,$11,0
+color3 db $CC,$CC,$CC,$CC,$CC,$CC,$CC,$CC,0
+;weave db $38,$74,$EE,$47,$83,$C5,$EE,$5C,0
+black db 0,0,0,0,0,0,0,0,0
+white db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+ db 0
+;
+tstpoly db 8,$80
+ dw 64,168,192,168,224,120,288,120,320,168,448,168,320,40,192,40
+ dw 3
+ dw 224,96,288,96,256,56
+;
+tstbits dw 50,50
+ dw handbits
+ dw 3
+ dw 0,0,17,9
+handbits db $00,$00,$00,$20,$00,$00,$30,$00,$00,$38,$00,$00
+ db $5E,$7F,$07,$7E,$00,$00,$3E,$1F,$00,$7E,$00,$00
+ db $3C,$0F,$00,$00,$00,$00
+;
+point3 dw 4,50
+;
+;
+tsttext dw msg
+ db msglength
+msg asc 'This is a test of the emergency graphics system'
+msglength equ *-msg
+;
+;
+MyPort ds 50
+MyBits dw 0,0
+ dw MyBuffer
+ dw 40
+ dw 0,0,200,100
+MyDestBits dw 50,30
+ dw MyBuffer
+ dw 40
+ dw 0,0,200,100
+;
+conttext dw msg1
+ db msgln
+msg1 asc ' Please press RETURN to continue. '
+msgln equ *-msg1
+point4 dw 30,190
+switch db 8
+;
+quittext dw msg2
+ db msgln1
+msg2 asc '      Please press RETURN to Quit..........                 '
+msgln1 equ *-msg2
+;
+buftext dw msg3
+ db msgln2
+msg3 asc '      Now drawing into buffer............'
+msgln2 equ *-msg3
+primstr asc 'prim.abs'
+ db 0
+tststr asc 'test.font'
+ db 0
+

@@ -1,0 +1,1890 @@
+_useshires
+ include stdlib.s
+_5
+ _lnk 1,6,11
+ TXA
+ PHA
+ LDX #0
+ LDY #5
+LOAD1 LDA (_SP),Y
+ INY
+ CPY #44
+ BEQ LOAD3 
+ CMP #$20
+ BEQ LOAD1
+LOAD2 STA $281,X
+ INX
+ LDA (_SP),Y
+ INY
+ CPY #44
+ BEQ LOAD3
+ CMP #$20
+ BNE LOAD2
+LOAD3 STX $280
+ LDA #$A
+ STA PAR
+ LDA #>$280
+ STA PAR+1
+ LDA #<$280
+ STA PAR+2
+ JSR _MLI
+ DB $C4
+ DW PAR
+ BNE ERR
+ LDA PAR+5
+ STA PAR+14
+ LDA PAR+6
+ STA PAR+15
+;
+ LDA #3
+ STA PAR
+ LDA #>$3000
+ STA PAR+3
+ LDA #<$3000
+ STA PAR+4
+ JSR _MLI
+ DB $C8
+ DW PAR
+ BNE ERR
+;
+ LDA #4
+ STA PAR
+ LDA PAR+5
+ STA PAR+1
+ LDA PAR+14
+ STA PAR+2
+ LDA PAR+15
+ STA PAR+3
+ LDA #>$5000
+ STA PAR+4
+ LDA #<$5000
+ STA PAR+5
+ JSR _MLI
+ DB $CA
+ DW PAR
+ BNE ERR
+;
+ LDA #1
+ STA PAR
+ JSR _MLI
+ DB $CC
+ DW PAR
+ BNE ERR
+EXIT PLA
+ TAX
+;
+ _end 6,11
+ERR LDA #$FF
+ JMP GERROR
+PAR DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+_10
+ _lnk 1,11,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDY #0
+ LDA (_T),Y
+ STA PARAM+2
+ CLC
+ LDA _T
+ ADC #>2
+ STA PARAM
+ LDA _T+1
+ ADC #<2
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 25
+ DW PARAM
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 11,2
+_15
+ _lnk 1,16,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA FPOLY 
+ INY
+ LDA (_SP),Y
+ STA FPOLY+1
+ JSR GRAFMLI
+ DB 22
+FPOLY DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 16,2
+_20
+ _lnk 1,21,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA FREC 
+ INY
+ LDA (_SP),Y
+ STA FREC+1
+ JSR GRAFMLI
+ DB 18
+FREC DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 21,2
+_25
+ _lnk 1,26,2
+ TXA
+ PHA
+ JSR GRAFMLI
+ DB 5
+ DW PARAM
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA PARAM+1
+ STA (_T),Y
+ PLA
+ TAX
+ _end 26,2
+_30
+ _lnk 1,31,0
+ JSR GRAFMLI
+ DB 1
+ DW PARAM
+ JMP INITEND
+
+GERROR PHA
+ LDA #8
+ STA PARAM
+ JSR GRAFMLI
+ DB 2
+ DW PARAM
+ LDA #12
+ JSR $C300
+ PLA
+ JSR $FDDA
+ JSR $FD8E
+ JMP _QUIT
+;
+GRAFMLI EQU $7000
+PARAM DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+ DW 0
+INITEND
+ _end 31,0
+_35
+ _lnk 1,36,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA IP
+ INY
+ LDA (_SP),Y
+ STA IP+1
+ JSR GRAFMLI
+ DB 3
+IP DS 2
+ PLA
+ TAX
+ _end 36,2
+_40
+ _lnk 1,41,3
+ _lla 3,41
+ _lcw 1
+ _stb
+ TXA
+ PHA
+ LDY #6
+ LDA (_SP),Y
+ STA IPOLY 
+ INY
+ LDA (_SP),Y
+ STA IPOLY+1
+ JSR GRAFMLI
+ DB 23
+IPOLY DS 2
+ CMP #$82
+ BNE *+5
+ JMP GERROR
+ CMP #$80
+ BNE *+4
+ LDA #$FF
+ LDY #5
+ STA (_SP),Y
+ PLA
+ TAX
+ _lla 3,41
+ _ldb
+ _end 41,3
+_45
+ _lnk 1,46,3
+ _lla 3,46
+ _lcw 0
+ _stb
+ TXA
+ PHA
+ LDY #6
+ LDA (_SP),Y
+ STA IREC 
+ INY
+ LDA (_SP),Y
+ STA IREC+1
+ JSR GRAFMLI
+ DB 19
+IREC DS 2
+ CMP #$82
+ BNE *+5
+ JMP GERROR
+ CMP #$80
+ BNE *+4
+ LDA #$FF
+ LDY #5
+ STA (_SP),Y
+ PLA
+ TAX
+ _lla 3,46
+ _ldb
+ _end 46,3
+_50
+ _lnk 1,51,4
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+2
+ INY
+ LDA (_SP),Y
+ STA PARAM+3
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ INY
+ LDA (_SP),Y
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 15
+ DW PARAM
+ PLA
+ TAX
+ _end 51,4
+_55
+ _lnk 1,56,4
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+2
+ INY
+ LDA (_SP),Y
+ STA PARAM+3
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ INY
+ LDA (_SP),Y
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 16
+ DW PARAM
+ PLA
+ TAX
+ _end 56,4
+_60
+ _lnk 1,61,4
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+2
+ INY
+ LDA (_SP),Y
+ STA PARAM+3
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ INY
+ LDA (_SP),Y
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 13
+ DW PARAM
+ PLA
+ TAX
+ _end 61,4
+_65
+ _lnk 1,66,4
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+2
+ INY
+ LDA (_SP),Y
+ STA PARAM+3
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ INY
+ LDA (_SP),Y
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 14
+ DW PARAM
+ PLA
+ TAX
+ _end 66,4
+_70
+ _lnk 1,71,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PBT 
+ INY
+ LDA (_SP),Y
+ STA PBT+1
+ JSR GRAFMLI
+ DB 20
+PBT DS 2
+ PLA
+ TAX
+ _end 71,2
+_75
+ _lnk 1,76,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PPOLY 
+ INY
+ LDA (_SP),Y
+ STA PPOLY+1
+ JSR GRAFMLI
+ DB 21
+PPOLY DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 76,2
+_80
+ _lnk 1,81,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PREC 
+ INY
+ LDA (_SP),Y
+ STA PREC+1
+ JSR GRAFMLI
+ DB 17
+PREC DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 81,2
+_85
+ _lnk 1,86,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SCM 
+ INY
+ LDA (_SP),Y
+ STA SCM+1
+ JSR GRAFMLI
+ DB 9
+SCM DS 2
+ PLA
+ TAX
+ _end 86,2
+_90
+ _lnk 1,91,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SFNT 
+ INY
+ LDA (_SP),Y
+ STA SFNT+1
+ JSR GRAFMLI
+ DB 11
+SFNT DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+ _end 91,2
+_95
+ _lnk 1,96,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPAT 
+ INY
+ LDA (_SP),Y
+ STA SPAT+1
+ JSR GRAFMLI
+ DB 8
+SPAT DS 2
+ PLA
+ TAX
+ _end 96,2
+_100
+ _lnk 1,101,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPM 
+ INY
+ LDA (_SP),Y
+ STA SPM+1
+ JSR GRAFMLI
+ DB 7
+SPM DS 2
+ PLA
+ TAX
+ _end 101,2
+_105
+ _lnk 1,106,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+1 
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ JSR GRAFMLI
+ DB 10
+ DW PARAM
+ PLA
+ TAX
+ _end 106,2
+_110
+ _lnk 1,111,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA ST
+ INY
+ LDA (_SP),Y
+ STA ST+1
+ JSR GRAFMLI
+ DB 4
+ST DS 2
+ PLA
+ TAX
+ _end 111,2
+_115
+ _lnk 1,116,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPB 
+ INY
+ LDA (_SP),Y
+ STA SPB+1
+ JSR GRAFMLI
+ DB 6
+SPB DS 2
+ PLA
+ TAX
+ _end 116,2
+_120
+ _lnk 1,121,2
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM
+ JSR GRAFMLI
+ DB 2
+ DW PARAM
+ PLA
+ TAX
+ _end 121,2
+_125
+ _lnk 1,126,1
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM 
+ JSR GRAFMLI
+ DB 12
+ DW PARAM
+ PLA
+ TAX
+ _end 126,1
+_130
+ _lnk 1,131,4
+ _lla 4,131
+ _lcw 0
+ _stw
+ TXA
+ PHA
+ LDY #7
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDY #0
+ LDA (_T),Y
+ STA PARAM+2
+ CLC
+ LDA _T
+ ADC #>2
+ STA PARAM
+ LDA _T+1
+ ADC #<2
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 24
+ DW PARAM
+ BEQ *+5
+ JMP GERROR
+ LDA PARAM+3
+ LDY #5
+ STA (_SP),Y
+ INY
+ LDA PARAM+4
+ STA (_SP),Y 
+ PLA
+ TAX
+ _lla 4,131
+ _ldw
+ _end 131,4
+_135
+ _lnk 1,136,10
+ TXA
+ PHA
+ JSR GRAFMLI
+ DB 28
+ DW PARAM
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM+4
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA PARAM+5
+ STA (_T),Y
+
+ LDY #7
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM+3
+ LDY #0
+ STA (_T),Y
+
+ LDY #9
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM+2
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA #0
+ STA (_T),Y
+
+ LDY #11
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM+1
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA #0
+ STA (_T),Y
+
+ LDY #13
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA #0
+ STA (_T),Y
+ PLA
+ TAX
+ _end 136,10
+_140
+ _lnk 1,141,2
+ _lla 2,141
+ _lcw 0
+ _stw
+ lda #>polygon
+ ldy #5
+ sta (_sp),y
+ iny
+ lda #<polygon
+ sta (_sp),y
+ _lla 2,141
+ _ldw
+ _end 141,2
+polygon equ *
+ db 8,$80
+ dw 64,168,192,168,224,120,288,120,320,168,448,168,320,40,192,40
+ db 3,0
+ dw 224,96,288,96,256,56
+;
+
+_1
+ _lnk 0,2,0
+ _lpa 11
+ _lsa 11
+ db 80
+ db 82
+ db 73
+ db 77
+ db 46
+ db 65
+ db 66
+ db 83
+ db 32
+ db 32
+ db 32
+ _mov 11
+ _jsr 5
+ _lpa 11
+ _lsa 11
+ db 116
+ db 101
+ db 115
+ db 116
+ db 46
+ db 102
+ db 111
+ db 110
+ db 116
+ db 32
+ db 32
+ _mov 11
+ _jsr 5
+ _jsr 30
+ _lpa 2
+ _lga 37
+ _stw
+ _jsr 35
+ _lpa 2
+ _lga 37
+ _stw
+ _jsr 110
+ _lga 141
+ _lcw 0
+ _stb
+ _lpa 2
+ _lga 141
+ _stw
+ _jsr 100
+ _lpa 1
+ _lcw 3
+ _stb
+ _lpa 1
+ _lcw 2
+ _stb
+ _jsr 105
+ _lpa 2
+ _lcw 115
+ _stw
+ _lpa 2
+ _lcw 30
+ _stw
+ _jsr 65
+ _lpa 2
+ _lcw 50
+ _stw
+ _lpa 2
+ _lcw 50
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 45
+ _ngi
+ _stw
+ _lpa 2
+ _lcw 0
+ _stw
+ _jsr 50
+ _lpa 1
+ _lcw 1
+ _stb
+ _lpa 1
+ _lcw 1
+ _stb
+ _jsr 105
+ _lpa 2
+ _lcw 0
+ _stw
+ _lpa 2
+ _lcw 0
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 240
+ _stw
+ _lpa 2
+ _lcw 150
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 2048
+ _stw
+ _jsr 90
+ _lpa 2
+ _lcw 10
+ _stw
+ _lpa 2
+ _lcw 190
+ _stw
+ _jsr 65
+ _lga 105
+ _fld 0
+ _lcw 47
+ _stw
+ _lga 105
+ _fld 2
+ _lsa 50
+ db 32
+ db 84
+ db 104
+ db 105
+ db 115
+ db 32
+ db 105
+ db 115
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 116
+ db 101
+ db 115
+ db 116
+ db 32
+ db 102
+ db 111
+ db 110
+ db 116
+ db 32
+ db 119
+ db 105
+ db 116
+ db 104
+ db 32
+ db 97
+ db 32
+ db 119
+ db 104
+ db 105
+ db 116
+ db 101
+ db 32
+ db 98
+ db 97
+ db 99
+ db 107
+ db 103
+ db 114
+ db 111
+ db 117
+ db 110
+ db 100
+ db 46
+ db 32
+ db 32
+ db 32
+ _mov 50
+ _lpa 1
+ _lcw 127
+ _stb
+ _jsr 125
+ _lpa 2
+ _lga 105
+ _stw
+ _jsr 10
+ _lpa 2
+ _lcw 240
+ _stw
+ _lpa 2
+ _lcw 20
+ _stw
+ _jsr 65
+ _lga 105
+ _fld 0
+ _lcw 40
+ _stw
+ _lga 105
+ _fld 2
+ _lsa 50
+ db 72
+ db 105
+ db 116
+ db 32
+ db 114
+ db 101
+ db 116
+ db 117
+ db 114
+ db 110
+ db 32
+ db 116
+ db 111
+ db 32
+ db 111
+ db 112
+ db 101
+ db 110
+ db 32
+ db 97
+ db 32
+ db 110
+ db 101
+ db 119
+ db 32
+ db 103
+ db 114
+ db 97
+ db 102
+ db 112
+ db 111
+ db 114
+ db 116
+ db 46
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ _mov 50
+ _lpa 1
+ _lcw 0
+ _stb
+ _jsr 125
+ _lpa 2
+ _lga 105
+ _stw
+ _jsr 10
+ _lga 145
+ _lpa 2
+ _lga 105
+ _stw
+ _fun 2
+ _jsr 130
+ _stw
+ _lga 113
+ _fld 0
+ _lcw 10
+ _stw
+ _lga 113
+ _fld 4
+ _lcw 40
+ _stw
+ _lga 113
+ _fld 2
+ _lcw 30
+ _stw
+ _lga 113
+ _fld 6
+ _lcw 70
+ _stw
+ _lga 122
+ _lcw 1
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 1
+ _stb
+ _lga 122
+ _lcw 2
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 2
+ _stb
+ _lga 122
+ _lcw 3
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 4
+ _stb
+ _lga 122
+ _lcw 4
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 8
+ _stb
+ _lga 122
+ _lcw 5
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 16
+ _stb
+ _lga 122
+ _lcw 6
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 32
+ _stb
+ _lga 122
+ _lcw 7
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 64
+ _stb
+ _lga 122
+ _lcw 8
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 128
+ _stb
+ _lga 122
+ _lcw 9
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lpa 2
+ _lga 122
+ _stw
+ _jsr 95
+ _lpa 2
+ _lga 113
+ _stw
+ _jsr 80
+ _lpa 2
+ _fun 2
+ _jsr 140
+ _stw
+ _jsr 75
+ _lpa 2
+ _lcw 3
+ _stw
+ _lpa 2
+ _lcw 4
+ _stw
+ _jsr 65
+ _lga 142
+ _lpa 2
+ _lga 113
+ _stw
+ _fun 1
+ _jsr 45
+ _stb
+ _lpa 2
+ _lcw 30
+ _stw
+ _lpa 2
+ _lcw 40
+ _stw
+ _jsr 65
+ _lga 143
+ _lpa 2
+ _lga 113
+ _stw
+ _fun 1
+ _jsr 45
+ _stb
+ _lga 131
+ _lcw 1
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 2
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 3
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 4
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 5
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 6
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 7
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 8
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 131
+ _lcw 9
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 255
+ _stb
+ _lga 140
+ _lcw 1
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 2
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 3
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 4
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 5
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 6
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 7
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 8
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lga 140
+ _lcw 9
+ _min 1
+ _max 8
+ _ndxb
+ _lcw 0
+ _stb
+ _lpa 2
+ _lga 131
+ _stw
+ _jsr 95
+ _lga 113
+ _fld 4
+ _lcw 80
+ _stw
+ _lpa 2
+ _lga 113
+ _stw
+ _jsr 20
+ _lpa 2
+ _fun 2
+ _jsr 140
+ _stw
+ _jsr 15
+ _inp
+ _rdf
+ _rdl
+ _lga 53
+ _fld 0
+ _fld 0
+ _lga 37
+ _fld 0
+ _fld 0
+ _fld 0
+ _ldw
+ _lcw 230
+ _adi
+ _stw
+ _lga 53
+ _fld 0
+ _fld 2
+ _lga 37
+ _fld 0
+ _fld 0
+ _fld 2
+ _ldw
+ _lcw 5
+ _adi
+ _stw
+ _lga 53
+ _fld 4
+ _lga 37
+ _fld 0
+ _fld 4
+ _ldw
+ _stw
+ _lga 53
+ _fld 6
+ _lga 37
+ _fld 0
+ _fld 6
+ _ldb
+ _stb
+ _lga 53
+ _fld 8
+ _fld 0
+ _lcw 20
+ _stw
+ _lga 53
+ _fld 8
+ _fld 2
+ _lcw 0
+ _stw
+ _lga 53
+ _fld 8
+ _fld 4
+ _lcw 300
+ _stw
+ _lga 53
+ _fld 8
+ _fld 6
+ _lcw 100
+ _stw
+ _lpa 2
+ _lga 53
+ _stw
+ _jsr 115
+ _lga 113
+ _fld 0
+ _lcw 0
+ _stw
+ _lga 113
+ _fld 4
+ _lcw 300
+ _stw
+ _lga 113
+ _fld 2
+ _lcw 0
+ _stw
+ _lga 113
+ _fld 6
+ _lcw 100
+ _stw
+ _lpa 2
+ _lga 140
+ _stw
+ _jsr 95
+ _lpa 2
+ _lga 113
+ _stw
+ _jsr 80
+ _lpa 2
+ _lcw 20
+ _stw
+ _lpa 2
+ _lcw 20
+ _stw
+ _jsr 65
+ _lga 105
+ _fld 0
+ _lcw 50
+ _stw
+ _lga 105
+ _fld 2
+ _lsa 50
+ db 32
+ db 72
+ db 101
+ db 114
+ db 101
+ db 32
+ db 97
+ db 114
+ db 101
+ db 32
+ db 99
+ db 108
+ db 105
+ db 112
+ db 112
+ db 101
+ db 100
+ db 32
+ db 108
+ db 105
+ db 110
+ db 101
+ db 115
+ db 46
+ db 32
+ db 32
+ db 72
+ db 105
+ db 116
+ db 32
+ db 114
+ db 101
+ db 116
+ db 117
+ db 114
+ db 110
+ db 46
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ db 32
+ _mov 50
+ _lpa 1
+ _lcw 0
+ _stb
+ _jsr 125
+ _lpa 2
+ _lga 105
+ _stw
+ _jsr 10
+ _lpa 2
+ _lga 131
+ _stw
+ _jsr 95
+ _lpa 2
+ _lcw 20
+ _stw
+ _lpa 2
+ _lcw 30
+ _stw
+ _jsr 65
+ _lpa 2
+ _lcw 100
+ _stw
+ _lpa 2
+ _lcw 50
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 0
+ _stw
+ _lpa 2
+ _lcw 55
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 5
+ _stw
+ _lpa 2
+ _lcw 30
+ _stw
+ _jsr 55
+ _lpa 2
+ _lcw 190
+ _stw
+ _lpa 2
+ _lcw 190
+ _stw
+ _jsr 55
+ _inp
+ _rdf
+ _rdl
+ _lpa 2
+ _lga 140
+ _stw
+ _jsr 95
+ _lpa 2
+ _lga 113
+ _stw
+ _jsr 80
+ _lpa 2
+ _lcw 20
+ _stw
+ _lpa 2
+ _lcw 20
+ _stw
+ _jsr 65
+ _lga 105
+ _fld 0
+ _lcw 50
+ _stw
+ _lga 105
+ _fld 2
+ _lsa 50
+ db 32
+ db 72
+ db 105
+ db 116
+ db 32
+ db 114
+ db 101
+ db 116
+ db 117
+ db 114
+ db 110
+ db 32
+ db 116
+ db 111
+ db 32
+ db 101
+ db 120
+ db 105
+ db 116
+ db 32
+ db 97
+ db 110
+ db 100
+ db 32
+ db 100
+ db 105
+ db 115
+ db 112
+ db 108
+ db 97
+ db 121
+ db 32
+ db 111
+ db 116
+ db 104
+ db 101
+ db 114
+ db 32
+ db 105
+ db 110
+ db 102
+ db 111
+ db 114
+ db 109
+ db 97
+ db 116
+ db 105
+ db 111
+ db 110
+ db 46
+ _mov 50
+ _lpa 1
+ _lcw 0
+ _stb
+ _jsr 125
+ _lpa 2
+ _lga 105
+ _stw
+ _jsr 10
+ _lpa 2
+ _lga 131
+ _stw
+ _jsr 95
+ _lpa 2
+ _fun 2
+ _jsr 140
+ _stw
+ _jsr 75
+ _inp
+ _rdf
+ _rdl
+ _lpa 2
+ _lcw 8
+ _stw
+ _jsr 120
+ lda #12
+ jsr $c300 ; re-initialize 80 col. card
+ _lsa 61
+ db 84
+ db 104
+ db 101
+ db 114
+ db 101
+ db 32
+ db 97
+ db 114
+ db 101
+ db 32
+ db 102
+ db 117
+ db 110
+ db 99
+ db 116
+ db 105
+ db 111
+ db 110
+ db 115
+ db 32
+ db 116
+ db 104
+ db 97
+ db 116
+ db 32
+ db 103
+ db 105
+ db 118
+ db 101
+ db 32
+ db 105
+ db 110
+ db 102
+ db 111
+ db 114
+ db 109
+ db 97
+ db 116
+ db 105
+ db 111
+ db 110
+ db 32
+ db 97
+ db 98
+ db 111
+ db 117
+ db 116
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 103
+ db 114
+ db 97
+ db 102
+ db 112
+ db 111
+ db 114
+ db 116
+ db 46
+ _out
+ _wrf
+ _lcw 61
+ _wrs 61
+ _wrl
+ _lsa 58
+ db 66
+ db 101
+ db 108
+ db 111
+ db 119
+ db 32
+ db 105
+ db 115
+ db 32
+ db 105
+ db 110
+ db 102
+ db 111
+ db 114
+ db 109
+ db 97
+ db 116
+ db 105
+ db 111
+ db 110
+ db 32
+ db 114
+ db 101
+ db 116
+ db 117
+ db 114
+ db 110
+ db 101
+ db 100
+ db 32
+ db 98
+ db 121
+ db 32
+ db 34
+ db 73
+ db 110
+ db 82
+ db 101
+ db 99
+ db 116
+ db 34
+ db 32
+ db 97
+ db 110
+ db 100
+ db 32
+ db 34
+ db 84
+ db 101
+ db 120
+ db 116
+ db 87
+ db 105
+ db 100
+ db 116
+ db 104
+ db 34
+ db 46
+ _out
+ _wrf
+ _lcw 58
+ _wrs 58
+ _wrl
+ _out
+ _wrf
+ _wrl
+ _lsa 41
+ db 65
+ db 32
+ db 114
+ db 101
+ db 99
+ db 116
+ db 97
+ db 110
+ db 103
+ db 108
+ db 101
+ db 32
+ db 105
+ db 115
+ db 32
+ db 108
+ db 111
+ db 99
+ db 97
+ db 116
+ db 101
+ db 100
+ db 32
+ db 97
+ db 116
+ db 32
+ db 49
+ db 48
+ db 44
+ db 32
+ db 52
+ db 48
+ db 44
+ db 32
+ db 51
+ db 48
+ db 44
+ db 32
+ db 55
+ db 48
+ db 46
+ _out
+ _wrf
+ _lcw 41
+ _wrs 41
+ _wrl
+ _lsa 36
+ db 73
+ db 115
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 112
+ db 111
+ db 105
+ db 110
+ db 116
+ db 32
+ db 51
+ db 44
+ db 52
+ db 32
+ db 105
+ db 110
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 114
+ db 101
+ db 99
+ db 116
+ db 97
+ db 110
+ db 103
+ db 108
+ db 101
+ db 63
+ db 32
+ db 32
+ _out
+ _wrf
+ _lcw 36
+ _wrs 36
+ _lga 142
+ _ldb
+ _lcw 1
+ _wrb
+ _wrl
+ _lsa 38
+ db 73
+ db 115
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 112
+ db 111
+ db 105
+ db 110
+ db 116
+ db 32
+ db 51
+ db 48
+ db 44
+ db 52
+ db 48
+ db 32
+ db 105
+ db 110
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 114
+ db 101
+ db 99
+ db 116
+ db 97
+ db 110
+ db 103
+ db 108
+ db 101
+ db 63
+ db 32
+ db 32
+ _out
+ _wrf
+ _lcw 38
+ _wrs 38
+ _lga 143
+ _ldb
+ _lcw 1
+ _wrb
+ _wrl
+ _out
+ _wrf
+ _wrl
+ _lsa 10
+ db 84
+ db 104
+ db 101
+ db 114
+ db 101
+ db 32
+ db 97
+ db 114
+ db 101
+ db 32
+ _out
+ _wrf
+ _lcw 10
+ _wrs 10
+ _lga 145
+ _ldw
+ _lcw 1
+ _wri
+ _lsa 35
+ db 32
+ db 112
+ db 105
+ db 120
+ db 101
+ db 108
+ db 115
+ db 32
+ db 105
+ db 110
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 119
+ db 105
+ db 100
+ db 116
+ db 104
+ db 32
+ db 111
+ db 102
+ db 32
+ db 116
+ db 104
+ db 101
+ db 32
+ db 115
+ db 116
+ db 114
+ db 105
+ db 110
+ db 103
+ db 58
+ _lcw 35
+ _wrs 35
+ _wrl
+ _lsa 38
+ db 34
+ db 72
+ db 105
+ db 116
+ db 32
+ db 114
+ db 101
+ db 116
+ db 117
+ db 114
+ db 110
+ db 32
+ db 116
+ db 111
+ db 32
+ db 111
+ db 112
+ db 101
+ db 110
+ db 32
+ db 97
+ db 32
+ db 110
+ db 101
+ db 119
+ db 32
+ db 103
+ db 114
+ db 97
+ db 102
+ db 112
+ db 111
+ db 114
+ db 116
+ db 46
+ db 32
+ db 32
+ db 34
+ _out
+ _wrf
+ _lcw 38
+ _wrs 38
+ _wrl
+ _end 2,145
+_lomem

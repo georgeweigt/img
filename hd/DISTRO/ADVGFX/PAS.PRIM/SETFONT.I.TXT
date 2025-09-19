@@ -1,0 +1,21 @@
+procedure SetFont ( FontPtr: integer );
+(* PASS ADDRESS OF FONT USING ADDRESS FUNCTION *)
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SFNT 
+ INY
+ LDA (_SP),Y
+ STA SFNT+1
+ JSR GRAFMLI
+ DB 11
+SFNT DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end; 

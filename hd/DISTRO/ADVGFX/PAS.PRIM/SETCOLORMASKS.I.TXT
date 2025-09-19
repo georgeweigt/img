@@ -1,0 +1,18 @@
+procedure SetColorMasks ( Var AMaskInfo: MaskInfo );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SCM 
+ INY
+ LDA (_SP),Y
+ STA SCM+1
+ JSR GRAFMLI
+ DB 9
+SCM DS 2
+ PLA
+ TAX
+#
+end; 

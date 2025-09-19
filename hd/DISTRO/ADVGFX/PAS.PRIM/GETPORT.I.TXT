@@ -1,0 +1,24 @@
+procedure GetPort ( Var Portptr: integer );
+begin;
+#A
+ TXA
+ PHA
+ JSR GRAFMLI
+ DB 5
+ DW PARAM
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDA PARAM
+ LDY #0
+ STA (_T),Y
+ INY
+ LDA PARAM+1
+ STA (_T),Y
+ PLA
+ TAX
+#
+end;

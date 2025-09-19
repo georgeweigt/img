@@ -1,0 +1,23 @@
+function polygondef:integer;
+begin
+ polygondef:=0;
+#a
+ lda #>polygon
+ ldy #5
+ sta (_sp),y
+ iny
+ lda #<polygon
+ sta (_sp),y
+#
+end;
+
+#a
+polygon equ *
+ db 8,$80
+ dw 64,168,192,168,224,120,288,120,320,168,448,168,320,40,192,40
+ db 3,0
+ dw 224,96,288,96,256,56
+;
+
+#
+ 

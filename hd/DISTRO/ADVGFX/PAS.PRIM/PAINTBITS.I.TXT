@@ -1,0 +1,18 @@
+procedure PaintBits ( Var AMapInfo: MapInfo );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PBT 
+ INY
+ LDA (_SP),Y
+ STA PBT+1
+ JSR GRAFMLI
+ DB 20
+PBT DS 2
+ PLA
+ TAX
+#
+end; 

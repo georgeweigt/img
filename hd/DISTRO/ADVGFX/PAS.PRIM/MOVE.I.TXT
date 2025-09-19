@@ -1,0 +1,24 @@
+procedure Move ( dx, dy: integer );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+2
+ INY
+ LDA (_SP),Y
+ STA PARAM+3
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ INY
+ LDA (_SP),Y
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 13
+ DW PARAM
+ PLA
+ TAX
+#
+end;

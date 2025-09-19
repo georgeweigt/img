@@ -1,0 +1,18 @@
+procedure SetPattern ( Var APattern: Pattern );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPAT 
+ INY
+ LDA (_SP),Y
+ STA SPAT+1
+ JSR GRAFMLI
+ DB 8
+SPAT DS 2
+ PLA
+ TAX
+#
+end; 

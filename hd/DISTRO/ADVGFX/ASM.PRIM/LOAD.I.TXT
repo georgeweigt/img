@@ -1,0 +1,113 @@
+;
+; This subroutine loads a bin file.  The file must be in the same
+; directory as the executable program calling it.  The address of the string
+; name of the file is put in X (lsb) and Y (msb) before it is called. 
+; This routine is used with the KIX environment.
+;
+load stx temp+1
+ sty temp+2
+;
+; get the path used in the command line
+;
+ ldy #0
+ ldx #0
+ stx temp
+load1  lda $200,y
+ pha
+ lda temp
+ sta $280,x
+ pla
+ sta temp
+ iny
+ inx
+ cmp #0
+ bne load1
+;
+load2 dex
+ lda $280,x
+ beq load4
+ cmp #'/
+ bne load2
+;
+; append the file name
+;
+load4 ldy #0
+load5 lda (temp+1),y
+ beq load6
+ iny
+ inx
+ sta $280,x
+ jmp load5
+;
+; load it
+;
+load6  stx $280
+;
+ lda #$a
+ sta par
+ lda #>$280
+ sta par+1
+ lda #<$280
+ sta par+2
+ jsr mli
+ db $C4
+ dw par
+ bne err
+ lda par+5
+ sta par+14
+ lda par+6
+ sta par+15
+;
+ lda #3
+ sta par
+ lda #>$2000
+ sta par+3
+ lda #<$2000
+ sta par+4
+ jsr mli
+ db $C8
+ dw par
+ bne err
+;
+ lda #4
+ sta par
+ lda par+5
+ sta par+1
+ lda par+14
+ sta par+2
+ lda par+15
+ sta par+3
+ lda #>$F000
+ sta par+4
+ lda #<$F000
+ sta par+5
+ jsr mli
+ db $CA
+ dw par
+ bne err
+;
+ lda #1
+ sta par
+ jsr mli
+ db $CC
+ dw par
+ beq *+5
+err jmp exit
+;
+ rts
+;
+par dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+ dw 0
+;

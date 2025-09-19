@@ -1,0 +1,20 @@
+procedure PaintRect ( Var ARect: Rect );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PREC 
+ INY
+ LDA (_SP),Y
+ STA PREC+1
+ JSR GRAFMLI
+ DB 17
+PREC DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end; 

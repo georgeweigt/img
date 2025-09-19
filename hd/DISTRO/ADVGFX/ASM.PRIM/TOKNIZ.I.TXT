@@ -1,0 +1,38 @@
+; This routine converts the input buffer
+; to a sequence of null-terminated strings
+; with all spaces removed.  The number of
+; strings is placed in "argc."
+;
+tokniz ldx #0
+ ldy #0
+ sty argc
+;
+toknz1 lda $200,x
+ inx
+ and #$7f
+ cmp #cr
+ beq toknz3
+ cmp #space+1
+ bcc toknz1
+;
+toknz2 sta $200,y
+ iny
+ lda $200,x
+ inx
+ and #$7f
+ cmp #space+1
+ bcs toknz2
+;
+ pha
+;
+ lda #0
+ sta $200,y
+ iny
+;
+ inc argc
+;
+ pla
+ cmp #cr
+ bne toknz1
+;
+toknz3 rts

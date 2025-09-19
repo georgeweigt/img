@@ -1,0 +1,28 @@
+function InPoly ( PolyPtr: integer ): boolean;
+(* PASS ADDRESS OF POLY USING ADDRESS FUNCTION *)
+begin
+ inpoly := true;
+#A
+ TXA
+ PHA
+ LDY #6
+ LDA (_SP),Y
+ STA IPOLY 
+ INY
+ LDA (_SP),Y
+ STA IPOLY+1
+ JSR GRAFMLI
+ DB 23
+IPOLY DS 2
+ CMP #$82
+ BNE *+5
+ JMP GERROR
+ CMP #$80
+ BNE *+4
+ LDA #$FF
+ LDY #5
+ STA (_SP),Y
+ PLA
+ TAX
+#
+end; 

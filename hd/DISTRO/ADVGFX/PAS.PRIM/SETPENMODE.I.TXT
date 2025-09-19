@@ -1,0 +1,18 @@
+procedure SetPenMode ( Var APenMode: PenMode );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPM 
+ INY
+ LDA (_SP),Y
+ STA SPM+1
+ JSR GRAFMLI
+ DB 7
+SPM DS 2
+ PLA
+ TAX
+#
+end; 

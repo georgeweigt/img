@@ -1,0 +1,30 @@
+procedure DrawText ( var Str: PString);
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDY #0
+ LDA (_T),Y
+ STA PARAM+2
+ CLC
+ LDA _T
+ ADC #>2
+ STA PARAM
+ LDA _T+1
+ ADC #<2
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 25
+ DW PARAM
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end;

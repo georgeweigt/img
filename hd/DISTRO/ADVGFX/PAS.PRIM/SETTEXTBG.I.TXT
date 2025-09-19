@@ -1,0 +1,15 @@
+procedure SetTextBG ( TextBG: byte );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM 
+ JSR GRAFMLI
+ DB 12
+ DW PARAM
+ PLA
+ TAX
+#
+end; 

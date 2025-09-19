@@ -1,0 +1,18 @@
+procedure SetPenSize ( Width, Height: byte );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PARAM+1 
+ INY
+ LDA (_SP),Y
+ STA PARAM
+ JSR GRAFMLI
+ DB 10
+ DW PARAM
+ PLA
+ TAX
+#
+end; 

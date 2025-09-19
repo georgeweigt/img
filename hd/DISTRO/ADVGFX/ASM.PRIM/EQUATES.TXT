@@ -1,0 +1,68 @@
+;
+; equate file for interfacing to toolkit/graphics
+;
+MLI equ $bf00
+ToolMLI equ $4000
+GrafMLI equ $4000
+;
+; constants
+;
+SrCopy equ 0
+SrOr equ 1
+SrXor equ 2
+SrBic equ 3
+SrNotCopy equ 4
+SrNotOr equ 5
+SrNotXor equ 6
+SrNotBic equ 7
+;
+; grafport structure
+;
+viewloc equ 0
+portbits equ viewloc+4
+portwidth equ portbits+2
+portrect equ portwidth+2
+penpat equ portrect+8
+penloc equ penpat+10
+pensize equ penloc+4
+penmode equ pensize+2
+txback equ penmode+1
+txfont equ txback+1
+;
+portlength equ txfont+2
+;
+; command numbers
+;
+InitGraf equ 1
+SSwitches equ InitGraf+1
+;
+InitPort equ SSwitches+1
+SPort equ InitPort+1
+GetPort equ SPort+1
+SPortBits equ GetPort+1
+SPenMode equ SPortBits+1
+SPattern equ SPenMode+1
+SColorFlags equ SPattern+1
+SPenSize equ SColorFlags+1
+SFont equ SPenSize+1
+STextBG equ SFont+1
+;
+Move equ STextBG+1
+MoveTo equ Move+1
+Line equ MoveTo+1
+LineTo equ Line+1
+PaintRect equ LineTo+1
+FrameRect equ PaintRect+1
+InRect equ FrameRect+1
+PaintBits equ InRect+1
+PaintPoly equ PaintBits+1
+FramePoly equ PaintPoly+1
+InPoly equ FramePoly+1
+;
+TextWidth equ InPoly+1
+DrawText equ TextWidth+1
+;
+SZP1 equ DrawText+1
+SZP2 equ SZP1+1
+GetVersion equ SZP2+1
+;

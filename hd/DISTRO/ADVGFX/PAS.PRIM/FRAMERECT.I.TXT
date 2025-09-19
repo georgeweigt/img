@@ -1,0 +1,20 @@
+procedure FrameRect ( Var ARect: Rect );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA FREC 
+ INY
+ LDA (_SP),Y
+ STA FREC+1
+ JSR GRAFMLI
+ DB 18
+FREC DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end; 

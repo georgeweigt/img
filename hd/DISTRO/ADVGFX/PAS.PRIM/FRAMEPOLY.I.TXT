@@ -1,0 +1,21 @@
+procedure FramePoly ( PolyPtr: integer );
+(* PASS ADDRESS OF POLY USING ADDRESS FUNCTION *)
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA FPOLY 
+ INY
+ LDA (_SP),Y
+ STA FPOLY+1
+ JSR GRAFMLI
+ DB 22
+FPOLY DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end; 

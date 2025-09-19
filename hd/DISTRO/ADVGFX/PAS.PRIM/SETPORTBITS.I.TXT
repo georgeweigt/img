@@ -1,0 +1,18 @@
+procedure SetPortBits ( Var AMapInfo: MapInfo );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA SPB 
+ INY
+ LDA (_SP),Y
+ STA SPB+1
+ JSR GRAFMLI
+ DB 6
+SPB DS 2
+ PLA
+ TAX
+#
+end; 

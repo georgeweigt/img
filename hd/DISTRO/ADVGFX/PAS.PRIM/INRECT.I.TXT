@@ -1,0 +1,27 @@
+function InRect ( Var ARect: Rect ): boolean;
+begin
+ inrect := false;
+#A
+ TXA
+ PHA
+ LDY #6
+ LDA (_SP),Y
+ STA IREC 
+ INY
+ LDA (_SP),Y
+ STA IREC+1
+ JSR GRAFMLI
+ DB 19
+IREC DS 2
+ CMP #$82
+ BNE *+5
+ JMP GERROR
+ CMP #$80
+ BNE *+4
+ LDA #$FF
+ LDY #5
+ STA (_SP),Y
+ PLA
+ TAX
+#
+end; 

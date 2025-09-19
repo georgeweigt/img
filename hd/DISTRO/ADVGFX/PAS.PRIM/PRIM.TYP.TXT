@@ -1,0 +1,59 @@
+
+        bitmap= array [0..4096] of integer;
+
+        pointer= ^bitmap;
+
+        byte= char;
+
+        penmode= (PenCopy, PenOr, PenXor, PenBic, NotPenCopy, NotPenOr,
+                NotPenXor, NotPenBic);
+
+        point= Record
+                x: integer;
+                y: integer
+               end;
+
+        rect= record
+                left: integer;
+                top: integer;
+                right: integer;
+                bottom: integer
+              end;
+
+        mapinfo= 
+               Record
+                viewloc: point;
+                mapbits: pointer;
+                mapwidth: byte;
+                reserved: byte;
+                maprect: rect
+              end;
+
+        pattern= array [1..9] of byte;
+
+        maskinfo= 
+               Record
+                ANDmask: byte;
+                ORmask: byte
+               end;
+
+        Grafportptr = ^Grafport;
+
+        GrafPort=
+               Record
+                portmap: mapinfo;
+                penpattern: pattern;
+                colormasks: maskinfo;
+                penloc: point;
+                penwidth: byte;
+                penheight: byte;
+                penmode: penmode;
+                textback: byte;
+                textfont: integer;
+               end;
+
+        PString=
+              Record
+               length:integer;
+               string: array [1..MaxString] of char;
+              end;

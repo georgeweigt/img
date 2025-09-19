@@ -1,0 +1,37 @@
+function TextWidth ( Var Str: PString): integer;
+begin
+ textwidth := 0;
+#A
+ TXA
+ PHA
+ LDY #7
+ LDA (_SP),Y
+ STA _T
+ INY
+ LDA (_SP),Y
+ STA _T+1
+ LDY #0
+ LDA (_T),Y
+ STA PARAM+2
+ CLC
+ LDA _T
+ ADC #>2
+ STA PARAM
+ LDA _T+1
+ ADC #<2
+ STA PARAM+1
+ JSR GRAFMLI
+ DB 24
+ DW PARAM
+ BEQ *+5
+ JMP GERROR
+ LDA PARAM+3
+ LDY #5
+ STA (_SP),Y
+ INY
+ LDA PARAM+4
+ STA (_SP),Y 
+ PLA
+ TAX
+#
+end;

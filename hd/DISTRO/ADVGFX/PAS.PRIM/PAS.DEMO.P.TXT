@@ -1,0 +1,254 @@
+#a
+_useshires
+#
+
+program testp;
+
+const
+#i prim.con
+
+type
+ BloadString = array [1..11] of char;
+#i prim.typ
+
+var Myport: GrafPort;
+    MyMapInfo: Mapinfo;
+    PS: pstring;
+    rec: rect;
+    pat, pat1, pat2: pattern;
+    pen:penmode;
+    status1, status2: boolean;
+    width: integer;
+
+#i bload.i
+#i drawtext.i
+#i framepoly.i
+#i framerect.i
+#i getport.i
+#i initgraf.i
+#i initport.i
+#i inpoly.i
+#i Inrect.i
+#i line.i
+#i lineto.i
+#i move.i
+#i moveto.i
+#i paintbits.i
+#i paintpoly.i
+#i paintrect.i
+#i Setcolormasks.i
+#i setfont.i
+#i setpattern.i
+#i setpenmode.i
+#i setpensize.i
+#i setport.i
+#i setportbits.i
+#i setswitches.i
+#i settextbg.i
+#i textwidth.i
+#i version.i
+#i polygondef.i
+
+begin
+ bload('PRIM.ABS   '); { load the primatives run time module }
+ bload('test.font  '); { load a test font where the heap is ($800) }
+
+ { initialize a port with default parameters }
+
+ initgraf;
+ InitPort (MyPort);
+ SetPort (MyPort);
+
+ { Set the pen characteristics for a wider pen }
+
+ pen:=pencopy;
+ setpenmode(pen);
+ setpensize(chr(3),chr(2));
+
+ { Draw two lines } 
+
+ MoveTo (115,30);
+ LineTo (50,50);
+ line (-45,0);
+
+ { Set the pen to a one pixel width }
+
+ setpensize(chr(1),chr(1));
+
+ { draw two lines }
+
+ lineto (0,0);
+ lineto (240,150);
+
+ { let the toolkit know where the font is loaded }
+
+ setfont(2048); { $800 }
+
+ { Output a character string }
+
+ moveto (10,190);
+ ps.length:= 47;
+ ps.string:= ' This is the test font with a white background.   ';
+ settextbg(chr(127)); { with white background }
+ drawtext(ps);
+
+ { Output another string }
+
+ moveto (240,20);
+ ps.length:=40;
+ ps.string:= 'Hit return to open a new grafport.                ';
+ settextbg(chr(0)); { with a black background }
+ drawtext(ps);
+
+ { get the number of pixels of width in this string }
+ width:= textwidth(ps);
+
+ { make a rectangle }
+
+ rec.left:=10;
+ rec.right:=40;
+ rec.top:=30;
+ rec.bottom:=70;
+
+ { generate a pattern }
+
+ pat[1]:=chr(1);
+ pat[2]:=chr(2);
+ pat[3]:=chr(4);
+ pat[4]:=chr(8);
+ pat[5]:=chr(16);
+ pat[6]:=chr(32);
+ pat[7]:=chr(64);
+ pat[8]:=chr(128);
+ pat[9]:=chr(0);
+
+ setpattern(pat); { use this pattern }
+
+ { fill the defined rectangle with the pattern }
+
+ paintrect(rec);
+
+ { now fill in a polygon defined in the routine polygondef.i }
+
+ paintpoly(polygondef);
+
+ { demonstrate the sensing of when the current pen location is in a rectangle }
+
+ moveto(3,4);
+ status1 := inrect(rec);
+
+ moveto (30,40);
+ status2 := inrect(rec);
+
+ { make some new patterns }
+
+ pat1[1]:=chr(255);
+ pat1[2]:=chr(255);
+ pat1[3]:=chr(255);
+ pat1[4]:=chr(255);
+ pat1[5]:=chr(255);
+ pat1[6]:=chr(255);
+ pat1[7]:=chr(255);
+ pat1[8]:=chr(255);
+ pat1[9]:=chr(255);
+ pat2[1]:=chr(0);
+ pat2[2]:=chr(0);
+ pat2[3]:=chr(0);
+ pat2[4]:=chr(0);
+ pat2[5]:=chr(0);
+ pat2[6]:=chr(0);
+ pat2[7]:=chr(0);
+ pat2[8]:=chr(0);
+ pat2[9]:=chr(0);
+
+ setpattern(pat1);
+
+ { frame the polygon and rectangle }
+
+ rec.right:=80;
+ framerect(rec);
+ framepoly(polygondef);
+
+ readln;
+
+ { make a new graphport, move it to the right and down, and set clipping rect.}
+
+ MyMapinfo.viewloc.x:= MyPort.PortMap.viewloc.x+230;
+ MyMapinfo.viewloc.y:=MyPort.PortMap.viewloc.y+5;
+ MyMapinfo.mapbits:=MyPort.PortMap.mapbits;
+ MyMapinfo.mapwidth:=MyPort.PortMap.mapwidth;
+
+ MyMapinfo.maprect.left:=20;
+ MyMapinfo.maprect.top:=0;
+ MyMapinfo.maprect.right:=300;
+ MyMapinfo.maprect.bottom:=100;
+
+ setportbits (MyMapinfo);
+
+ { clear the new graphport }
+
+ rec.left:=0;
+ rec.right:=300;
+ rec.top:=0;
+ rec.bottom:=100;
+
+ setpattern(pat2);
+
+ paintrect(rec);
+
+ moveto (20,20);
+ ps.length:=50;
+ ps.string:= ' Here are clipped lines.  Hit return.             ';
+ settextbg(chr(0)); { with a black background                   }           
+ drawtext(ps);
+
+ setpattern(pat1);
+
+ { draw some lines that are clipped }
+
+ MoveTo (20,30);
+ LineTo (100,50);
+ lineTo (0,55);
+ lineto (5,30);
+ lineto (190,190);
+
+ readln;
+
+ { clear the graphport again }
+
+ setpattern(pat2);
+
+ paintrect(rec);
+
+ moveto (20,20);
+ ps.length:=50;
+ ps.string:= ' Hit return to exit and display other information.';
+ settextbg(chr(0)); { with a black background                   }           
+ drawtext(ps);
+
+ { draw the polygon and watch it be clipped }
+
+ setpattern(pat1);
+
+ paintpoly(polygondef);
+
+ readln;
+
+ { exit the toolkit }
+
+ setswitches(8);
+
+#a
+ lda #12
+ jsr $c300 ; re-initialize 80 col. card
+#
+writeln('There are functions that give information about the grafport.');
+writeln('Below is information returned by "InRect" and "TextWidth".');
+writeln;
+writeln('A rectangle is located at 10, 40, 30, 70.');
+writeln('Is the point 3,4 in the rectangle?  ',status1);
+writeln('Is the point 30,40 in the rectangle?  ',status2);
+writeln;
+writeln('There are ',width,' pixels in the width of the string:');
+writeln('"Hit return to open a new grafport.  "');
+end.

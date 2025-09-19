@@ -1,0 +1,21 @@
+procedure PaintPoly ( PolyPtr: integer );
+(* PASS ADDRESS OF POLY USING ADDRESS FUNCTION *)
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA PPOLY 
+ INY
+ LDA (_SP),Y
+ STA PPOLY+1
+ JSR GRAFMLI
+ DB 21
+PPOLY DS 2
+ BEQ *+5
+ JMP GERROR
+ PLA
+ TAX
+#
+end; 

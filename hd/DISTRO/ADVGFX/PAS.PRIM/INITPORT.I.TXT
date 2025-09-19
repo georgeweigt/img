@@ -1,0 +1,18 @@
+procedure InitPort ( Var AGrafPort: GrafPort );
+begin
+#A
+ TXA
+ PHA
+ LDY #5
+ LDA (_SP),Y
+ STA IP
+ INY
+ LDA (_SP),Y
+ STA IP+1
+ JSR GRAFMLI
+ DB 3
+IP DS 2
+ PLA
+ TAX
+#
+end;
