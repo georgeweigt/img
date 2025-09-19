@@ -20,4 +20,4 @@ Instructions for use with Virtual ][
 
 8. Do `ls bin` to see available shell commands.
 
-9. `kix`, `menu`, and `intro` are help commands.
+9. Commands `kix`, `menu`, and `intro` are help commands.
