@@ -1,0 +1,105 @@
+KIX Version 1.0 Command Summary
+
+Controlling Directories
+-----------------------
+
+PWD           Print working directory
+CD [dir]      Change directory
+MKDIR dirlist Make directories
+RMDIR dirlist Delete directories
+
+Listing Directory/File Contents
+-------------------------------
+
+LS [path or dir] [;type] [redirect]
+options:     
+-L   List extended directory     
+-F   List file types as:
+     & txt  * bin  
+     / dir  @ sys
+-P   Print protection: (rwdn)            
+     R  read   protect active             
+     W  write  protect active             
+     D  delete protect active             
+     N  rename protect active            
+     -  protection not active     
+-N   Disable filename sort
+;TYP List files of type:            
+     SYS System   BIN Binary
+     TXT Text     DIR Directory
+
+ECHO pathname    Print each evaluation of pathname argument
+
+LPR pathlist     Print files using the format set by CFG
+
+CAT pathlist     Display or copy files   
+options:     
+-N     Number output lines
+-B     Do not number empty lines     
+-S     Remove adjacent empty lines     
+-V     Print ctrl chars as ASCII
+
+Manipulating Files,Dirs and Volumes
+-----------------------------------
+
+CP pathlist [path or dir]: Copy files to a file or directory
+options:     
+-I     Prompt to verify overwrite
+
+MV pathlist [path or dir]: Move files to directory or rename file
+options:     
+-I     Prompt to rename each file
+-F     Rename even if locked
+
+RM pathlist       Remove files  
+options:     
+-I     Prompt to delete each file     
+-F     Delete even if locked     
+-R     Empty directory
+
+CHMOD pathlist   Add/remove file access   
+options:
++      Add access (permit option)     
+-      Remove access (deny option)     
+R      Read     
+W      Write     
+D      Deletion     
+N      Rename
+
+FORMAT (s,d) /volname  Format diskette
+
+CPV (ss,dd) (s,d)      Copy volume
+
+Comparing Files and Volumes
+---------------------------
+
+CMP file1 file2     Compare files
+
+CMP (s,d) (s,d)     Compare volumes
+
+SDIFF file1 file2   List text file differences
+
+Searching Directories and Files
+-------------------------------
+
+FIND dirlist -filename  Find filename in and below directory level
+
+GREP string pathlist    Look for string pattern in text files
+
+System Date and Displays
+------------------------
+
+DATE [yymmddhhmm] [www]: Print or set the system date and time  
+C40      Set 40 column mode
+C80      Set 80 column mode
+SD       Screen dump to printer
+INTRO    An introduction to Kyan Pascal
+MENU     Menu of system facilities
+KIX      This help screen
+QUIT     Exit the KIX shell
+
+System Facilities
+-----------------
+PC       Pascal compiler/assembler
+ED       Text editor
+AS       6502 Assembler
