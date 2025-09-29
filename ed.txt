@@ -1,4 +1,6 @@
-Commands for editor "ed"
+Instructions for Kix text editor "ed".
+"ed" starts in edit mode.
+Press ESC to toggle between edit and command modes.
 
 Cursor control in edit mode (^ is control key)
 
@@ -27,9 +29,8 @@ Cursor control in edit mode (^ is control key)
 ^O	Mark/cut block
 ^P	Paste block
 
-Command mode
+Commands in command mode
 
-ESC	Toggle edit/command mode
 S	Save file
 Q	Exit without saving
 X	Save file and exit
