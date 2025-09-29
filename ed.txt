@@ -17,6 +17,16 @@ Cursor control in edit mode (^ is control key)
 ^T	Go to top of file
 ^V	Go to bottom of file
 
+^Q	Delete to left of cursor
+^G	Delete under cursor
+^Y	Delete current line
+
+^W	Find string backward
+^Z	Find string forward
+
+^O	Mark/cut block
+^P	Paste block
+
 Command mode
 
 ESC	Toggle edit/command mode
