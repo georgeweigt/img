@@ -1,0 +1,21 @@
+/*************************************************/
+/*                                               */
+/*  SCR.H  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+/* MAKRO definitions for 80-column-screen */
+
+#define        SCR_INV            15
+#define        SCR_NOR            14
+#define        SCR_KILL           21
+#define        SCR_CLEAR          12
+#define        SCR_HOME           25
+#define        SCR_SWAP_40        17
+#define        SCR_SWAP_80        18
+#define        SCR_MTXT           24
+#define        SCR_MTXTOFF        27
+
+#define        clrscr()           putchr(0x16)
+#define        clreol()           putchr(0x1d)
+

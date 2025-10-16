@@ -1,0 +1,17 @@
+/************************************************/
+/*                                              */
+/*  JOYX  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+int joyx ()
+{
+#asm
+ROd EQU $08
+	ldx #$00
+	jsr $FB1E
+	sty ROd
+	ldy #$00
+	sty ROd+1
+#endasm;
+}

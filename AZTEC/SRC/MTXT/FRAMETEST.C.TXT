@@ -1,0 +1,32 @@
+/*
+    simple program to test mouse text library
+    link to my.lib
+*/
+
+char fr1_str[22] = " Kandi's Kreations ";
+char fr2_str[20] = " Window ";
+
+main()
+  {
+
+    int fr1_x = 6;
+    int fr1_y = 6;
+    int fr1_w = 30;
+    int fr1_h = 10;
+
+
+    int fr2_x = 28;
+    int fr2_y = 8;
+    int fr2_w = 47;
+    int fr2_h = 14;
+
+    int l;
+
+    clrscrn();
+
+    do_frame(fr1_x,fr1_y,fr1_w,fr1_h,fr1_str);
+    do_frame(fr2_x,fr2_y,fr2_w,fr2_h,fr2_str);
+
+    gotoxy(0,23);
+  }
+

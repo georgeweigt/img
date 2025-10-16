@@ -1,0 +1,45 @@
+/*
+    display a button & text
+    link with my.lib
+
+    ex: do_button(x,y,textstr);
+
+    w - width is proportional to textstr + border chars
+    h - is set at 3 chars - if buttons are lined in a column
+        you should allow an extra line between or draw the
+        button set starting from the bottom
+*/
+ 
+do_button(x,y,txtstr)
+    int x;
+    int y;
+    char *txtstr;
+  {
+    int l;
+    int l2;
+    int h = 2; /* actually 3, 0..2 */
+    int w;
+
+    w=strlen(txtstr)+2;
+
+        /* display top of button */
+    gotoxy(x+1,y);                          /* top row */
+    for (l=x;l<x+w;l++) putchr('_');      
+
+    mtxton();
+    gotoxy(x,y+1);
+    putstr("ZV");
+    mtxtoff();
+
+        /* inverse title */
+    itxt();
+    putstr(txtstr);
+    ntxt();
+
+    mtxton();
+    putstr("V_");
+    gotoxy(x+1,y+h);
+    for(l=0;l<w;l++) putchr('L');
+    mtxtoff();
+  }
+

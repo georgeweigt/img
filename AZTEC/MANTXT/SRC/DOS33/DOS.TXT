@@ -1,0 +1,21 @@
+*
+* Copyright (c) 1982 by Manx Software Systems
+* Copyright (c) 1982 by Jim Goodnow II
+*
+*		:tab=8
+	instxt	<zpage.h>
+*
+*
+	public	_get_paramlist_
+_get_paramlist_	jsr	$3DC
+	sty	R0
+	sta	R0+1
+	rts
+*
+*
+	public	_dos_
+_dos_	ldy	#2
+	lda	(SP),Y
+	tax
+	jmp	$3D6
+*

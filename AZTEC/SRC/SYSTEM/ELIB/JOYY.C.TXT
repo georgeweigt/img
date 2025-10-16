@@ -1,0 +1,17 @@
+/************************************************/
+/*                                              */
+/*  JOYY  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+int joyy ()
+{
+#asm
+ROe EQU $08
+	ldx #$01
+	jsr $FB1E
+	sty ROe
+	ldy #$00
+	sty ROe+1
+#endasm;
+}

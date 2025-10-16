@@ -1,0 +1,56 @@
+/* Copyright (C) 1985 by Manx Software Systems */
+#include	<dos33.h>
+#include	<errno.h>
+#define EBADNAME 0x40	/* ProDOS error code for bad file name */
+#define BINARY 4
+
+access(file, mode)
+char *file;
+{
+	register struct _params *p;
+	register struct _buffers *b;
+	register int filetype;
+	int err;
+
+	if (_isdev(file))
+		return 0;
+	p = _get_paramlist();
+	if (_get_name(file,p) < 0 ){
+		errno = EBADNAME;
+		return -1;
+	}
+	if ((b = _get_buf(p)) == 0){
+		errno= EMFILE;
+		return -1;
+	}
+	p->p_cmd = D33_OPEN; /* open file without creating it */
+	p->p_record = 0;
+	_dos(1);
+	if (err=p->p_return) { /* if open w/o create failed... */
+		_free_buf(b);
+		errno = _errxlate(err);
+		return -1;
+	}
+	filetype=p->p_range>>8;
+	p->p_cmd = D33_CLOSE;
+	_dos(1);
+	_free_buf(b);
+	switch(mode) {
+	case 0:
+	case 4:
+		return(0);
+	case 1:
+		if ((filetype&0x7f)==BINARY)
+			return 0;
+		errno = EACCES;
+		return(-1);
+	case 2:
+		if ((filetype & 0x80) == 0)
+			return(0);
+		errno = EACCES;
+		return(-1);
+	}
+	errno = EACCES;
+	return(-1);
+}
+

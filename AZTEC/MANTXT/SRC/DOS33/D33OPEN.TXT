@@ -1,0 +1,121 @@
+/* Copyright (C) 1985 by Manx Software Systems */
+#include	<fcntl.h>
+#include	<dos33.h>
+#include	<errno.h>
+#include	<sgtty.h>
+#include	<device.h>
+
+#define EBADNAME 0x40	/* ProDOS error code for bad file name */
+
+creat(name, mode)
+char *name;
+{
+	return open(name, O_WRONLY|O_TRUNC|O_CREAT, mode);
+}
+
+open(uname, flags, mode)
+char *uname;
+{
+	register int dev, err, fd;
+	register struct _fil_buf *fb;
+	register char *iobuf;
+	register struct _name_dev *dp;
+	int mflg = 0;
+	struct _params *p, *_get_paramlist();
+	struct _buffers *b, *_get_buf();
+	
+	for (fb=_fil_tab;fb<_fil_tab+MAXFILES;fb++)
+		if (fb->unit == 0)
+			goto found;
+	errno = EMFILE;
+	return(-1);
+found:
+	fb->flags = flags & 0x03;
+	fd = fb - _fil_tab;
+
+	for (dp=&_dev_info->dev_con;dp<=&_dev_info->dev_ser;dp++) {
+		if (strequ(uname, dp->dev_nam) == 0) {
+			dev = dp->dev_num;
+			goto gotdev;
+		}
+	}
+	if (uname[3] == 0 && uname[2] == ':' && toupper(uname[0]) == 'S') {
+		dev = uname[1] - '0';
+gotdev:
+		if ((dev&0x40) == 0)
+			_slot_open(&_dev_info->slots[dev&7]);
+		fb->unit = dev | 0x80;
+		return(fd);
+	}
+	/* open a file: */
+	p = _get_paramlist();
+	if (_get_name(uname,p) < 0 ){
+		errno = EBADNAME;
+		return -1;
+	}
+	if ((b = _get_buf(p)) == 0){
+		errno= EMFILE;
+		return -1;
+	}
+	p->p_cmd = D33_OPEN; /* open file without creating it */
+	p->p_record = 0;
+	_dos(1);
+	if (err = p->p_return) { /* if open w/o create failed... */
+		if (err != 6) {/* only valid error is 'file doesn't exist' */
+	xerr:
+			_free_buf(b);
+			errno = _errxlate(err);
+			return(-1);
+		}
+		/* file doesn't exist. if create not requested, take error exit */
+		if ((flags&O_CREAT) == 0) {
+			err = ENOENT;
+			goto xerr;
+		}
+		p->p_cmd=D33_OPEN; /* create file & open it */
+		p->p_record = 0;
+		p->p_range = p->p_range & 0xff | mode<<8; /* set file type */
+		_dos(0);
+		if (err = p->p_return && err != 6) /* if create & open fails, give up */
+			goto xerr;
+	} else { /* open w/o create succeeded */
+		/* if open should fail if file already exists, take error exit */
+		if ((flags&(O_CREAT|O_EXCL)) == (O_CREAT|O_EXCL)) {
+			p->p_cmd=D33_CLOSE;
+			_dos(1);
+			_free_buf(b);
+			errno = EEXIST;
+			return -1;
+		}
+		/* if truncation requested, delete, close, create*/
+		if (flags & O_TRUNC){ 
+			p->p_cmd=D33_CLOSE;
+			_dos(1);
+			p->p_cmd = D33_DELETE;
+			_dos(1);
+			p->p_cmd = D33_OPEN;
+			p->p_record = 0; /* variable length records */
+			p->p_range = p->p_range & 0xff | mode<<8; /* set file type */
+			_dos(0);
+			if ((err=p->p_return) && err != 6)
+				goto xerr;
+		}
+	}
+
+	/* position file: */
+	if (flags & O_APPEND)
+		lseek(fd, 0L, 2);
+	else {
+		p->p_cmd = D33_POSITION;
+		p->p_record = 0;
+		p->p_offset = 0;
+		p->p_range = 0;
+		p->p_work = (char *) b->b_work;
+		_dos(1);
+	}
+
+	fb->unit = 1;	/* set 'file descriptor' flag */
+	fb->iob = b;
+	return fd;
+}
+

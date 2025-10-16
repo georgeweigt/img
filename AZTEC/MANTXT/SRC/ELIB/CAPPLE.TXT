@@ -1,0 +1,25 @@
+/**************************************************/
+/*                                                */
+/*  CAPPEL  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+int capple ()
+{
+#asm
+ROb EQU $08
+  lda $C062
+  clc
+  cmp #$80
+  bcs closetrue
+  ldy #$0
+  sty ROb
+  jmp closeend
+closetrue
+  ldy #$1
+  sty ROb
+closeend
+  ldy #$0
+  sty ROb+1
+#endasm;
+}

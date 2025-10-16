@@ -1,0 +1,3 @@
+cc filename -O output.name
+
+    native code compiler.

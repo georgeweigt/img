@@ -1,0 +1,12 @@
+set PS1="Apple ][ Forever! -> "
+set PATH=:/aztec/bin:/aztec/utility:/aztec/aliases
+set INCLUDE=/aztec/include
+set CLIB=/aztec/lib/
+set TMPDIR=/aztec/temp/
+set EDITOR=/aztec/bin/ed
+set ALIASPATH=/aztec/aliases/
+set MANPATH=/aztec/mantxt/
+env
+echo "For help type ' man <filename> ' or the command"
+echo " ' man ' by itself to see available documentation."
+echo

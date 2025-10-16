@@ -1,0 +1,13 @@
+/***************************************************/
+/*                                                 */
+/*  STRTOUP  Copyright (C) 1990 by Phade Software  */
+/*                                                 */
+/***************************************************/
+
+strtoup (str)
+char *str;
+{
+	int i;
+
+	for (i=0; i<strlen (str); i++) str[i] = toupper (str[i]);
+}

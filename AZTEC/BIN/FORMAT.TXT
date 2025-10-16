@@ -1,0 +1,3 @@
+formatobj1 $1 $2
+formatobj2
+formatobj1 -

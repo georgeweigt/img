@@ -1,0 +1,3 @@
+echo "USE <CONTROL> <S> TO PAUSE"
+echo
+cp $1 pr:

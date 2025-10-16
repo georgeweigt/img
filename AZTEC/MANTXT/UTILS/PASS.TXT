@@ -1,0 +1,7 @@
+
+usage   : pass option password(xxx) source [target]
+
+options : [-s] = save
+          [-r] = rebuild
+          [-p] = print but don't rebuild
+

@@ -1,0 +1,8 @@
+
+#define isodd(x) ((int)(x) & 1)
+
+main()
+  {
+    printf("%d",isodd(2));
+    printf("%d",isodd(3));
+  }

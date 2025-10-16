@@ -1,0 +1,8 @@
+/*	Copyright (C) 1985 by Manx Software Systems, Inc. */
+
+_exit(n)
+{
+	(*(int *)0x3cb)=n;
+	(*((void (*)())0x03d0))();		/* DOS warm boot */
+}
+

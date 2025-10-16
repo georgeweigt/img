@@ -1,0 +1,81 @@
+/* Copyright (C) 1985 by Manx Software Systems */
+#include	<dos33.h>
+#include	<fcntl.h>
+#include	<errno.h>
+#include	<sgtty.h>
+#include	<device.h>
+
+read (fd, buf, cnt)
+register int fd, cnt;
+register char *buf;
+{
+	register int ret;
+	register int offset, record;
+	register struct _buffers *b;
+	register struct _params *p, *_get_paramlist();
+	register struct _wrkbuf *wrk;
+	register struct _fil_buf *fp;
+
+	fp = _fil_tab+fd;
+	if (fd < 0 || fd >= MAXFILES || fp->unit == 0 || fp->flags == O_WRONLY) {
+		errno = EBADF;
+		return(-1);
+	}
+	if ((fp->unit)&0x80) {
+		if (fp->unit&0x40)
+			return(_kb_get(buf, cnt));
+		return(_dev_read(&_dev_info->slots[fp->unit&7], buf, cnt));
+	}
+	/* file read: */
+	b = fp->iob;
+	wrk = b->b_work;
+	p = _get_paramlist();
+	p->p_cmd = 3;
+	p->p_sub = 2;
+	offset = wrk->w_offset;
+	record = wrk->w_record;
+	p->p_range = cnt;
+	p->p_addr = buf;
+	p->p_work = (char *)wrk;
+	p->p_tslist = b->b_tslist;
+	p->p_data = b->b_data;
+	_dos(1);
+#ifdef DEBUG
+	printf("in read. rc=%d\n",p->p_return);
+#endif
+	if ((ret = p->p_return) && ret != 5){
+		errno = _errxlate(ret);
+		return -1;
+	}
+	ret = ((wrk->w_record - record)<<8) + wrk->w_offset - offset;
+#ifdef DEBUG
+	printf("in read. br=%d er=%d bo=%d eo=%d ret=%d\n",record, wrk->w_record,
+		offset, wrk->w_offset,ret);
+#endif
+	if (ret == 0)
+		return(0);
+	if ((wrk->w_ftype&0x7f) == 0) {
+		cnt = strlen(buf);
+#ifdef DEBUG
+		printf("in read. cnt=%d\n",cnt);
+#endif
+		if (cnt < ret) {
+			lseek(fd, (long) (cnt - ret), 1);
+			return(cnt);
+		}
+	}
+	return(ret);
+}
+
+_dev_read(s, buf, cnt)
+struct _slot_dev *s;
+unsigned char *buf;
+{
+	int i;
+
+	for (i=0;i<cnt;i++)
+		if ((*buf++ = _slot_read(s)) < 0)
+			break;
+	return(i);
+}
+

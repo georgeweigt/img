@@ -1,0 +1,188 @@
+/************************************************/
+/*                                              */
+/*  FIND  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+#include <malloc.h>
+#include <fcntl.h>
+
+struct dir
+{
+	char length;		/* entry_name length */
+	char name[15];		/* entry_name */
+	char type;			/* entry_type */
+	char fil[22];		/* not used bytes */
+};
+
+int silent;
+int dircount;
+int found;
+
+int poke ()
+{
+#asm
+  lda #$00
+  sta $057B
+#endasm;
+}
+
+int makepoint ()
+{
+	if (silent == 1) return ();
+	poke ();
+	if (dircount == 0) printf ("\\");
+	if (dircount == 1) printf ("|");
+	if (dircount == 2) printf ("/");
+	if (dircount == 3)
+	{
+		printf ("-");
+		dircount = 0;
+	}
+	else dircount++;
+}	
+
+int find (path, name)
+char *path;
+char *name;
+{
+	struct dir *entry = (struct dir *)malloc (sizeof (struct dir));
+	char header[43];
+	char newpath[64];
+	int fd;
+	int nbytes;
+	int count = 1;
+
+	makepoint();
+	if (setprefix (path) == -1) errexit ();
+	makepoint();
+	if ((fd = open (name, O_RDONLY, 0)) < 0);
+	else
+	{
+		close (fd);
+		poke ();
+		if (found)
+		{
+			poke ();
+			if (silent == 0) printf ("found in %s\n", path);
+		}
+		else if (silent == 0) printf (" \nfound in %s\n", path);
+		found = 1;
+	}
+	if ((fd = open (path, O_RDONLY, 0)) < 0) return (-1);
+	makepoint();
+	nbytes = read (fd, header, 43);
+	makepoint();
+	if (nbytes < 43)
+	{
+		close (fd);
+		free (entry);
+		return (-1);
+	}
+	while (0 == 0)
+	{
+		makepoint();
+		nbytes = read (fd, entry, 39);
+		makepoint();
+		if (nbytes < 39)
+		{
+			close (fd);
+			free (entry);
+			return (0);
+		}
+		makepoint();
+		if (++count == 13)
+		{
+			read (fd, header, 5);
+			count = 0;
+		}
+		while (entry->length > 15) entry->length = entry->length - 16;
+		if (entry->type == 0)
+		{
+			close (fd);
+			free (entry);
+			return (0);
+		}
+		if (entry->length != 0)
+		{
+			if (entry->type == (char)15)
+			{
+				strcpy (newpath, path);
+				strcat (newpath, "/");
+				strncat (newpath, entry->name, entry->length);
+				find (newpath, name);
+			}
+		}
+	}
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+	char curpath[64];
+	int argfound = 0;
+	int reverse = 0;
+
+	silent = 0;
+	dircount = 0;
+	found = 0;
+
+	if ((argc < 2) || (argc > 4))
+	{
+		printf ("\n");
+		printf ("usage  : find [-option] [path] file\n");
+		printf ("\n");
+		printf ("option : [-s] = silent\n");
+		printf ("         [-S] = silent and returns -1 if found\n");
+		printf ("\n");
+		exit (-1);
+	}
+
+	if (getprefix (curpath) == -1) errexit ();
+	if (*argv[1] == '-')
+	{
+		argfound = 1;
+		switch (*++argv[1])
+		{
+			case 's' : silent = 1;
+					   break;
+			case 'S' : silent = 1;
+					   reverse = 1;
+					   break;
+			default  : break;
+		}
+	}
+	if ((argc == 2) && (argfound == 0)) find (curpath, argv[1]);
+	if ((argc == 3) && (argfound == 1)) find (curpath, argv[2]);
+	if ((argc == 3) && (argfound == 0))
+	{
+		strtoup (argv[1]);
+		find (argv[1], argv[2]);
+	}
+	if ((argc == 4) && (argfound == 1))
+	{
+		strtoup (argv[2]);
+		find (argv[2], argv[3]);
+	}
+	if (setprefix (curpath) == -1) errexit ();
+	poke ();
+	if ((found) && (silent == 0)) printf (" \n");
+	else if (silent == 0) printf (" \nfind: not found\n\n");
+
+	if ((!found) && (silent) && (!reverse)) exit (-1);
+	if ((found) && (silent) && (reverse)) exit (-1);
+	exit (0);
+}
+
+errexit ()
+{
+	poke ();
+	printf (" \n");
+	perror ("find");
+	printf ("\n");
+	exit (-1);
+}

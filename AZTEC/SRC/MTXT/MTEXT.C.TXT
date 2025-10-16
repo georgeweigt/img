@@ -1,0 +1,75 @@
+/*
+    simple program to test mouse text library
+    link to my.lib
+*/
+
+char fr1_str[20] = " Kandi's Kreations ";
+char titlstr[22] = " Mouse Text Char Set ";
+char sm_str[10] = "Test";
+char btn_str[10] = " Return ";
+char bt2_str[10] = " ESC ";
+
+main()
+  {
+
+    int btn_x = 20;
+    int btn_y = 20;
+    int bt2_x = 32;
+    int bt2_y = 20;
+
+    int tt_x = 6;
+    int tt_y = 4;
+    int tt_w = 68;
+    int tt_h = 14;
+
+    int sm_x = 42;
+    int sm_y = 12;
+    int sm_w = 19;
+    int sm_h = 7;
+
+    int fr1_x = 0;
+    int fr1_y = 0;
+    int fr1_w = 78;
+    int fr1_h = 20;
+
+    int l;
+
+    int tmp1,tmp2;
+
+    clrscrn();
+
+    do_frame(fr1_x,fr1_y,fr1_w,fr1_h,fr1_str);
+    do_folder(tt_x,tt_y,tt_w,tt_h,titlstr);
+
+    /* show ascii chars */
+    gotoxy(tt_x+2,tt_y+4);
+    for (l=64;l<96;l++)
+      {
+        putchr(l);
+        putchr(' ');
+      }
+
+    /* show mousetext chars */
+    gotoxy(tt_x+2,tt_y+6);
+    for (l=64;l<96;l++)
+      {
+        mtxton();
+        putchr(l);
+        mtxtoff();
+        putchr(' ');
+      }
+
+    do_folder(sm_x,sm_y,sm_w,sm_h,sm_str);
+
+    do_button(bt2_x,bt2_y,bt2_str);
+    do_button(btn_x,btn_y,btn_str);
+
+    /* test read80 */
+    gotoxy(3,3);
+    tmp1=scr_read80(0,0);
+    tmp2=scr_read80(tt_x+2,tt_y+4);
+
+    printf("0x%02x 0x%02x",tmp1,tmp2);
+    gotoxy(0,23);
+
+  }

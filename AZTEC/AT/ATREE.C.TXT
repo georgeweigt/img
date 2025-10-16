@@ -1,0 +1,8 @@
+/*  atree - SYS launcher for overlaid program
+    atreemain is launched from atree
+        supports as many overlays as needed
+*/
+main()
+  {
+    execl("atreemain","");
+  }

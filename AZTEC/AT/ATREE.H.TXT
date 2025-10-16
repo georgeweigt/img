@@ -1,0 +1,43 @@
+/*
+    Program: Atree
+            A file utility
+
+    header: Atree
+*/
+
+extern cmd_x;
+extern cmd_y;
+extern cmd_w;
+extern cmd_h;
+extern cmd_str[];
+extern cmd_list1[];
+extern cmd_list2[];
+extern cmd_list3[];
+
+/* directory variables */
+extern dir_x;
+extern dir_y;
+extern dir_w;
+extern dir_h;
+
+extern dir_cx;
+extern dir_cy;
+extern dir_max;
+extern dir_str[];
+
+extern fil_x;
+extern fil_y;
+extern fil_w;
+extern fil_h;
+extern fil_str[];
+
+extern inf_x;
+extern inf_y;
+extern inf_w;
+extern inf_h;
+extern inf_str[];
+
+extern count;
+extern cur_path_name[64];
+extern struct dir_file *dirs;
+

@@ -1,0 +1,73 @@
+/**************************************************/
+/*                                                */
+/*  LOCKME  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+
+set_reset ()
+{
+#asm
+    instxt <zpage.h>
+    lda #$0
+    sta $3f2
+    lda #$08
+    sta $3f3
+    jsr $fb6f
+    jsr $c300
+    jsr $fc58
+#endasm;
+}
+
+start ()
+{
+    qprintf ("             wrong password");
+    chilp ();
+#asm
+    jmp $800
+#endasm;
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    char keyword[80];
+    int key;
+    int i=0;
+
+    if (argc != 2)
+    {
+        printf ("\nusage: lockme password\n\n");
+        exit (-1);
+    }
+    set_reset ();
+#asm
+    lda #$0f
+    jsr $fded
+#endasm;
+    qprintf (" LOCKME ");
+#asm
+    lda #$0e
+    jsr $fded
+    lda #$0d
+    jsr $fded
+    jsr $fded
+#endasm;
+    
+    while ((key = get_char ()) != 141)
+    {
+        key = key - 128;
+        keyword[i] = key;
+        i++;
+        if (i == 80) start ();
+        qprintf (".");
+    }
+    if (strlen (argv[1]) != i) start ();
+    if (strncmp (keyword, argv[1], i)) start ();
+    printf ("\n\n");
+    exit (0);
+}

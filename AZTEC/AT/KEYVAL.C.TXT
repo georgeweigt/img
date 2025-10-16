@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <scr.h>
+
+main()
+  {
+
+    char kp; /* get_char required */
+
+    int temp;
+    int done=0;
+
+    while (!done)
+      {
+        gotoxy(0,23);
+        kp=get_char();
+        if (kp==0x9b) done=1;
+        printf("Key: %x ",kp);
+      };
+  }

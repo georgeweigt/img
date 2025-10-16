@@ -1,0 +1,38 @@
+/***************************************************/
+/*                                                 */
+/*  QPRINTF  Copyright (C) 1990 by Phade Software  */
+/*                                                 */
+/***************************************************/
+
+qprintf (ch)
+char *ch;
+{
+#asm
+RO EQU $02
+RE EQU $08
+	ldy #$b
+	lda (RO),Y
+	sta RE
+	iny
+	lda (RO),Y
+	sta RE+1
+	ldy #$0
+qpl lda (RE),Y
+	cmp #$0
+	beq qpe
+	clc
+	cmp #$9
+	beq qta
+	clc
+	adc #$80
+	jmp qpn
+qta lda #$a0
+	jsr $fded
+	jsr $fded
+	jsr $fded
+qpn jsr $fded
+	iny
+	jmp qpl
+qpe nop
+#endasm;
+}

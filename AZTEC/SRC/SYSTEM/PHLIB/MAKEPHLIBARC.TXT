@@ -1,0 +1,15 @@
+makephlib
+makephlibarc
+chilp.c
+chrpos.c
+click.c
+getchar.c
+getdir.c
+peek.c
+poke.c
+qprintf.c
+scr.c
+strtok.c
+strtolow.c
+strtoup.c
+waitkey.c

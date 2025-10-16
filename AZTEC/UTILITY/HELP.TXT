@@ -1,0 +1,7 @@
+echo
+echo "Aztec C       HELP"
+echo
+echo "date, styp,   lock,   cp,     set,    df,     pr:,     mkdir"
+echo "ls,   ls -l,  rm,     pwd,    cd,     echo,   bye,    loop"
+echo "eloop,        shift,  con:"
+echo       

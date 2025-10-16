@@ -1,0 +1,75 @@
+/**************************************************
+    lib mousetxt
+
+    functions:
+
+        putchr(c)   puts char to output ($fded)
+
+        mtxton()    turns on mouse text
+        mtxtoff()   turns off mouse text
+
+
+ **************************************************/
+
+void putchr (c)     { _cputc(c); }
+void gotoxy(cx,cy)    { _vtab(cx,cy); }
+
+void clrscrn ()     { putchr('\f'); }
+void mtxton ()      { putchr(15);putchr(27); }
+void mtxtoff ()     { putchr(24);putchr(14); }
+void itxt ()        { putchr(15); }
+void ntxt ()        { putchr(14); }
+void mchr(x,y,c)    { mtxton(); gotoxy(x,y); putchr(c); mtxtoff();}
+
+void putstr(s)
+  char *s;
+  {
+    int i;
+    for(i=0;i<strlen(s);i++) {putchr(s[i]);}
+  }
+
+void printat(x,y,s)
+  int x,y;
+  char *s;
+  {
+    int i;
+    gotoxy(x,y);
+    for(i=0;i<strlen(s);i++) {putchr(s[i]);}
+  }
+
+void mstr(x,y,s)
+  int x,y;
+  char *s;
+  {
+    int i;
+    gotoxy(x,y);
+    mtxton();
+    for (i=0;i<strlen(s);i++){ putchr(s[i]);}
+    mtxtoff();
+  }  
+/*
+   internal object code
+   keep routines above here for clarity
+*/
+
+#asm
+  instxt <zpage.h>
+
+_cputc_
+  lda #$80
+  ldy #2 ;offset into stack
+  ora (SP),Y
+  jmp $fded
+
+_vtab_
+ ldy #2
+ lda (SP),Y
+ sta $24 ;CH
+ sta $57b ;CH80
+ iny
+ iny
+ lda (SP),Y
+ sta $25 ;CV
+ jmp $fc22
+#endasm
+

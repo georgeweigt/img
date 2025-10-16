@@ -1,0 +1,13 @@
+/****************************************************/
+/*                                                  */
+/*  STRTOLOW  Copyright (C) 1990 by Phade Software  */
+/*                                                  */
+/****************************************************/
+
+strtolow (str)
+char *str;
+{
+	int i;
+
+	for (i=0; i<strlen (str); i++) str[i] = tolower (str[i]);
+}

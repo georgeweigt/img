@@ -1,0 +1,177 @@
+
+    This list is still being updated. It is only provided as a quick reference
+    for those new to the system. It was started at the beginning of this
+    project. I have tried to keep it accurate but some things may still be
+    a little out of date.
+
+
+    EXTERNAL COMMANDS
+            These are stored in the BIN directory.
+            These are primarily the compiler, assembler, and support tools.
+
+        cls - a program to clear the screen from command line or script.
+            I didn't see a simple clear screen method so I made one.
+            (I later found one in the Phade archive)
+
+        make -  script file to compile and link
+                simple method to compile. later replaced with aliases
+
+        edd  -  script file to edit .c files ex: edd exmpl
+                simple alias to edit .c source
+
+        list -  cp file con: IE: list to screen
+                this was a script file, later replaced with MORE & LESS
+                programs from Phade.
+
+        plist - ie: cp filename pr:
+                send file to printer
+
+        sym   - libname (lib must be in LIB directory)
+
+        man   - imitated UNIX MAN function. needs to be expanded
+                with further references
+
+              - enhanced to list man directory and/or subdirectories
+                as well as files in subdirectories
+
+        alias - enhanced script utility. very useful
+
+    BUILT IN COMMANDS
+
+        NOTE:   These command names were taken from a hex dump of the system
+                file. I have not tested all of them yet. Some are related to
+                compiling and linking. some are for assembling. I expect some
+                follow the Unix-C conventions for support programs, such as
+                GREP and ARCV 
+
+    date    displays current date. (may set if no clock - not sure yet)
+
+    mv      move a file. you need not specify the filename if moving to
+            another directory.
+            IE: mv mysrc newdir
+            ==  mv mysrc newdir/mysrc
+
+    debug   seems to crash... don't know the syntax here...
+
+    cal     don't know, was in the command table
+
+    styp    used to make a system file!
+            here is the basic formula, this may need some adjustment
+            for different applications.
+                compile with cc (native code system!)
+                link obj [obj]... -b 2000 -l/c [-l/lib]...
+                styp -tff -a2000 progname
+
+                    should result in a sys file
+                    this may also make a stand alone bin file
+
+                    be sure to link in the obj file SAMAIN.O
+                    (last seen in the LIB subdir)
+
+    lock    lock a file
+
+    unlock  unlock a file
+
+    cp      copy file
+
+    set     set environment variable (see profile startup file)
+
+    df      disk free - use volume name with /
+            will list info on a file but only the blocks used
+            may be valid
+
+    pr:     used for output redirection
+            ex: cat file > pr:
+
+    mkdir   (see script file MD in utility dir)
+
+    ls      list dir wide format names only. subdirectories are listed
+            with a - in front of the names.
+        
+            -l  list files with attributes
+            -p  pause(?)
+            -r
+            -s
+            -t
+            -x
+            these switches did not give errors at usage but no obvious
+            results either.
+
+    rm      remove file
+
+    pwd     print working directory
+
+    cd      change directory
+
+    echo    echo argument to output device
+
+    bye     supposed to quit to prodos - seems to crash - use quit
+
+    loop    script loop function
+
+    eloop   end script loop function 
+
+    shift
+
+    con:    used in output redirection - see pr:
+
+
+    LINKING see src/example/make
+            ln file.o -llib
+                switches -C -D -F -S -X -U -B
+
+                -C  Caddr (?)
+                -D  Daddr (?)
+                -F  input from filename, ex: -f exmpl.prj
+                        exmpl.prj
+                            exmpl.c
+                            -l/s
+                            -l/c
+                            -b 2000
+
+                -L  link object file ex: -l/c -l/s -l/mylib
+                        use of slash depends upon the include setting
+                        in the profile. If it ends with a slash then
+                        use -llibname
+                        else -l/libname
+
+                -R  build overlay main prg file and .rsm table
+                        link overlays with .rsm
+
+                -S  Create SYS file
+                        ln file.o -lc +S -O file[.system]
+                        this is simpler than the STYP method.
+
+                -T  Create symbol table
+                -X  Xaddr (?)
+                -U  Un-initialized data
+                -B  set Base address in hex, ex: -b 2000
+                        useful for binary types or skipping over
+                        the hi-res screen.
+
+            ln file.o -l/c       <-- simple version of link
+
+
+            it is possible to create a sys file, overlaid programs
+            and even overlaid system applications. If you got the
+            large version of this system there is a non-functional
+            (ie: not finished) program called ATREE which demonstrates
+            these concepts. It creates a small system program to launch
+            the aztec application. Since P8 launches at 0x2000 you loose
+            some memory but this method allows you to locate the Aztec
+            code at 0x0800 (normal link location) and build the overlays
+            around standard memory a layout.
+            note: this may not work. I tried the program from a fresh
+            P8 boot and it failed on KEGS ( a //gs emulator )
+
+            This is neccessary for most larger applications since Aztec
+            only uses the 1st 64k memory bank. Maybe someone will create
+            some extended memory functions for the auxiliary memory bank.
+
+    EDITORS
+            VED - Aztec line editor
+
+            ED  - a copy of PDEDIT
+                PDEDIT is a nice little text editor with a few limitations
+                but it works fairly well with Aztec C source files and
+                scripts.

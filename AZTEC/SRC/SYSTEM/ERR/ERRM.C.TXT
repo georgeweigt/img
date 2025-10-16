@@ -1,0 +1,198 @@
+/***************************************/
+/*                                     */
+/*          Error protocol             */
+/*                                     */
+/*        by Phade Software            */
+/*        Copyright (c) 1990           */
+/*                                     */
+/*         errm.c  of err.c            */
+/*                                     */
+/***************************************/
+
+#include <ctype.h>
+#define IN (char)15
+#define NO (char)14
+
+char *comment[] =
+{
+"-> must be '0[0..7]'",
+"-> use cc -Z option",
+"-> double quote missing",
+"-> gulp",
+"-> not allowed to return aggregates",
+"-> type or non-declaration",
+"-> missing comma or semicolon",
+"-> be careful !",
+"-> see error 10",
+"-> zero specifications become positive integer",/*10*/
+"-> too many levels",
+"-> pointer must be of type int or unsigned",
+"-> gulp",
+"-> gulp",
+"-> illegal combination of storage specifiers",
+"-> illegal combination of type specifiers",
+"-> enum etc not implemented",
+"-> error in use of long or unsigned type",
+"-> you got a old compiler version!",
+"-> check for multiply definition",/*20*/
+"-> missing brace in structure",
+"-> { missing",
+"-> check type off called function",
+"-> functioncall without parentheses ?",
+"-> invalid symbol name",
+"-> symbol undeclared, type ?",
+"-> be careful !",
+"-> C permits the assignment of one structure to another",
+"-> check same call with dot and ampersand operator",
+"",/*30*/
+"-> check function name, maybe internal ! missing operator ?",
+"-> be careful !",
+"-> don't connect - or ~ with structures, pointers, arrays or functions",
+"-> possible type or declaration omitted",
+"-> check casts and expressions",
+"-> use cc -E option",
+"",
+"-> must be static or external aggregate",
+"",
+"-> gulp",/*40*/
+"-> remember statics and globals occurs at link-time not at run-time",
+"-> maybe byte array to small",
+"-> compiler is unable to interpret a word, check syntax",
+"-> the final brace is missing, check program structure",
+"-> cant interpret word in external declaration",
+"-> possible missing brace above",
+"-> check include directory and system variable",
+"-> legal name must begin with an alphabetic",
+"-> indentifier declared twice, use longer names to prevent this",
+"-> there is need of parenthesis, brckets or braces",/*50*/
+"",
+"",
+"",
+"",
+"",
+"",
+"-> use backslash-newline sequence",
+"",
+"",
+"",/*60*/
+"",
+"",
+"",
+"",
+"",
+"",
+"-> no corresponding if",
+"-> keyword not allowed here",
+"-> check preceding statements",
+"",/*70*/
+"-> while missing",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",/*80*/
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",/*90*/
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",/*100*/
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",/*110*/
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",/*120*/
+"",
+"",
+"",
+"",
+"",
+};
+
+more()
+{
+printf ("%c FATAL COMPILER-ERRORS : %c\n", IN, NO);
+printf ("\n");
+printf ("Out of disk space!     -> Outputfile maybe writeprotected\n");
+printf ("unknown option:        -> Remember upper and lower case options\n");
+printf ("duplicate output file  -> -o don't overwrite -O specify new file\n");
+printf ("too few arguments      -> Must occur last in the command line\n");
+printf ("Open failure on input  -> File does not exist or cannot be opened\n");
+printf ("No input!              -> File was found is empty\n");
+printf ("Open failure on output -> Maybe disk or directory full\n");
+printf ("Local table full       -> Use -L option to increment table\n");
+printf ("Out of memory!         -> Decrement -E -L -Y -Z table options\n");
+printf ("\n");
+printf ("%c MACHINE - INDEPENDENT COMPILEROPTIONS : %c\n", IN, NO);
+printf ("\n");
+printf ("-A         -> Don't start the assemler when compilation is done\n");
+printf ("-D[symbol] -> Define a symbol to the preprocessor\n");
+printf ("-l[dir]    -> Search [directory] for #include files\n");
+printf ("-O [file]  -> Send output to [file]\n");
+printf ("-S         -> Silent option don't print warnings\n");
+printf ("-T         -> Include C source statements in the assembly code\n");
+printf ("-B         -> Don't pause after every fifth error to ask\n");
+printf ("-E[num]    -> Use an expression table having [num] entries\n");
+printf ("-L[num]    -> Use a local symbol table having [num] entries\n");
+printf ("-Y[num]    -> Use a case table having [num] entries in switch\n");
+printf ("-Z[num]    -> Use a literal table having [num] entries\n");
+printf ("+C         -> Generate 65C02 code (cc only)\n");
+printf ("+B         -> Don't generate the statement 'public.begin'\n");
+printf ("+L         -> Turn automatic variables into statics (cc only)\n");
+printf ("\n");
+printf ("%c LINKEROPTIONS : %c\n", IN, NO);
+printf ("\n");
+printf ("-O [file] -> Write code to the file named [file]\n");
+printf ("-L[name]  -> Connect code with [name].lib modules\n");
+printf ("-F [file] -> Read command arguments from [file]\n");
+printf ("-T        -> Generate a symbol table file\n");
+printf ("-M        -> Don't issue warning messages\n");
+printf ("-N        -> Don't abort if there are undefined symbols\n");
+printf ("-V        -> Be verbose\n");
+printf ("-B [addr] -> Set base address to hex value [addr]\n");
+printf ("-C [addr] -> Set code segment address to hex [addr]\n");
+printf ("-D [addr] -> Set data segment address to hex [addr]\n");
+printf ("-U [addr] -> Set uninitialized data segment to hex [addr]\n");
+printf ("+B / +S   -> Create [B]in- or [S]ys-program (link with samain.o)\n");
+printf ("+H [s,e]  -> Create a hole in program from hex [s]tart to [end]\n");
+printf ("\n");
+}
+
+comm(err)
+int  err;
+{
+	printf ("     %s\n", comment[err]);
+}  

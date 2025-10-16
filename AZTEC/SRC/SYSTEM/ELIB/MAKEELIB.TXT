@@ -1,0 +1,16 @@
+clear
+echo Building E.LIB ...
+echo
+cc keypress.c
+cc killbuf.c
+cc oapple.c
+cc capple.c
+cc joyx.c
+cc joyy.c
+lb e.lib -v keypress killbuf oapple capple joyx joyy
+lock e.lib
+clear
+lb e.lib -t
+echo
+echo E.LIB is created.
+echo

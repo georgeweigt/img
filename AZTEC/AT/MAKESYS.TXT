@@ -1,0 +1,2 @@
+cc atree.c
+ln atree.o -lsa -lmy -lc +S -o /aztec/atree

@@ -1,0 +1,63 @@
+/*
+    display a folder & label
+    link with my.lib
+
+    ex: do_folder(x,y,wid,hgt,titlestr);
+*/
+ 
+do_folder(x,y,w,h,txtstr)
+    int x;
+    int y;
+    int w;
+    int h;
+    char *txtstr;
+  {
+    int l;
+    int l2;
+    int tmp;
+
+    tmp=strlen(txtstr)+2;
+
+        /* display top of folder */
+    gotoxy(x+1,y);                          /* top row */
+    for (l=x;l<x+tmp;l++) putchr('_');      
+
+    mtxton();
+    gotoxy(x,y+1);
+    putchr('Z');
+    putchr('V');
+    mtxtoff();
+
+        /* inverse title */
+    itxt();
+    putstr(txtstr);
+    ntxt();
+
+    mtxton();
+    putchr('V');
+    putchr('_');
+
+    gotoxy(x,y+2);
+    putchr('Z');
+    for (l=x+1; l < x+w; l++) putchr('L');
+    putchr('_');
+
+        /* continue folder */
+    for (l=y+3;l<y+h;l++)
+      {
+        gotoxy(x,l);
+        mtxton();
+        putchr('Z');
+        mtxtoff();
+        for(l2=0;l2<w-1;l2++) putchr(' ');
+        mtxton();
+        putchr('_');
+        mtxtoff();
+      }
+
+    gotoxy(x+1,y+h);
+    mtxton();
+    for(l=0;l<w-1;l++) putchr('L');
+    mtxtoff();
+  }
+

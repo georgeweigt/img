@@ -1,0 +1,50 @@
+/*
+    Program: Atree
+            A file utility
+
+    obj: Globals
+*/
+
+#include "dirs.h"
+
+int cmd_x = 0;
+int cmd_y = 0;
+int cmd_w = 78;
+int cmd_h = 3;
+char cmd_str[] = " Apple Tree Commands ";
+char cmd_list1[] = "(A) About....  (x) unused...  (x) unused...  \
+(x) unused...  (x) unused...";
+
+char cmd_list2[] = "(x) unused...  (x) unused...  (x) unused...  \
+(x) unused...  (x) unused...";
+
+char cmd_list3[] = "(x) unused...  (x) unused...  (x) unused...  \
+(x) unused...  (Q) Quit.....";
+
+/* directory variables */
+int dir_x=0;
+int dir_y=5;
+int dir_w=21; /* 1,15,1,15,1,16,1 */
+int dir_h=16;
+
+int dir_cx = 2; /* dir_x+4 spaces */
+int dir_cy = 6; /* dir_y+1 line */
+int dir_max = 15;
+char dir_str[]=" Current Tree ";
+
+int fil_x=24;
+int fil_y=5;
+int fil_w=54;
+int fil_h=10;
+char fil_str[]=" Current File List ";
+
+int inf_x=24;
+int inf_y=17;
+int inf_w=54;
+int inf_h=4;
+char inf_str[]=" Disk Info ";
+
+int count;
+char cur_path_name[64];
+struct dir_file *dirs;
+

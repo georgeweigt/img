@@ -1,0 +1,32 @@
+
+alias   Psuedo alias system. Creates 1 line scripts files
+        These files take up 1 prodos block on disk each.
+        Normally this is not a problem since Aztec need a
+        large volume for best results.
+
+        You must configure the system properly:
+
+        In the startup file PROFILE use this example:
+
+        set PATH=:/aztec/bin:/aztec/aliases
+        set ALIASPATH=/aztec/aliases/
+
+        trailing slash is necessary for ALIASPATH
+
+
+usage:  alias name 'function'   - Define alias.
+        alias                   - list available aliases
+
+To call alias issue the alias name like any other command.
+
+
+
+Some example aliases:
+
+ct               ls -l
+md               mkdir $1
+binls            ls /aztec/bin
+edc              ed $1.c
+edh              ed $1.h
+list             more $1
+

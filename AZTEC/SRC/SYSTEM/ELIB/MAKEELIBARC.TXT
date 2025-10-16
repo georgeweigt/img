@@ -1,0 +1,8 @@
+makeelib
+makeelibarc
+keypress.c
+killbuf.c
+oapple.c
+capple.c
+joyx.c
+joyy.c

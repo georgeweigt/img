@@ -1,0 +1,26 @@
+.SUFFIXES:.a65 .r
+CFLAGS=
+
+.c.r:
+	c65 $(CFLAGS) $*.c
+
+.a65.r:
+	as65 $*.a65
+
+TERM=apple2e.r u6551.r acumcrc.r
+SRC= ttymake tty.c apple2e.a65 u6551.a65 acumcrc.a65
+
+tty.bin:	tty.r $(TERM) 
+	vermsg "TTY 1.3" NDATE >signon.c
+	cci signon.c
+	ln65 -mt tty.r $(TERM) signon.i -lc
+	strip65 <tty >tty.bin
+	send tty.bin tty
+
+tty33: tty.r $(TERM)
+	vermsg "TTY 1.3" NDATE >signon.c
+	cci signon.c
+	ln65 -mto tty33 tty.r $(TERM) signon.i ../lib/dos33/d33roota.r -ld
+
+tty.arc: $(SRC) signon.c tty.bld
+	mkarcv tty.arc <tty.bld

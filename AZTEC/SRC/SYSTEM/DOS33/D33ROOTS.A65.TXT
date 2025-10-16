@@ -1,0 +1,119 @@
+*:ts=8
+*
+* Copyright (C) 1982,83,84,85 by Manx Software Systems, Inc.
+*
+
+	instxt	<zpage.h>
+
+	global	_Top_,2
+	global	_mbot_,2
+	global	_dev_info_,2
+	global	_devinfo_,0
+	global	_fil_tab_,2
+	global	_filtab_,0
+	global	errno_,2
+
+	dseg
+	public _DSLOT_
+	public _DDRIVE_
+	public _DVOLUME_
+_DSLOT_	fdb	6	default slot no=6
+_DDRIVE_	fcb	1	default drive no=1
+_DVOLUME_	fdb	0	default volume no = 0
+
+	global _SLOT_,2
+	global _DRIVE_,2
+	global _VOLUME_,2
+
+	global _NAME_,30
+
+	dseg
+	public	MEMRY
+MEMRY	rmb	2
+	public	_Stksiz_
+_Stksiz_
+	fdb	$0800		;default stack size is 2K
+	public	_End_
+_End_
+	fdb	$0001		;force into inited data space
+
+	public	_main_
+_main_	fdb	.begin	;pseudo-random value for mktemp
+
+	cseg
+	public	_Uorg_,_Uend_,_Corg_
+
+	public	.begin
+	entry	.begin
+.begin	cld
+	lda	SP	
+	ldx	SP+1
+	sec
+	sbc	#2
+	sta	SP
+	sta	_End_
+	bcs	.1
+	dex
+.1
+	stx	_End_+1
+	ldy	#1
+	lda	#0
+	sta	(SP),y
+	dey
+	sta	(SP),Y
+	lda	#<_Uorg_	;clear out bss space
+	sta	VAL
+	lda	#>_Uorg_
+	sta	VAL+1
+	ldy	#0
+loop	tya
+	sta	(VAL),Y
+	inc	VAL
+	bne	skip
+	inc	VAL+1
+skip	lda	VAL
+	cmp	#<_Uend_
+	bne	loop
+	lda	VAL+1
+	cmp	#>_Uend_
+	bne	loop
+	lda	MEMRY		;set end of program for alloc routines
+	sta	_Top_
+	sta	_mbot_
+	lda	MEMRY+1
+	sta	_Top_+1
+	sta	_mbot_+1
+	lda	#<acc		;init pointers for floating point registers
+	sta	ACC
+	lda	#>acc
+	sta	ACC+1
+	lda	#<sec
+	sta	SEC
+	lda	#>sec
+	sta	SEC+1
+
+	lda	#<_devinfo_
+	sta	_dev_info_
+	lda	#>_devinfo_
+	sta	_dev_info_+1
+	lda	#<_filtab_
+	sta	_fil_tab_
+	lda	#>_filtab_
+	sta	_fil_tab_+1
+	jsr	main_
+	ldy	#0
+	tya
+	sta	(SP),Y
+	iny
+	sta	(SP),Y
+	jsr	exit_
+	brk
+;
+	public	main_
+	public	exit_
+
+	dseg
+	global	acc,14		;space reserved for floating point registers
+	global	sec,14
+*
+

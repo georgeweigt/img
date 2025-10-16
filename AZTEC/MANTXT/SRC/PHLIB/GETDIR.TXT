@@ -1,0 +1,161 @@
+/**************************************************/
+/*                                                */
+/*  GETDIR  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+/* getdir (), if called with a directory-name    */
+/* returns a struct of type dir_file. This       */
+/* struct is terminated by a struct of type      */
+/* dir_file where the next-pointer is set to     */
+/* NULL. If the directory-name is illegal,       */
+/* getdir () returns a struct of type dir_file   */
+/* where the next-pointer is set to NULL.        */
+
+struct dir_file
+{
+	char *name;					/* file name */
+	int type;					/* file type */
+	long size;					/* file size */
+	long loadadr;				/* file load adress */
+	char flags[4];				/* file flags 			[0] [1] [2] [3] [4] */
+								/* 						 d   e   b   w   r  */
+	struct dir_file *next;		/* next file */
+};
+
+struct dir_buf
+{
+	char length;				/* name length */
+	char name[15];				/* name */
+	char type;					/* type */
+	char fil1[4];				/* not used bytes */
+	char l_size;				/* size low-byte */
+	char h_size;				/* size high-byte */
+	char fil2[7];				/* not used bytes */
+	char flags;					/* flags */
+	char l_adr;					/* load adress low-byte */
+	char h_adr;					/* load adress high-byte */
+	char fil3[6];				/* not used bytes */
+};
+
+struct dir_info
+{
+	unsigned char	access;		/* file information structure */
+	unsigned char	file_type;
+	unsigned short	aux_type;
+	unsigned char	storage_type;
+	unsigned short	blocks_used;
+	unsigned short	mod_date;
+	unsigned short	mod_time;
+	unsigned short	create_date;
+	unsigned short	create_time;
+};
+
+get_flags (flags, f)
+char flags[5];
+int f;
+{
+	if (f > 127) { flags[0] = 1; f = f - 128; } else flags[0] = 0;
+	if (f >  63) { flags[1] = 1; f = f -  64; } else flags[1] = 0;
+	if (f >  31) { flags[2] = 1; f = f -  32; } else flags[2] = 0;
+	if (f >  15) f = f - 16;
+	if (f >   7) f = f - 8;
+	if (f >   3) f = f - 4;
+	if (f >   1) { flags[3] = 1; f = f -   2; } else flags[3] = 0;
+	if (f >   0) flags[4] = 1; else flags[4] = 0;
+}
+
+struct dir_file *set_file (count, fd)
+int count;
+int fd;
+{
+	char *malloc ();
+
+	struct dir_buf *buf = (struct dir_buf *)malloc (sizeof (struct dir_buf));
+	struct dir_file *entry=(struct dir_file *)malloc(sizeof(struct dir_file));
+
+	char header[5];
+	int nbytes;
+
+	entry->next = (void *)0;
+	while (1)
+	{
+		nbytes = read (fd, buf, 39);
+		if (nbytes < 39)
+		{
+			close (fd);
+			free (buf);
+			free (header);
+			return (entry);
+		}
+		if (++count == 13)
+		{
+			read (fd, header, 5);
+			count = 0;
+		}
+		while (buf->length > 15) buf->length = buf->length - 16;
+		if (buf->type == 0)
+		{
+			close (fd);
+			free (buf);
+			free (header);
+			return (entry);
+		}
+		if (buf->length != 0)
+		{
+			entry->type = buf->type;
+			entry->name = malloc (buf->length);
+			strncpy (entry->name, buf->name, buf->length);
+			*(entry->name+buf->length) = '\0';
+			entry->size = (long)buf->h_size * (long)256 + (long)buf->l_size;
+			entry->loadadr = (long)buf->h_adr * (long)256 + (long)buf->l_adr;
+			get_flags (entry->flags, buf->flags);
+			free (buf);
+			free (header);
+			entry->next = set_file (count, fd);
+		}
+	}
+}
+
+struct dir_file *get_dir (path)
+char *path;
+{
+	struct dir_info *di = (struct dir_info *)malloc (sizeof (struct dir_info));
+	struct dir_file *entry=(struct dir_file *)malloc(sizeof(struct dir_file));
+
+	char header[43];
+	int fd;
+	int nbytes;
+
+	if (getfinfo (path, di) == -1)
+	{
+		free (di);
+		free (header);
+		entry->next = (void *)0;
+		return (entry);
+	}
+	if (di->file_type != 15)
+	{
+		free (di);
+		free (header);
+		entry->next = (void *)0;
+		return (entry);
+	}
+	free (di);
+	if ((fd = open (path, 0, 0)) < 0)
+	{
+		free (header);
+		entry->next = (void *)0;
+		return (entry);
+	}
+	nbytes = read (fd, header, 43);
+	if (nbytes < 43)
+	{
+		close (fd);
+		free (header);
+		entry->next = (void *)0;
+		return (entry);
+	}
+	free (header);
+	return (set_file (1, fd));
+}

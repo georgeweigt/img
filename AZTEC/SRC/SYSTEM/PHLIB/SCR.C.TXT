@@ -1,0 +1,25 @@
+/*********************************************************/
+/*                                                       */
+/*  SCR_FUNCTIONS  Copyright (C) 1990 by Phade Software  */
+/*                                                       */
+/*********************************************************/
+
+scr_inverse ()
+{
+	printf ("%c", (char)15);
+}
+
+scr_normal ()
+{
+	printf ("%c", (char)14);
+}
+
+scr_scrolldown ()
+{
+	printf ("%c", (char)22);
+}
+
+scr_scrollup ()
+{
+	printf ("%c", (char)23);
+}

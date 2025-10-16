@@ -1,0 +1,93 @@
+/***********************************************/
+/*                                             */
+/*  DIR  Copyright (C) 1990 by Phade Software  */
+/*                                             */
+/***********************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+#include <dir.h>
+
+int count;
+long used;
+
+int ttype (type, makro, text)
+int type;
+int makro;
+char *text;
+{
+    if (type != makro) return (0);
+    printf ("%s ", text);
+    return (1);
+}
+
+printtype (type)
+int type;
+{
+    if (ttype (type, TXT, "TXT")) return;
+    if (ttype (type, BIN, "BIN")) return;
+    if (ttype (type, DIR, "DIR")) return;
+    if (ttype (type, CMD, "CMD")) return;
+    if (ttype (type, DAT, "DAT")) return;
+    if (ttype (type, PRG, "PRG")) return;
+    if (ttype (type, BAS, "BAS")) return;
+    if (ttype (type, SYS, "SYS")) return;
+    printf ("??? ");
+}
+
+print_dir (di)
+struct dir_file *di;
+{
+    int i;
+
+    if (di->next)
+    {
+        count++;
+        if (di->flags[3]) printf (" ");
+        else printf ("*");
+        printf ("%-15s ", di->name);
+        printtype (di->type);
+        printf ("A=$%04x ", di->loadadr);
+        printf ("L=%-5ld\n", di->size);
+        used = used + di->size;
+        print_dir (di->next);
+    }
+}
+
+printdir (di, name)
+struct dir_file *di;
+char *name;
+{
+    char *rname;
+    int i;
+
+    strtoup (name);
+    fixnam (name, rname);
+    printf ("\nPath: %s\n\n", rname);
+    print_dir (di);
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    char name[64];
+
+    count = 0;
+    used = 0;
+
+    if (argc == 1)
+    {
+        if (getprefix (name) == -1)
+        {
+            printf ("\ndir: error while getting prefix\n\n");
+            exit (-1);
+        }
+        printdir (get_dir (name), name);
+    }
+    if (argc == 2) printdir (get_dir (argv[1]), argv[1]);
+    if (count > 0) printf ("\n%d files using %ld bytes\n\n", count, used);
+
+    exit (0);
+}

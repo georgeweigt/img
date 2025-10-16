@@ -1,0 +1,61 @@
+/**************************************************/
+/*                                                */
+/*  SYSERR  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+#define MAXERR 0x5a
+
+struct errlist {
+    int code;
+    char *msg;
+} errlist[] = {
+    0x00, "No error",
+    0x01, "Invalid number for system call",
+    0x04, "Invalid param count for system call",
+    0x25, "Interrupt vector table full",
+    0x27, "I/O Error",
+    0x28, "No device connected/detected",
+    0x2b, "Disk write protected",
+    0x2e, "Disk switched",
+    0x40, "Invalid characters in pathname",
+    0x42, "File control block table full",
+    0x43, "Invalid reference number",
+    0x44, "Path not found",
+    0x45, "Volume directory not found",
+    0x46, "File not found",
+    0x47, "Duplicate file name",
+    0x48, "Overrun error",
+    0x49, "Volume table full",
+    0x4a, "Incompatible file format",
+    0x4b, "Unsupported storage type",
+    0x4c, "End of file encountered",
+    0x4d, "Position out of range",
+    0x4e, "Access error",
+    0x50, "File is open",
+    0x51, "Directory count error",
+    0x52, "Not a ProDOS disk",
+    0x53, "Invalid parameter",
+    0x55, "Volume control block table full",
+    0x56, "Bad buffer address",
+    0x57, "Duplicate volume",
+    0x5a, "Invalid address in bit map",
+    -1, "Unknown Error Code"
+};
+
+main ()
+{
+    register struct errlist *sp;
+    int i;
+
+    printf ("\n%c SYSERR %c\n\n", (char)15, (char)14);
+    for (i=0; i<MAXERR+1; i++)
+    {
+        for (sp=errlist;sp->code>=0;sp++)
+            if (sp->code == i) break;
+        if (sp->code != -1) printf ("%2d : %s\n", i, sp->msg);
+    }
+    printf ("\n");
+
+    exit (0);
+}

@@ -1,0 +1,62 @@
+/* Copyright (C) 1984 by Manx Software Systems */
+#include	<dos33.h>
+#include	<fcntl.h>
+#include	<errno.h>
+#include	<sgtty.h>
+#include	<device.h>
+
+write (fd, buf, cnt)
+register int fd, cnt;
+register char *buf;
+{
+	register unsigned offset, record;
+	register int ret;
+	register struct _params *p, *_get_paramlist();
+	register struct _buffers *b;
+	register struct _wrkbuf *wrk;
+	register int err;
+	register struct _fil_buf *fp;
+
+	fp = _fil_tab+fd;
+	if (fd < 0 || fd >= MAXFILES || fp->unit == 0 || fp->flags == O_RDONLY) {
+		errno = EBADF;
+		return(-1);
+	}
+	if (cnt == 0)
+		return(0);
+	if (fp->unit & 0x80) {
+		if (fp->unit & 0x40)
+			return(_kb_put(buf, cnt));
+		return(_dev_write(&_dev_info->slots[fp->unit&7], buf, cnt));
+	}
+	/* file write: */
+	b = fp->iob;
+	wrk = b->b_work;
+	p = _get_paramlist();
+	p->p_cmd = 4;
+	p->p_sub = 2;
+	offset = wrk->w_offset;
+	record = wrk->w_record;
+	p->p_range = cnt - 1;
+	p->p_addr = buf;
+	p->p_work = (char *)wrk;
+	p->p_tslist = b->b_tslist;
+	p->p_data = b->b_data;
+	_dos(1);
+	if (ret = p->p_return) {
+		errno = _errxlate(ret);
+		return -1;
+	}
+	return(((wrk->w_record - record)<<8) + wrk->w_offset - offset);
+}
+
+_dev_write(s, buf, cnt)
+char *buf;
+{
+	int i = cnt;
+
+	while (cnt--)
+		_slot_write(s, *buf++);
+	return(i);
+}
+

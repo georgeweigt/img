@@ -1,0 +1,2 @@
+mkdir /aztec/src/system/$1
+arcv $1.arc /aztec/src/system/$1/

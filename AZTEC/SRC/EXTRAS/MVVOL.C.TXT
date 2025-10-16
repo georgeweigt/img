@@ -1,0 +1,24 @@
+/*************************************************/
+/*                                               */
+/*  MVVOL  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+#include <stdio.h>
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    if (argc != 3)
+    {
+        printf ("\nusage: mvvol sourcevolume targetvolume\n\n");
+        exit (-1);
+    }
+    if (rename (argv[1], argv[2]) == -1)
+    {
+        printf ("\nmvvol error\n\n");
+        exit (-1);
+    }
+    exit (0);
+}

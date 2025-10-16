@@ -1,0 +1,32 @@
+/*************************************************/
+/*                                               */
+/*  CHILP  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+chilp()
+{
+#asm
+    instxt <zpage.h>
+_duett_
+  ldx #$50
+  stx R0
+  ldy #$69
+j3
+  tya
+  tax
+j1
+  dex
+  bne j1
+  bit $c030
+  eor R0
+  tax
+j2
+  dex
+  bne j2
+  bit $c030
+  dey
+  bne j3
+  rts
+#endasm;
+}

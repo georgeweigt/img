@@ -1,0 +1,1 @@
+lb /aztec/lib/$1 -t

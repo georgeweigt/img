@@ -1,0 +1,6 @@
+
+usage  : find [-option] [path] file
+
+option : [-s] = silent
+         [-S] = silent and returns -1 if found
+

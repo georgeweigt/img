@@ -1,0 +1,176 @@
+/************************************************/
+/*                                              */
+/*  MAN  an extended more with dir listings     */
+/*                                              */
+/************************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+#include <prodos.h>
+#include <dir.h>
+
+#define INV 15
+#define NOR 14
+#define EDI "ED"
+
+char *MANPATH;
+
+int count;
+long used;
+
+int signal;
+
+int ttype (type, makro, text)
+int type;
+int makro;
+char *text;
+{
+    if (type != makro) return (0);
+    printf ("%s ", text);
+    return (1);
+}
+
+printtype (type)
+int type;
+{
+    if (ttype (type, TXT, "TXT")) return;
+    if (ttype (type, DIR, ""))
+      {
+        mtxton();
+        putstr("XY");
+        mtxtoff();
+        putchr(' ');
+        return;
+      }
+    printf ("??? ");
+}
+
+print_dir (adir)
+struct dir_file *adir;
+{
+
+    if (adir->next)
+    {
+        printtype (adir->type);
+        strtolow (adir->name);
+        printf ("%-16s", adir->name);
+        print_dir (adir->next);
+    }
+}
+
+front ()
+{
+#asm
+    lda #$0
+    sta $57b
+#endasm;
+}
+
+more ()
+{
+    int c;
+
+    front ();
+    printf ("%c%s%c", INV," More... <Q> <E> " , NOR);
+    c = get_char ();
+    if ((c == 209) || (c == 241)) signal = 1;
+    if ((c == 246) || (c == 229)) signal = 2;
+    front ();
+    printf ("                                      ");
+    front ();
+}
+
+printit (fd, filename)
+FILE *fd;
+char *filename;
+{
+    char buf[256];
+    int line;
+
+    line = 0;
+    while (fgets (buf, 256, fd))
+    {
+        if (feof (fd)) break;
+        front ();
+        qprintf (buf);
+        line++;
+        if (line == 23)
+        {
+            more ();
+            if (signal == 1) break;
+            if (signal == 2) break;
+            line = 0;
+        }
+    }
+    printf ("\n");
+    free (buf);
+}
+
+main (argc,argv)
+int argc;
+char *argv[];
+{
+    struct dir_file *FP;
+    FILE *fd;
+    char *ed;
+    char *getenv();
+    char fname[64];
+    char tmpnam[64];
+    int err, tmp;
+
+    MANPATH=getenv("MANPATH");
+    if (MANPATH==0)
+      {
+        printf("\nError: MANPATH environment variable not set!");
+        exit(-1);
+      }
+
+    if (argc == 1)
+    {
+        printf ("\n");
+        print_dir (get_dir (MANPATH));
+        printf ("\n");
+        exit (0);
+    }
+
+    if (argc != 2)
+    {
+        printf ("\nusage: man [[folder/]name]\n\n");
+        exit (-1);
+    }
+
+    strcpy(fname,MANPATH);
+    strcat(fname,argv[1]);
+
+    FP=get_dir(fname);
+    if (!(FP->next == NULL))
+      {
+        putchr(13);
+        print_dir(FP);
+        putchr(13);
+        putchr(13);
+        exit(0);
+      }
+
+    fd = fopen (fname, "r");
+    if (fd == 0)
+    {
+        printf ("\nMan: can't open \"%s\" !\n\n", fname);
+        exit (-1);
+    }
+
+    signal = 0;
+    printit (fd, fname);
+    fclose (fd);
+
+    if (signal == 2)
+    {
+        ed = getenv ("EDITOR");
+        if (ed == 0) err = execlp (EDI, EDI, fname, 0);
+        else err = execlp (ed, ed, fname, 0);
+        if (err = -1) printf ("\nmore: can't start editor\n\n");
+    }
+
+    exit (0);
+}

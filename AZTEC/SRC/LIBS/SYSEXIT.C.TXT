@@ -1,0 +1,20 @@
+/*    Copyright (C) 1985 by Manx Software Systems, Inc. */
+
+#include    <prodos.h>
+#include    <sysfunc.h>
+
+extern struct shvar {
+    char            vects[6];
+    int                retflg;
+} *_Sp;
+
+sysexit(n)
+{
+    _sys_parm[0] = 1;
+    _sys_parm[1] = 0;                /* close all files */
+    _system(SYS_CLOSE);
+    _sys_parm[0] = 4;
+    _sys_parm[1] = 0;
+    _system(0x65);
+}
+

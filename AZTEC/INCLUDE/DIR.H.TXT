@@ -1,0 +1,25 @@
+/*************************************************/
+/*                                               */
+/*  DIR.H  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+#define		TXT		4
+#define		BIN		6
+#define		DIR		15
+#define		CMD		240
+#define		DAT		241
+#define		PRG		248
+#define		BAS		252
+#define		SYS		255
+
+struct dir_file
+{
+	char *name;					/* file name */
+	int type;					/* file type */
+	long size;					/* file size */
+	long loadadr;				/* file load adress */
+	char flags[4];				/* file flags 			[0] [1] [2] [3] [4] */
+								/* 						 d   e   b   w   r  */
+	struct dir_file *next;		/* next file */
+};

@@ -1,0 +1,35 @@
+/************************************************/
+/*                                              */
+/*  SORT  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+#include <stdio.h>
+#include <malloc.h>
+    
+#define MAXLINES 500
+    
+char *lines[MAXLINES];
+    
+int cmp (a, b)
+char **a, **b;
+{
+	return strcmp (*a, *b);
+}
+    
+main()
+{
+	int i;
+	int numlines;
+	char buf[80];
+    
+	for (numlines=0; numlines<MAXLINES; ++numlines)
+	{
+		if (gets (buf) == (char)0) break;
+		lines[numlines] = malloc (80);
+		strcpy (lines[numlines], buf);
+	}
+	qsort (lines, numlines, 2, cmp);
+	for (i=0; i<numlines; ++i) printf ("%s\n", lines[i]);
+	exit (0);
+}

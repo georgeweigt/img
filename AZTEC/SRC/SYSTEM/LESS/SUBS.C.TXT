@@ -1,0 +1,468 @@
+/************************************************/
+/*                                              */
+/*  LESS  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+/* subs.c part of less */
+
+#include "less.h"
+#include <sgtty.h>
+
+#define    SCR_TOP    0
+#define    SCR_BOT    23
+#define    STATUS    23
+
+#define scr_half 11
+#define scr_full 22 /* allow for status line */
+
+start_screen()
+{
+    mv_curs(0, STATUS);
+    printf ("%c LESS %c",(char)15,(char)14);
+    mesg ("");
+    if (*Fil_nam == 0 || read_fil(Fil_nam) < 0) quit();
+    redraw(Mem_buf, 1, SCR_TOP);
+}
+
+mesg(str)
+char *str;
+{
+    mv_curs(10, STATUS);
+    scr_eol();
+    mv_curs(10, STATUS);
+    write(1, str, strlen(str));
+}
+
+search(flg)
+int flg;
+{
+    static char srch[80];
+    char buf[80];
+    register char *tp, *cp;
+    register int c;
+
+    cp = buf;
+    *cp++ = '/';
+    for (;;)
+    {
+        *cp = 0;
+        mesg(buf);
+        if (flg) break;
+        c = getchar();
+        if (c == '\r') break;
+        if ((c == 8) || (c == 0x7f))
+        {
+            if (cp > buf+1)    cp--;
+            continue;
+        }
+        if (c < 0x20) continue;
+        *cp++ = c;
+    }
+    if (buf[1])    strcpy(srch, buf+1);
+    if (srch[0] == 0)
+    {
+        mesg("no previous search string");
+        return;
+    }
+    *End_buf = 0;
+    tp = Cur_ptr + 1;
+    c = strlen(srch);
+    for (;;)
+    {
+        cp = index(tp, srch[0]);
+        if (cp == 0)
+        {
+            mesg("no match");
+            return;
+        }
+        if (strncmp(cp, srch, c) == 0)
+        {
+            Cur_lp = get_prev(get_next(Cur_ptr = cp));
+            if (Cur_lp >= Top_lp && Cur_lp < Bot_lp)
+            {
+                cp = Top_lp;
+                Cur_lin = Top_lin;
+                Cur_y = Top_y;
+                while (cp < Cur_lp)
+                {
+                    set_param(cp);
+                    Cur_y += Lin_siz;
+                    Cur_lin++;
+                    cp = get_next(cp);
+                }
+            }
+            redraw(Cur_lp, Cur_lin, SCR_BOT/2);
+            return;
+        }
+        tp = cp + 1;
+    }
+}
+
+page(c)
+int c;
+{
+    int wi;
+
+    if ((c == 'D') || (c == 'd') ||
+        (c == 'U') || (c == 'u'))
+      {
+        if (Cur_lin >= scr_full)
+          {
+            wi = scr_half;
+          }
+        else wi = scr_full;
+      }
+    else wi = scr_full;
+    
+    if ((c == 'B') || (c == 'b') || 
+        (c == 'U') || (c == 'u') ||
+        (c == 11))
+      {
+        Num = Cur_lin - wi;
+        if (Num <= 1) Num = 1;
+      }
+    else Num = Cur_lin + wi;
+    Val = 1;
+    goline();
+}
+
+goline()
+{
+    register char *t;
+
+    if (Val == 0) Num = -1;
+    Val = 0;
+    Cur_lp = Mem_buf;
+    Cur_lin = 1;
+    while (--Num && (t = get_next(Cur_lp)) != End_buf)
+    {
+        Cur_lp = t;
+        Cur_lin++;
+    }
+    Cur_ptr = Cur_lp;
+    redraw(Cur_lp, Cur_lin, SCR_BOT/2);
+    mesg(" Keys: B D E N Q U V / <space> <up-arrow> <dn-arrow>");
+}
+
+get_num(c)
+int c;
+{
+    char buf[10];
+    register char *cp;
+
+    Num = 0;
+    cp = buf;
+    for (;;)
+    {
+        if (c < '0' || c > '9')
+        {
+            Val = Num;
+            if (Num == 0) Num = 1;
+            return(c);
+        }
+        Num = Num * 10 + c - '0';
+        *cp++ = c;
+        *cp = 0;
+        mesg(buf);
+        c = getchar();
+    }
+}
+
+stats()
+{
+    char buf[80];
+    register char *cp;
+    register int c;
+
+    maknam (buf, Fil_nam);
+    cp = Mem_buf;
+    c = 1;
+    while ((cp = get_next(cp)) != End_buf) ++c;
+    itoa (buf+strlen(buf), c);
+    strcat (buf, " lines");
+    mesg (buf);
+}
+
+itoa(buf, num)
+char *buf;
+int num;
+{
+    register int flg = 0;
+    register int i, j = 1000;
+
+    while (j)
+    {
+        i = num/j;
+        num %= j;
+        j /= 10;
+        if (i == 0 && flg == 0)    continue;
+        *buf++ = i + '0';
+        flg = 1;
+    }
+    if (flg == 0) *buf++ = '0';
+    *buf = 0;
+}
+
+blockmv(dst,src,cnt)
+char *dst, *src;
+{
+    movmem(src,dst,cnt);
+}
+
+#asm
+    public    db_
+db_    lda    #0
+    rts
+#endasm
+
+draw_lin(lp, d, y)
+char *lp;
+register int d;
+int y;
+{
+    int c;
+    register int i;
+
+    mv_curs(d, y);
+    for (;;)
+    {
+        c = *lp++;
+        if (c < 0x20)
+        {
+            switch(c) {
+            case '\t':
+                i = Tabwidth;
+                while (i <= d) i += Tabwidth;
+                write(1, "                     ", i-d);
+                d = i;
+                break;
+            case '\r':
+                scr_eol();
+                return;
+            default:
+                write(1, "^", 1);
+                c |= 0x40;
+                write(1, &c, 1);
+                d += 2;
+                break;
+            }
+        }
+        else
+        {
+            write(1, &c, 1);
+            d++;
+        }
+    }
+}
+
+redraw(lp, lin, y)
+char *lp;
+int lin, y;
+{
+    register char *cp;
+
+    Top_lp = lp;
+    Top_y = y;
+    Top_lin = lin;
+    for (;;)
+    {
+        if (Top_y == SCR_TOP || Top_lp == Mem_buf) break;
+        cp = get_prev(Top_lp);
+        set_param(cp);
+        if (Top_y - Lin_siz < SCR_TOP) break;
+        Top_y -= Lin_siz;
+        Top_lin--;
+        Top_lp = cp;
+    }
+    Top_y = SCR_TOP;
+    draw(Top_lp, Top_lin, Top_y);
+}
+
+draw(lp, lin, y)
+char *lp;
+int lin;
+register int y;
+{
+    Bot_lin = lin;
+    Bot_lp = lp;
+    for (;;)
+    {
+        if (y >= SCR_BOT) break;
+        if (Bot_lp >= End_buf) draw_lin(" \r", 0, y++);
+        else
+        {
+            set_param(Bot_lp);
+            if (y + Lin_siz > SCR_BOT) draw_lin(" \r", 0, y++);
+            else
+            {
+                draw_lin(Bot_lp, 0, y);
+                if (Cur_lp == Bot_lp)
+                {
+                    Cur_y = y;
+                    Cur_lin = Bot_lin;
+                }
+                Bot_y = y += Lin_siz;
+                Bot_lp = get_next(Bot_lp);
+                ++Bot_lin;
+            }
+        }
+    }
+}
+
+set_param(lp)
+char *lp;
+{
+    register int c, d;
+
+    d = 0;
+    for (;;)
+    {
+        if (Cur_ptr == lp) Cur_x = d;
+        c = *lp++;
+        if (c < 0x20)
+        {
+            switch(c) {
+            case '\t':
+                c = Tabwidth;
+                while (c <= d) c += Tabwidth;
+                d = c;
+                break;
+            case '\r':
+                d++;
+                Lin_siz = d / Lwidth + 1;
+                return;
+            default:
+                d += 2;
+                break;
+            }
+        }
+        else
+        {
+            d++;
+        }
+    }
+}
+
+char *get_next(lp)
+register char *lp;
+{
+    *End_buf = 0;
+    lp = index(lp, '\r');
+    if (lp == 0) lp = End_buf;
+    else ++lp;
+    return(lp);
+}
+
+char *get_prev(lp)
+register char *lp;
+{
+    lp--;
+    while (*--lp != '\r' && lp >= Mem_buf);
+    return(lp+1);
+}
+
+init()
+{
+    struct sgttyb ss;
+    char *malloc();
+
+    Max_mem = 35000;
+    while ((Mem_buf = malloc(Max_mem)) == 0) Max_mem -= 2000;
+    free(Mem_buf);
+    Max_mem -= 1024;
+    Mem_buf = malloc(Max_mem);
+    Width = *(char *)0x21;
+    Lwidth = Width + 1;
+    scr_clear();
+    ioctl(1, TIOCGETP, &ss);
+    ss.sg_flags = CBREAK;
+    ioctl(1, TIOCSETP, &ss);
+}
+
+quit()
+{
+    struct sgttyb ss;
+
+    mv_curs(0, 23);
+    scr_eol();
+    write(1, "\r", 2);
+
+    exit(0);
+}
+
+mv_curs(x, y)
+register int x, y;
+{
+    char buf[4];
+
+    if (x >= Width)
+    {
+        y += x / Width;
+        x = x % Width;
+    }
+    scr_curs(y,x);
+}
+
+getchar()
+{
+    int c;
+
+    read(0, &c, 1);
+    return(c&0xff);
+}
+
+read_fil(name)
+char *name;
+{
+    register int fd;
+    register char *t, *tmp;
+    char msg[60];
+    register int cnt;
+    char buf[257];
+
+    maknam(msg, name);
+    Low_mem = Cur_ptr;
+    mesg(msg);
+    tmp = Cur_ptr;
+    if ((fd = open(name, 0)) < 0)
+    {
+        mesg("can't open file");
+        return(-1);
+      }
+    for (;;)
+    {
+        if ((cnt = read(fd, buf, 256)) <= 0) break;
+        buf[cnt] = 0;
+        t = buf;
+        while (t = index(t, '\n')) *t++ = '\r';
+        if (t_insert(tmp, 0, buf, cnt))
+        {
+            mesg("file too big");
+            break;
+        }
+        tmp += cnt;
+        if (cnt != 256)    break;
+    }
+    close(fd);
+    return(0);
+}
+
+t_insert(t, len, buf, cnt)
+char *t, *buf;
+register int len, cnt;
+{
+    if (End_buf + (cnt - len) > Mem_buf + Max_mem) return(-1);
+    blockmv(t+cnt, t+len, End_buf-t-len);
+    End_buf += cnt - len;
+    blockmv(t, buf, cnt);
+    return(0);
+}
+
+maknam(buf, nam)
+char *buf, *nam;
+{
+    *buf++ = '"';
+    strcpy(buf, nam);
+    strcat(buf, "\" ");
+}

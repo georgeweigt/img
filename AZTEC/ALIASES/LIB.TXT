@@ -1,0 +1,2 @@
+cp $1.lib /aztec/lib/$1.lib
+rm $1.lib

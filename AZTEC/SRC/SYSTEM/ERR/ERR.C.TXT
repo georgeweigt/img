@@ -1,0 +1,179 @@
+/***************************************/
+/*                                     */
+/*          Error protocol             */
+/*                                     */
+/*        by Phade Software            */
+/*        Copyright (c) 1990           */
+/*                                     */
+/*         err.c   of err.c            */
+/*                                     */
+/***************************************/
+
+#include <ctype.h>
+
+char *errstr[] =
+{
+"  1: bad digit in octal constant",
+"  2: string space exhausted",
+"  3: unterminated string",
+"  4: internal error",
+"  5: illegal type for function",
+"  6: error in argument declaration",
+"  7: bad declaration syntax",
+"  8: syntax error in type cast",
+"  9: array dimension must be constant of type char, int or unsigned",
+" 10: array size must be positive integer greater zero",
+" 11: data type too complex",
+" 12: illegal pointer reference",
+" 13: internal error",
+" 14: internal error",
+" 15: storage class conflict",
+" 16: data type conflict",
+" 17: unsupported data type",
+" 18: data type conflict",
+" 19: obsolete",
+" 20: structure redeclaration",
+" 21: missing } in aggregate initialization",
+" 22: syntax error in structure declaration",
+" 23: obsolete",
+" 24: missing right paranthesis or comma in function call",
+" 25: structure member name expected here",
+" 26: must be structure / union member",
+" 27: illegal type cast",
+" 28: incompatible structures used in assignment",
+" 29: illegal use of structure with operator or struct used as argument",
+" 30: missing : in ? conditional expression",
+" 31: call of non-function",
+" 32: illegal pointer calculation",
+" 33: illegal application of operator to type",
+" 34: undefined symbol",
+" 35: typedef not allowed here",
+" 36: no more expression space",
+" 37: invalid expression in expression containing unary operator",
+" 38: no auto aggregate initalization",
+" 39: obsolete",
+" 40: internal error",
+" 41: initializer must be a constant",
+" 42: too many initializers for aggregate",
+" 43: attempted initialization of undefined structure",
+" 44: obsolete",
+" 45: bad declaration syntax",
+" 46: missing closing brace",
+" 47: open failure on #include file",
+" 48: illegal symbol name in preprocessor statement",
+" 49: multiply defined symbol",
+" 50: missing paranthesis, bracket or brace",
+" 51: lvalue required on left side of assignment",
+" 52: obsolete",
+" 53: multiply defined goto label",
+" 54: too many goto labels",
+" 55: missing quote in #define",
+" 56: missing apostrophe in #define",
+" 57: line too long",
+" 58: illegal # encountered",
+" 59: macro too long",
+" 60: obsolete",
+" 61: reference of member of undefined structure",
+" 62: function body must compound statement / error in function declaration",
+" 63: no label for goto found in function",
+" 64: inappropriate arguments in function declaration",
+" 65: illegal or missing argument name in function argument list",
+" 66: expected comma in argument list",
+" 67: invalid else",
+" 68: syntax error",
+" 69: missing semicolon",
+" 70: bad goto syntax",
+" 71: statement syntax error in do-while",
+" 72: 'for' syntax error - missing first semicolon",
+" 73: 'for' syntax error - missing second semicolon",
+" 74: case value must be int, char or unsigned constant",
+" 75: missing colon on case",
+" 76: too many cases on switch",
+" 77: case outside of switch",
+" 78: missing colon in switch",
+" 79: duplicate default:",
+" 80: default: outside of switch",
+" 81: break / continue error",
+" 82: illegal character",
+" 83: too many nested includes",
+" 84: too many array dimensions",
+" 85: not an argument",
+" 86: null dimension in array",
+" 87: invalid character constant",
+" 88: not a structure",
+" 89: invalid storage class",
+" 90: symbol redeclared",
+" 91: illegal use of floating point type",
+" 92: illegal type conversion",
+" 93: illegal expression type for switch",
+" 94: bad argument to define",
+" 95: no argument list",
+" 96: missing argument to macro",
+" 97: obsolete",
+" 98: not enough args in macro reference",
+" 99: internal error",
+"100: internal error",
+"101: missing close paranthesis on macro reference",
+"102: macro arguments too long",
+"103: #else with no #if",
+"104: #endif with no #if",
+"105: #endasm with no #asm",
+"106: #asm within #asm block",
+"107: missing #endif",
+"108: missing #endasm",
+"109: #if value must be integer constant",
+"110: invalid use of colon operator",
+"111: illegal use of void expression",
+"112: illegal use of function pointer",
+"113: duplicate case in switch",
+"114: macro redefined",
+"115: keyword redefined",
+"116: field width must > 0",
+"117: invalid 0 length field",
+"118: field is too wide",
+"119: field not allowed here",
+"120: invalid type for field",
+"121: pointer / integer conversion",
+"122: pointer and integer not same size",
+"123: function pointer and pointer not the same size",
+"124: invalid pointer / pointer assignment",
+"125: too many subscripts or indirection on integer"
+};
+
+main(argc,argv)
+int argc;
+char *argv[];
+{
+	int i;
+	int zero = 0;
+	int number = 0;
+	int errnum;
+
+	if (argc < 2)
+	{
+		printf ("\nusage : err 'cc error number[s] or 0'\n\n");
+		exit (-1);
+	}
+
+	printf ("\n%c ERROR PROTOCOL %c\n\n", (char)15, (char)14);
+
+	for (i=1; i < argc; i++)
+	{
+		errnum = atoi (argv[i]);
+		if (errnum < 0 || errnum > 125)
+			printf ("\nusage : error number must be 1..125\n\n");
+		else
+		{
+			if (errnum == 0) zero = 1;
+			else
+			{
+				number = 1;
+				printf ("%s\n", errstr[errnum-1]);
+				comm (errnum-1);
+			}
+		}
+	}
+	if (number) printf ("\n");
+	if (zero) more ();
+	exit (0);
+}

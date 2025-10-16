@@ -1,0 +1,75 @@
+/*	Copyright (c) 1986 by Manx Software Systems	*/
+
+#include <dos33.h>
+
+_get_name(name, p)
+char *name;
+register struct _params *p;
+{
+	register int i, c;
+	register char *cp;
+
+	if (_parse(name) < 0 || (_NAME[0]&0x7f) == ' ')
+		return(-1);
+
+	p->p_offset = (_DRIVE << 8) | _VOLUME;
+	p->p_range = (p->p_range & 0xff00) | _SLOT;
+	p->p_addr = _NAME;
+	return(0);
+}
+
+/*
+ *	This routine parses a given name for the name, drive, slot and volume
+ *		parameters. It puts the result in the global variables SLOT, DRIVE,
+ *		VOLUME and NAME. These values default to the current data device.
+ */
+
+_parse(name)
+register char *name;
+{
+	register int i, c;
+	register char *cp;
+	char buf[60];
+	int code;
+
+	if (*name == 0)
+		return(-1);
+	_SLOT = _DSLOT;
+	_DRIVE = _DDRIVE;
+	_VOLUME = _DVOLUME;
+
+	/* get file name: */
+	for (cp=_NAME;(c= *name) && c != ',';++cp, ++name)
+		*cp = toupper(c) | 0x80;
+	for (;cp< _NAME+30;cp++)
+		*cp = ' ' | 0x80;
+
+	/* get drive, slot, volume numbers: */
+	while (*name++) {
+		code = *name++;
+		for (i=0; (c = *name) && c >= '0' && c <= '9';name++)
+			i = i*10 + c-'0';
+		if (c && c != ',')
+			return -1;
+		switch (toupper(code)){
+		case 'S':
+			if (i<1 || i > 7)
+				return -1;
+			_SLOT = i;
+			break;
+		case 'D':
+			if (i < 1 || i > 2)
+				return -1;
+			_DRIVE = i;
+			break;
+		case 'V':
+			if (i<0 || i>254)
+				return -1;
+			*(int *)0xaa66 = _VOLUME = i;
+			break;
+		default:
+			return -1;
+		}
+	}
+	return(0);
+}

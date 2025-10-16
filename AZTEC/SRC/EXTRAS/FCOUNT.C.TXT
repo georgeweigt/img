@@ -1,0 +1,161 @@
+/**************************************************/
+/*                                                */
+/*  FCOUNT  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+#include <stdio.h>
+#include <malloc.h>
+#include <fcntl.h>
+
+#define empty ""
+
+struct dir
+{
+    char length;        /* entry_name length */
+    char name[15];        /* entry_name */
+    char type;            /* entry_type */
+    char fil[22];        /* not used bytes */
+};
+
+int nosubs;
+int dircount;
+
+int poke ()
+{
+#asm
+  lda #$00
+  sta $057B
+#endasm;
+}
+
+int makepoint ()
+{
+    poke ();
+    if (dircount == 0) printf ("\\");
+    if (dircount == 1) printf ("|");
+    if (dircount == 2) printf ("/");
+    if (dircount == 3)
+    {
+        printf ("-");
+        dircount = 0;
+    }
+    else dircount++;
+}    
+
+int fcount (path)
+char *path;
+{
+    struct dir *entry = (struct dir *)malloc (sizeof (struct dir));
+    char header[43];
+    char *newpath = malloc (64);
+    int fd;
+    int nbytes;
+    int count = 1;
+    int num = 0;
+
+    makepoint ();
+    if ((fd = open (path, O_RDONLY, 0)) < 0)
+    {
+        poke ();
+        return (-1);
+    }
+    makepoint ();
+    nbytes = read (fd, header, 43);
+    makepoint ();
+    if (nbytes < 43)
+    {
+        close (fd);
+        free (entry);
+        free (newpath);
+        poke ();
+        return (0);
+    }
+    while (0 == 0)
+    {
+        makepoint ();
+        nbytes = read (fd, entry, 39);
+        makepoint ();
+        if (nbytes < 39)
+        {
+            close (fd);
+            free (entry);
+            free (newpath);
+            poke ();
+            return (num);
+        }
+        if (++count == 13)
+        {
+            read (fd, header, 5);
+            count = 0;
+        }
+        while (entry->length > 15) entry->length = entry->length - 16;
+        if (entry->type == 0)
+        {
+            close (fd);
+            free (entry);
+            free (newpath);
+            poke ();
+            return (num);
+        }
+        if (entry->length != 0)
+        {
+            if ((entry->type == (char)15) && (!nosubs))
+            {
+                strcpy (newpath, path);
+                strcat (newpath, "/");
+                strncat (newpath, entry->name, entry->length);
+                num = num + fcount (newpath);
+            }
+            num = num + 1;
+        }
+    }
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    char *curpath = malloc (64);
+    char *path = malloc (64);
+
+    dircount = 0;
+    nosubs = 0;
+
+    if (argc > 3)
+    {
+        printf ("\n");
+        printf ("usage  : fcount [-option] [path]\n\n");
+        printf ("option : [-n] = counting without subdirectory\n");
+        printf ("\n");
+        exit (-1);
+    }
+    if (*argv[1] == '-')
+    {
+        switch (*++argv[1])
+        {
+            case 'n' : nosubs = 1;
+                       break;
+            default  : break;
+        }
+    }
+
+    if (((argc == 1) && (!nosubs)) || ((argc == 2) && (nosubs)))
+    {
+        if (getprefix (path) == -1) errexit ();
+        if (strlen (path) < 2) exit (0);
+        strcpy (curpath, empty);
+        strncat (curpath, path, strlen (path) - 1);
+        printf (" \n%d files\n\n" ,fcount (curpath));
+    }
+    else if (nosubs) printf (" \n%d files\n\n", fcount (argv[2]));
+         else printf (" \n%d files\n\n", fcount (argv[1]));
+
+    exit (0);
+}
+
+errexit ()
+{
+    perror ("fcount ");
+    exit (-1);
+}

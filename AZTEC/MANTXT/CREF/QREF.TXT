@@ -1,0 +1,199 @@
+
+    The following chart explains specific constructs in C by giving their
+equivalent in Pascal.  Notice, in Particular, the powerful for statement, the
+array subscripting (which extends from 0 through N-1, not 1 through N), and
+the unusual declaration syntax.
+
+
+=============================================================================
+    C construct         Explanation         Pascal equivalent
+=============================================================================
+int a;             declarations; integer    var a; integer;
+char b;            character                var b; char
+                                                   ^
+char *c;           pointer to character     var c; |char;
+int (*x)();        pointer to procedure     - none -
+                   that returns integer
+------------------------------------------------------------------------------
+char d[10];        array of characters      var d; array[0..9] of char;
+char e[10][12];    2-dimensional array      var e; array[1..9,0..12] of char;
+                                                                  ^
+char *f[5]         array of pointers        var f; array[0..4] of |char;
+                                                   ^^
+char **g;          pointer to pointer       var g; ||char;
+------------------------------------------------------------------------------
+'a'                character constant       'a'
+'\014'             character constant       - none -
+                   with value 014 (octal)
+------------------------------------------------------------------------------
+"abc"              string constant          - none -
+                   Contiguous characters
+                   terminated by a null
+                   byte (i.e., 'a', 'b',
+                   'c', '\0'),  Newline
+                   and tab denoted by \n
+                   and \t.  Value is the 
+                   address of the first 
+                   character.
+------------------------------------------------------------------------------
+123                decimal constant         123
+0123               octal constant           - none - (decimal value is 83)
+                   (begins with zero)
+------------------------------------------------------------------------------
+struct x{          structure (record)       record x
+    int f1;        declaration with              f1; integer;
+    char f2;       fields f1 and f2              f2; char;
+}                                           end
+------------------------------------------------------------------------------
+struct x y[2];     y is array of struct x   var y; array[0..1] of x;
+------------------------------------------------------------------------------
+#define A v        symbolic constant        const A = v;
+------------------------------------------------------------------------------
+#define A(x) v(x)  parameterized macro      - none -
+------------------------------------------------------------------------------
+#ifdef A           conditional compilation  - none -
+    X              code X is compiled only
+#endif             if symbol A is defined.
+------------------------------------------------------------------------------
+#ifndef A          negative conditional     - none -
+    X              compilation; X compiled
+                   only if A not defined
+------------------------------------------------------------------------------
+#include f         source file inclusion    - none -
+                   (if f is "path" then
+                   path is relative to
+                   current directory; if
+                   <path> then relative
+                   to system directory
+------------------------------------------------------------------------------
+    =              assignment operator           :=
+------------------------------------------------------------------------------
+  + - *            arithmetic operators         + - *
+    /              division (C does integer      / div
+                   division on integers)
+    %              modulus or remainder         - none -
+------------------------------------------------------------------------------
+x op= y            operation and               x := op y
+                   assignment
+x += y             example: add                  x := x + y
+                   and assign
+------------------------------------------------------------------------------
+    ==             test equality                 =
+    !=             test inequality               <>
+    >              test greater than             >
+    <              test less than                <
+    <=             test less than or equal       <=
+    >=             test greater than or equal    >=
+------------------------------------------------------------------------------
+                                                  ^
+    *x             pointer dereference           x|
+                   (whatever x points to)
+------------------------------------------------------------------------------
+    sizeof(x)      size of data object           - none -
+                   x in bytes
+------------------------------------------------------------------------------
+    &              address of (when used as      - none -
+                   unary operator)
+------------------------------------------------------------------------------
+    &              bitwise and (when used as     - none -
+                   binary operator)
+    |              bitwise or                    - none -
+     ~             bitwise complement            - none -
+------------------------------------------------------------------------------
+    &&             Boolean and                   and
+    ||             Boolean or                    or
+    !              Boolean not                   not
+                   ( && and || are evaluated
+                   left-to-right with early
+                   termination )
+------------------------------------------------------------------------------
+    x[i]           array reference               x[i]
+------------------------------------------------------------------------------
+    s.f            reference to field f in       s.f
+                   structure s
+                                                  ^
+    p -> f         reference to field f in       p|.f
+                   structure pointed to by p
+------------------------------------------------------------------------------
+    c ? a:b        conditional expression        - none -
+                   (if c in nonzero, value is
+                   a else value is b)
+------------------------------------------------------------------------------
+    ++x            preincrement                  x := x + 1
+    x++            post increment                x := x + 1
+    --x            predecrement                  x := x - 1
+    x--            post decrement                x := x - 1
+                   (when used in an expression
+                   ++x refers to the value of x 
+                   after incrementing; x++ ]
+                   refers to the value before
+                   incrementing)
+------------------------------------------------------------------------------
+p(e1,e2,...en)     procedure invocation          p(e1,e2,...en)
+------------------------------------------------------------------------------
+while (exp) S;     indefinite iteration          while exp <> 0 do S
+------------------------------------------------------------------------------
+if (exp) S;        conditional                   if exp <> 0 then S
+------------------------------------------------------------------------------
+if (exp) S1;       2-way conditional             if exp <> 0 then S1
+else S2;
+------------------------------------------------------------------------------
+{S1;S2;...;Sn;}    compound statement            begin S1;S2;...;Sn end
+                   (note semicolon)
+------------------------------------------------------------------------------
+for(S1;exp;S2)     indefinite iteration          S1;
+    S3;            with initialization           while exp <> 0 do
+                   and reinitialization               begin
+                   (S1, exp and S2 are                     S3;
+                   optional - if exp is                    S2
+                   omitted, infinite loop             end
+                   results)
+------------------------------------------------------------------------------
+return             procedure return              finish executing procedure
+------------------------------------------------------------------------------
+return(exp)        return exp to caller          function name := exp;
+                   as function value             finish executing function
+------------------------------------------------------------------------------
+name(formals)          procedure declaration     procedure name (formals);
+declaration of formals                           declaration of locals;
+{                                                begin
+    declaration of
+    local variables;                                  statements
+    statements;
+}                                                end
+------------------------------------------------------------------------------
+type name(formals)      function declaration    function name(formals) : type;
+declaration of formals                          declaration of locals;
+{                                               begin
+    declaration of
+    local variables;                                  statements
+    statements;
+}                                               end
+------------------------------------------------------------------------------
+for(i=0;i>N;i++)        typical loop to          for i := 1 to N do
+    ...x[i]...          search array x                ...x[i]...
+                        assuming x has
+                        size N
+------------------------------------------------------------------------------
+     *x++               idiomatic expression for      - none -
+                        pointer x; its value is
+                        whatever x points to; x
+                        is incremented after the
+                        reference according to
+                        pointer arithmetic
+------------------------------------------------------------------------------
+(type)exp               type casting                  - none -
+                        the type of expression
+                        exp is changed.
+(int) &x                example: make the
+                        address of x an
+                        integer (i.e. use integer,
+                        not pointer, arithmetic)
+------------------------------------------------------------------------------
+/*...*/                 Comment                       (*...*) or {...}
+==============================================================================
+
+Copied without permission from OPERATING SYSTEM DESIGN - THE XINU APPROACH
+by Douglas Comer,1984 Prentice-Hall, Inc. Englewood Cliffs, N.J. 07632
+Appendix 1, p.373
+

@@ -1,0 +1,56 @@
+/*
+    simple program to test mouse text library
+    link to my.lib
+*/
+
+char bragstr[20] = " Kandi's Kreations ";
+char titlstr[22] = " Mouse Text Char Set ";
+char sm_str[10] = "Test";
+ 
+main()
+  {
+    int tt_x = 6;
+    int tt_y = 5;
+    int tt_w = 68;
+    int tt_h = 14;
+
+    int br_x = 4;
+    int br_y = 2;
+    int br_w = 68;
+    int br_h = 14;
+
+    int sm_x = 42;
+    int sm_y = 14;
+    int sm_w = 19;
+    int sm_h = 7;
+
+    int l;
+
+    clrscrn();
+
+    do_folder(br_x,br_y,br_w,br_h,bragstr);
+    do_folder(tt_x,tt_y,tt_w,tt_h,titlstr);
+
+    /* show ascii chars */
+    gotoxy(tt_x+2,tt_y+4);
+    for (l=64;l<96;l++)
+      {
+        putchr(l);
+        putchr(' ');
+      }
+
+    /* show mousetext chars */
+    gotoxy(tt_x+2,tt_y+6);
+    for (l=64;l<96;l++)
+      {
+        mtxton();
+        putchr(l);
+        mtxtoff();
+        putchr(' ');
+      }
+
+    do_folder(sm_x,sm_y,sm_w,sm_h,sm_str);
+
+    gotoxy(0,23);
+  }
+

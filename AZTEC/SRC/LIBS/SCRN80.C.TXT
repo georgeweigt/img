@@ -1,0 +1,98 @@
+
+
+/**************************************************
+    screen 80 column lib
+ **************************************************/
+
+crt80()
+  {
+#asm
+  jsr $c300
+#endasm
+  }
+
+int scr_read80(x,y) 
+  int x;
+  int y;
+{
+#asm
+SPP EQU $02
+R0 EQU $08
+    ldy #0
+    sty R0+1
+    ldy #$0d    ;y offset
+    lda (SPP),y ;get y location
+    jsr $fc24 ;set basl
+    ldy #$0b
+    lda (SPP),y
+    lsr a
+    tay
+    bcs rd1a
+    sta $c055
+rd1a
+    lda ($28),y
+    sta $c054
+    sta R0
+    lda $25
+    jsr $fc24
+#endasm
+}
+
+int scr_write80(x,y,c) 
+  int x;
+  int y;
+  char c;
+{
+#asm
+    ldy #$0f
+    lda (SPP),y
+    tax
+    ldy #$0d    ;y offset
+    lda (SPP),y ;get y location
+    jsr $fc24 ;set basl
+    ldy #$0b
+    lda (SPP),y
+    lsr a
+    tay
+    bcs wr1a
+    sta $c055
+wr1a
+    txa ;restore char from x
+    sta ($28),y
+    sta $c054
+    lda $25
+    jsr $fc24
+#endasm
+}
+
+getbuf(x,y,w,h,bbuf)
+  int x,y,w,h;
+  char *bbuf;
+  {
+    int l1,l2;
+    for (l1=0;l1<=h;l1++)
+      {
+        for(l2=0;l2<=w;l2++)
+          {
+            *bbuf=scr_read80(l2+x,l1+y);
+            bbuf++;
+          }/* for l2 */
+      }/* for l1 */
+  }
+
+
+putbuf(x,y,w,h,bbuf)
+  int x,y,w,h;
+  char *bbuf;
+  {
+    int l1,l2;
+    for (l1=0;l1<=h;l1++)
+      {
+        for(l2=0;l2<=w;l2++)
+          {
+            scr_write80(l2+x,l1+y,*bbuf);
+            bbuf++;
+          }/* for l2 */
+      }/* for l1 */
+  }
+

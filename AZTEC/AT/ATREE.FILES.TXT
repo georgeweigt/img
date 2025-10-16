@@ -1,0 +1,5 @@
+atreemain.o 
+ovld.o
+globals.o
+getdir.o
+getchar.o

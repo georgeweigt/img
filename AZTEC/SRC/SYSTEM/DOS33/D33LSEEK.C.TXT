@@ -1,0 +1,42 @@
+/* Copyright (C) 1985 by Manx Software Systems */
+#include	<errno.h>
+#include	<dos33.h>
+
+long
+lseek (fd, pos, how)
+long pos;
+{
+	register int err;
+	register struct _fil_buf *fp;
+	register struct _params *p;
+	register struct _buffers *b;
+	register struct _wrkbuf *w;
+	long off;
+
+	fp = _fil_tab+fd;
+	if (fd < 0 || fd > MAXFILES || fp->unit == 0) {
+		errno = EBADF;
+		return(-1L);
+	}
+	if (fp->unit & 0x80){
+		errno= EACCES;
+		return -1L;
+	}
+	b = fp->iob;
+	w = b->b_work;
+	p = _get_paramlist();
+	p->p_cmd = D33_POSITION;
+	off = w->w_record;
+	off = (off << 8) + w->w_offset;
+	if (how == 1)
+		pos += off;
+	p->p_record = pos >> 8;
+	p->p_offset = pos & 0xff;
+	p->p_work = (char *) b->b_work;
+	_dos(1);
+	if (p->p_return){
+		errno = _errxlate(p->p_return);
+		return -1L;
+	}
+	return pos;
+}

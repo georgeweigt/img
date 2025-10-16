@@ -1,0 +1,2 @@
+lb /aztec/lib/c -r $1
+lb /aztec/lib/c -a+ $1

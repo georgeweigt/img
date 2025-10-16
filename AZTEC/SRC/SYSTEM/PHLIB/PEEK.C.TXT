@@ -1,0 +1,25 @@
+/************************************************/
+/*                                              */
+/*  PEEK  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+int peek (adr)
+long adr;
+{
+#asm
+SPP EQU $02
+ROP EQU $08
+	ldy #$0b
+	lda (SPP),y
+	tax
+	iny
+	lda (SPP),y
+	stx $02
+	sta $03
+	ldy #$00
+	lda (SPP),y
+	sta ROP
+	sty ROP+1
+#endasm;
+}

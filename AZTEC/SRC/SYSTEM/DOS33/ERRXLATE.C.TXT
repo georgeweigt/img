@@ -1,0 +1,22 @@
+#include <errno.h>
+
+static int errcodes[]={
+	0,				/* 0 = no error */
+	EINVAL,			/* 1 = not used */
+	EINVAL,			/* 2 = bad call type */
+	EINVAL,			/* 3 = bad sub call type */
+	0x2b,			/* 4 = disk write protected */
+	0x4c,			/* 5 = end of data */
+	ENOENT,			/* 6 = file exists */
+	0x45,			/* 7 = volume mismatch */
+	0x27,			/* 8 = i/o error */
+	0x48,			/* 9 = disk full */
+	EACCES			/* 10 = invalid operation */
+};
+int _d33errno;
+
+_errxlate(err)
+{
+	_d33errno = err;
+	return  errcodes[err];
+}

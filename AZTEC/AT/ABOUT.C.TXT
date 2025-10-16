@@ -1,0 +1,34 @@
+/*
+    Program: Atree
+            A file utility
+
+    sub: about
+*/
+
+ovmain()
+  {
+    auto char scrbuf[512];
+    char kp;
+    int x=23; int y=8;
+    int w=30; int h=9;
+
+    getbuf(x,y,w+1,h+1,scrbuf);
+
+    do_frame(x,y,w,h," About AppleTree ");
+
+    printat(x+5,y+2,"Apple Tree version 1.0");
+    printat(x+3,y+4,"(c) 1999 Kandi's Kreations");
+    printat(x+5,y+6,"Author: Michael Thomas");
+
+    itxt();
+    printat(x+9,y+8," PRESS A KEY ");
+    ntxt();
+
+    /* wait for user */
+        kp=get_char();
+
+    /* restore window! */
+    putbuf(x,y,w+1,h+1,scrbuf);
+    free(scrbuf);
+  }
+

@@ -1,0 +1,33 @@
+/* Copyright (C) 1985 by Manx Software Systems, Inc. */
+#include	<errno.h>
+#include <dos33.h>
+
+#define EBADNAME 0x40	/* ProDOS error code for bad file name */
+
+unlink(name)
+char *name;
+{
+	register struct _params *p;
+	register struct _buffers *b;
+
+	if (_isdev(name)){
+badname:
+		errno = EBADNAME;
+		return -1;
+	}
+	p = _get_paramlist();
+	p->p_cmd = D33_DELETE;
+	if (_get_name(name, p))
+		goto badname;
+	if ((b = _get_buf(p)) == 0){
+		errno = EMFILE;
+		return(-1);
+	}
+	_dos(1);
+	_free_buf(b);
+	if (p->p_return){
+		errno = _errxlate(p->p_return);
+		return -1;
+	}
+	return 0;
+}

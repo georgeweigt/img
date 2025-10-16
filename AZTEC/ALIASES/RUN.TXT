@@ -1,0 +1,4 @@
+cc $1.c
+ln $1.o -lmy -lph -lc
+rm $1.o
+$1

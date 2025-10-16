@@ -1,0 +1,3 @@
+cci filename -O output.name
+
+    interpreted code compiler.

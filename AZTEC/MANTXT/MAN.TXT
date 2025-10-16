@@ -1,0 +1,27 @@
+syntax: man [filename] [subdirectory]
+
+man is an online document utility similiar to the Un*x man command
+it has the capability to list files to the screen by screenfuls.
+Should the file need more than one screen to display, you will be
+prompted on the bottom line with "More  <Q> <E>"
+
+press any key except <Q> or <E> to continue paging.
+
+<Q> quits displaying file
+<E> edit current file
+
+You should be able to execute man from any directory except the mantxt
+directory. The problem comes from the text file in this directory named
+man (this file). Because of the way the shell works it tries to execute
+this file first which results in errors. This is not normally a problem
+since you do not need to change directories to use the man function.
+
+The man command by itself will list the files in the currently defined
+mantxt path. See the file profile in the startup directory. It will also
+list files in the subdirectories under the mantxt path.
+
+To see how this works try:
+
+man aztec               /* list subdirectory aztec */
+man aztec/<filename>    /* view filename under subdirectory mantxt/aztec */
+ 

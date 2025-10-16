@@ -1,0 +1,3 @@
+cc subs.c
+cc less.c
+ln -m less.o subs.o -l/s -l/c -l/my

@@ -1,0 +1,7 @@
+
+usage   : rem option source target
+
+options : [-c] = C-Source      /* rem */
+          [-k] = Kyan-Source   (* rem *)
+          [-p] = Pascal-Source  { rem }
+

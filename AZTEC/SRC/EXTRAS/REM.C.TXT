@@ -1,0 +1,214 @@
+/***********************************************/
+/*                                             */
+/*  REM  Copyright (C) 1990 by Phade Software  */
+/*                                             */
+/***********************************************/
+
+#include <stdio.h>
+
+FILE    *fd1,
+        *fd2;
+
+int        Byte;
+
+int        i = 0;
+int        lasti = 0;
+int        Byte1,
+        Byte2,
+        ok;
+
+int readit()
+{
+    if (feof (fd1)) return (0);
+    Byte = fgetc (fd1);
+
+    return (1);
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    int code = 0;
+
+    printf ("\n");
+    if (argc != 4)
+    {
+        printf ("usage   : rem option source target\n");
+        printf ("\n");
+        printf ("options : [-c] = C-Source      /* rem */\n");
+        printf ("          [-k] = Kyan-Source   (* rem *)\n");
+        printf ("          [-p] = Pascal-Source  { rem }\n\n");
+        exit (-1);
+    }
+
+    fd1 = fopen (argv[2],"r");
+    if (fd1 == 0L)
+    {
+        printf ("Can't open %s !\n\n",argv[2]);
+        exit (-1);
+    }
+
+    fd2 = fopen (argv[3],"w");
+    if (fd2 == 0L)
+    {
+        printf ("Can't open %s !\n\n",argv[3]);
+        fclose (fd1);
+        exit (-1);
+    }
+
+    if (*argv[1] == '-')
+    switch (*++argv[1])
+    {
+        case 'c':    csource();
+                    break;
+        case 'k':    ksource();
+                    break;
+        case 'p':    psource();
+                    break;
+        default:    printf ("Wrong option specified.\n\n");
+                    code = -1;
+                    break;
+    }
+    else
+    {
+        printf ("No option specified.\n\n");
+        code = -1;
+    }
+
+    CloseIt (code);
+}
+
+csource ()
+{
+    int stop = 1;
+    int marker = 0;
+
+    if ((ok = readit ()) == 1) Byte2 = Byte;
+    else
+    {
+        printf ("C-rem's are removed.\n\n");
+        CloseIt (0);
+    }
+
+    while (stop == 1)
+    {
+        if ((ok = readit()) == 1) Byte1 = Byte;
+        else
+        {
+            if (lasti != 0) printf ("\n\n");
+            printf ("C-rem's are removed.\n\n");
+            CloseIt (0);
+        }
+        if (marker == 3) marker = 0;
+        else
+        {
+            if ((Byte2 == '/') && (Byte1 == '*') && (marker == 0))
+            {
+                marker = 2;
+                i = i + 2;
+            }
+            if ((Byte2 == '*') && (Byte1 == '/') && (marker == 2))
+            {
+                marker = 3;
+                i = i + 2;
+            }
+            if (marker == 0) fputc (Byte2, fd2);
+            if (marker == 2) i = i + 1;
+        }
+        if ((i/50 >= lasti) && (i/50 != lasti))
+        {
+            if (lasti == 0) printf ("Each dot is 50 Byte to remove.\n\n");
+            printf (".");
+            lasti = i/50;
+        }
+        Byte2 = Byte1;
+    }
+}
+
+ksource ()
+{
+    int stop = 1;
+    int marker = 0;
+
+    if ((ok = readit ()) == 1) Byte2 = Byte;
+    else
+    {
+        printf ("Kyan-rem's are removed.\n\n");
+        CloseIt (0);
+    }
+
+    while (stop == 1)
+    {
+        if ((ok = readit()) == 1) Byte1 = Byte;
+        else
+        {
+            if (lasti != 0) printf ("\n\n");
+            printf ("Kyan-rem's are removed.\n\n");
+            CloseIt (0);
+        }
+        if (marker == 3) marker = 0;
+        else
+        {
+            if ((Byte2 == '(') && (Byte1 == '*') && (marker == 0))
+            {
+                marker = 2;
+                i = i + 2;
+            }
+            if ((Byte2 == '*') && (Byte1 == ')') && (marker == 2))
+            {
+                marker = 3;
+                i = i + 2;
+            }
+            if (marker == 0) fputc (Byte2, fd2);
+            if (marker == 2) i = i + 1;
+        }
+        if ((i/50 >= lasti) && (i/50 != lasti))
+        {
+            if (lasti == 0) printf ("Each dot is 50 Byte to remove.\n\n");
+            printf (".");
+            lasti = i/50;
+        }
+        Byte2 = Byte1;
+    }
+}
+
+psource ()
+{
+    int marker = 0;
+    int last   = 0;
+
+    while (1)
+    {
+        ok = readit ();
+        if (feof (fd1))
+        {
+            if (lasti != 0) printf ("\n\n");
+            printf ("Pascal-rem's are removed.\n\n");
+            CloseIt (0);
+        }
+        if ((Byte == '}') && (marker == 1))
+        {
+            marker = 0;
+            last   = 1;
+        }
+        if ((Byte == '{') && (marker == 0)) marker = 1;
+        if ((marker == 0) && (last == 0)) fputc (Byte, fd2);
+        if (marker != 0) i = i + 1;
+        if ((i/50 >= lasti) && (i/50 != lasti))
+        {
+            if (lasti == 0) printf ("Each dot is 50 Byte to remove.\n\n");
+            printf (".");
+            lasti = i/50;
+        }
+        last = 0;
+    }
+}
+
+CloseIt (code)
+int code;
+{
+    fclose (fd1);
+    fclose (fd2);
+    exit (code);
+}

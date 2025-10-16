@@ -1,0 +1,87 @@
+     PHADE SOFTWARE presents SHAREWARE NOTICE :    Update 01.01.1990
+--------------------------------------------------------------------
+
+This  program is Shareware. You may distribute it freely, but to use
+legally  after  a  10 - day - evaluation period  you  have  to  send
+75 DM (or 40$) to :
+
+       PHADE SOFTWARE
+       Inhaber Frank Gadegast
+
+       Schierker Strasse 39
+       1000 Berlin 44           Telefon : GERMANY (030) 6265667
+
+In  return, you will receive the latest version of this program, the
+source code and a registration number allowing you to use and change
+this program in every way you want.
+You will also receive the next update free. Your honesty will enable
+PHADE SOFTWARE to continue distributing quality Shareware products.
+Please include a brief description of your system when you register,
+and REPORT THE NAME OF THIS PROGRAM WITH THE VERSION NUMBER.
+
+All  comments  and ideas you like to add are welcome. If you have  a
+good  program  that  you  like  to add, send it. You  will  get  the
+registration free.
+
+All  following products  are Shareware. If  you like to have a  copy
+contact PHADE SOFTWARE.
+
+
+
+  PHADE SOFTWARE NEWS presents latest APPLE ][e PRODOS Utilities :
+--------------------------------------------------------------------
+
+Aztec.Man        : Aztec C65 Manual
+Aztec.Uti        : Aztec C65 Utilities like FIND, FORMAT, HC, etc.
+Chess.Board      : Chess for two players
+Hires.Tricks     : Hires packing programs
+Starter          : Full-screen startup program by directory entries
+Startup          : Full-screen startup program with editor
+Text.Tricks      : 40- & 80-column screen editors, scrolls, etc.
+
+
+
+  PHADE SOFTWARE NEWS presents latest APPLE ][e DOS Utilities :
+--------------------------------------------------------------------
+
+Chess Board      : Chess for two players
+Dos & Tricks     : Dos 3.3/4 utilities like BYE, CAT, BREAK BEEP
+Desk - Merger    : Window graphic merging program
+DHGR - Utilities : Double-Hires expand utilities
+Hires - Pack     : Hires packing programs
+Pager 2.2        : Full-window-screen text-editor
+Phade Shell      : Unix-like Shell for Dos 3.3/4 or Z-Dos
+Phade Selector   : Program selector with BYE-Command
+Startup          : Full-screen startup program with editor
+Text & Tricks    : 40- & 80-column screen editors, scrolls, etc.
+
+
+
+  PHADE SOFTWARE NEWS presents latest APPLE ][e UCSD Utilities :
+--------------------------------------------------------------------
+
+Filer ][   : Graphic - Window File-Utility and starting program
+             ( secial appendix to SYSTEM.FILER )
+Paint ][   : Graphic - Window Drawing-Program
+Startup ][ : Graphic - Window Startup-Program with editor
+Startup    : Full-screen startup program with editor
+
+
+
+     PHADE SOFTWARE presents latest IBM MS-DOS Utilities :
+--------------------------------------------------------------------
+
+MENU : Full-textscreen Harddisk - Organization - Program
+       You can install all your programs in a Window-Menu.
+       Comes together with MENU-EDITOR and DIRECTORY STARTER.
+PI   : Full-textscreen Organization - Program like NORTON INTEGRATOR
+       You can install all your programs in a menu. Usefull to
+       organize programs and there options. Editor included.
+UTIL : Usefull utilities like :
+       CALC  : Calculator
+       CHAR  : Shows charset
+       DUMP  : Dumps every file in different options
+       MAP   : Memory map (shows resident programs)
+       MERGE : Merge textfiles
+       PASS  : Saves and rebuilds textfiles with password
+       REMM  : Removes remarks and krunchs textfiles

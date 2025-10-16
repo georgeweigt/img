@@ -1,0 +1,20 @@
+/***************************************************/
+/*                                                 */
+/*  TTYHIDE  Copyright (C) 1990 by Phade Software  */
+/*                                                 */
+/***************************************************/
+
+#include <stdio.h>
+#include <waitkey.h>
+
+main()
+{
+	printf ("%c\n",(char)26);
+	waitkey ();
+#asm
+  lda #$0
+  sta $C010
+#endasm
+
+	exit (0);
+}

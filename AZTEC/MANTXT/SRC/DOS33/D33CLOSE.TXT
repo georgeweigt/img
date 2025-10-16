@@ -1,0 +1,39 @@
+/* Copyright (C) 1985 by Manx Software Systems */
+
+#include	<dos33.h>
+#include	<errno.h>
+
+close (fd)
+{
+	register struct _fil_buf *fp;
+	register int err;
+	struct _params *_get_paramlist(), *p;
+	struct _buffers *b;
+
+	fp = _fil_tab+fd;
+	if (fd >= MAXFILES || fp->unit == 0) {
+		errno = EBADF;
+		return(-1);
+	}
+
+	err = fp->unit;
+	fp->unit = 0; /* free filbuf entry */
+	if (err&0x80) /* device close: */
+		return 0;
+	/* file close: */
+	p = _get_paramlist();
+	b = fp->iob;
+	p->p_cmd = D33_CLOSE;
+	p->p_work = (char *) b->b_work;
+	p = _get_paramlist();
+	p->p_tslist = b->b_tslist;
+	p->p_data = b->b_data;
+	_dos(1);
+	_free_buf(b);
+	if (err = p->p_return){
+		errno=_errxlate(err);
+		return -1;
+	}
+	return 0;
+}
+

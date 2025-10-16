@@ -1,0 +1,130 @@
+/************************************************/
+/*                                              */
+/*  TREE  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+#include <malloc.h>
+#include <fcntl.h>
+
+#define empty ""
+
+struct dir
+{
+    char length;        /* entry_name length */
+    char name[15];        /* entry_name */
+    char type;            /* entry_type */
+    char fil[22];        /* not used bytes */
+};
+
+int tree (path, subs)
+char *path;
+int subs;
+{
+    struct dir *entry = (struct dir *)malloc (sizeof (struct dir));
+    char header[43];
+    char newpath[64];
+    char filename[16];
+    int fd;
+    int nbytes;
+    int count = 1;
+    int i;
+
+    for (i=0;i<subs;i++) printf ("    ");
+    printf ("%s\n", path);
+    if ((fd = open (path, O_RDONLY, 0)) < 0) return (-1);
+    nbytes = read (fd, header, 43);
+    if (nbytes < 43)
+    {
+        close (fd);
+        free (entry);
+        free (newpath);
+        free (filename);
+        return (-1);
+    }
+    while (0 == 0)
+    {
+        nbytes = read (fd, entry, 39);
+        if (nbytes < 39)
+        {
+            close (fd);
+            free (entry);
+            free (newpath);
+            free (filename);
+            return (0);
+        }
+        if (++count == 13)
+        {
+            read (fd, header, 5);
+            count = 0;
+        }
+        while (entry->length > 15) entry->length = entry->length - 16;
+        if (entry->type == 0)
+        {
+            close (fd);
+            free (entry);
+            free (newpath);
+            free (filename);
+            return (0);
+        }
+        if (entry->length != 0)
+        {
+            if (entry->type == (char)15)
+            {
+                strcpy (newpath, path);
+                strcat (newpath, "/");
+                strncat (newpath, entry->name, entry->length);
+                tree (newpath, subs + 1);
+            }
+            else
+            {
+                for (i=0;i<subs;i++) printf ("    ");
+                strcpy (filename, empty);
+                strncat (filename, entry->name, entry->length);
+                printf ("  %s\n", filename);
+            }
+        }
+    }
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    char curpath[64];
+    char path[64];
+
+    if (argc > 2)
+    {
+        printf ("\nusage : tree [path]\n\n");
+        exit (-1);
+    }
+
+    if (argc == 1)
+    {
+        if (getprefix (path) == -1) errexit ();
+        if (strlen (path) < 2) exit (0);
+        strcpy (curpath, empty);
+        strncat (curpath, path, strlen (path) - 1);
+        printf ("\nDirectory-tree at %s :\n\n", curpath);
+        tree (curpath, 0);
+    }
+    else
+    {
+        strtoup (argv[1]);
+        printf ("\nDirectory-tree at %s :\n\n", argv[1]);
+        tree (argv[1], 0);
+    }
+    printf ("\n");
+
+    exit (0);
+}
+
+errexit ()
+{
+    perror ("tree ");
+    exit (-1);
+}

@@ -1,0 +1,25 @@
+/**********************************************/
+/*                                            */
+/*  TD  Copyright (C) 1990 by Phade Software  */
+/*                                            */
+/**********************************************/
+
+#include <stdio.h>
+#include <time.h>
+
+char *day[] = {"Sun","Mon","Tues","Wends","Thurs","Fri","Satur"};
+char *mon[] = {"Januar","Februar","March","April","Mai","June",
+               "July","August","September","October","November","December"};
+
+main()
+{
+    struct tm *tm;
+    long t=time();
+    
+    tm = localtime(&t);
+    printf ("\nTime: %02d:%02d:%02d   Date: %sday %02d %s 19%02d\n\n",
+            tm->tm_hour,tm->tm_min,tm->tm_sec,
+            day[tm->tm_wday],tm->tm_mday,mon[tm->tm_mon],tm->tm_year);
+
+    exit (0);
+}

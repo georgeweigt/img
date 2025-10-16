@@ -1,0 +1,6 @@
+cc ov.c
+cc ov1.c
+cc ov2.c
+ln -t -r +c 400 +d 1000 ov.o ovld.o  -lc
+ln ov1.o ov.rsm ovbgn.o -lc
+ln ov2.o ov.rsm ovbgn.o -lc

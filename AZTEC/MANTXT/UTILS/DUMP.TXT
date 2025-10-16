@@ -1,0 +1,7 @@
+
+usage   : DUMP [-option] filename
+
+options : [-t] = textdump
+          [-h] = hexdump
+          [-d] = text & hexdump
+

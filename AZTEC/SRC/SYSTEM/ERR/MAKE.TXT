@@ -1,0 +1,3 @@
+cc -Z5000 errm.c
+cc -Z5000 err.c
+ln err.o errm.o -lc

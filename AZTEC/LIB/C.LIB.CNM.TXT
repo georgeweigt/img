@@ -1,0 +1,330 @@
+c.lib(tmpfile ): code: 194 data: 3 udata: 0  total: 197 (0xc5)
+  0000 Pg tmpfile_  0000 Un .csav     0000 Un .cpystk   0000 Un tmpnam_ 
+  0000 Un fopen_    0000 Un perror_   0000 Un strlen_   0000 Un malloc_ 
+  0000 Un fclose_   0000 Un unlink_   0000 Un strcpy_ 
+c.lib(perror  ): code: 162 data: 800 udata: 0  total: 962 (0x3c2)
+  0000 Dt errlist_  0000 Pg perror_   0000 Un .csav     0000 Un errno_  
+  0000 Un Cbuffs_   0000 Un .cpystk   0000 Un fprintf_
+c.lib(fdopen  ): code: 56 data: 0 udata: 0  total: 56 (0x38)
+  0000 Pg fdopen_   0000 Un .csav     0000 Un .cpystk   0000 Un newstrea
+c.lib(fopen   ): code: 272 data: 45 udata: 0  total: 317 (0x13d)
+  0000 Pg fopen_    0040 Pg freopen_  0000 Un .csav     0000 Un .cpystk 
+  0000 Un newstrea  0000 Un fclose_   0000 Un errno_    0000 Un strcmp_ 
+  0000 Un open_   
+c.lib(fseek   ): code: 477 data: 0 udata: 0  total: 477 (0x1dd)
+  0000 Pg fseek_    00ef Pg ftell_    0000 Un .csav     0000 Un .cpystk 
+  0000 Un flsh__    0000 Un lseek_  
+c.lib(scanf   ): code: 163 data: 0 udata: 2  total: 165 (0xa5)
+  0000 Pg scanf_    0000 Un .csav     0000 Un .cpystk   0000 Un scanfmt_
+  0000 Un Cbuffs_   0000 Un agetc_    0000 Un ungetc_ 
+c.lib(gets    ): code: 138 data: 0 udata: 0  total: 138 (0x8a)
+  0000 Pg gets_     0000 Un .csav     0000 Un .cpystk   0000 Un getchar_
+c.lib(getchar ): code: 19 data: 0 udata: 0  total: 19 (0x13)
+  0000 Pg getchar_  0000 Un .csav     0000 Un Cbuffs_   0000 Un .cpystk 
+  0000 Un agetc_  
+c.lib(fscanf  ): code: 191 data: 0 udata: 4  total: 195 (0xc3)
+  0000 Pg fscanf_   0000 Un .csav     0000 Un .cpystk   0000 Un scanfmt_
+  0000 Un agetc_    0000 Un ungetc_ 
+c.lib(fgets   ): code: 181 data: 0 udata: 0  total: 181 (0xb5)
+  0000 Pg fgets_    0000 Un .csav     0000 Un .cpystk   0000 Un agetc_  
+c.lib(agetc   ): code: 67 data: 0 udata: 0  total: 67 (0x43)
+  0000 Pg agetc_    0000 Un .csav     0000 Un .cpystk   0000 Un getc_   
+c.lib(fread   ): code: 195 data: 0 udata: 0  total: 195 (0xc3)
+  0000 Pg fread_    0000 Un .csav     0000 Un .cpystk   0000 Un getc_   
+c.lib(getw    ): code: 117 data: 0 udata: 0  total: 117 (0x75)
+  0000 Pg getw_     0000 Un .csav     0000 Un .cpystk   0000 Un getc_   
+  0000 Un .shl    
+c.lib(getc    ): code: 259 data: 0 udata: 0  total: 259 (0x103)
+  0000 Pg getc_     0000 Un .csav     0000 Un .cpystk   0000 Un getbuff_
+  0000 Un read_   
+c.lib(puterr  ): code: 28 data: 0 udata: 0  total: 28 (0x1c)
+  0000 Pg puterr_   0000 Un .csav     0000 Un Cbuffs_   0000 Un .cpystk 
+  0000 Un aputc_  
+c.lib(printf  ): code: 46 data: 0 udata: 0  total: 46 (0x2e)
+  0000 Pg printf_   0000 Un .csav     0000 Un putchar_  0000 Un .cpystk 
+  0000 Un format_ 
+c.lib(puts    ): code: 96 data: 0 udata: 0  total: 96 (0x60)
+  0000 Pg puts_     0000 Un .csav     0000 Un .cpystk   0000 Un putchar_
+c.lib(putchar ): code: 28 data: 0 udata: 0  total: 28 (0x1c)
+  0000 Pg putchar_  0000 Un .csav     0000 Un Cbuffs_   0000 Un .cpystk 
+  0000 Un aputc_  
+c.lib(fprintf ): code: 89 data: 0 udata: 2  total: 91 (0x5b)
+  0000 Pg fprintf_  0000 Un .csav     0000 Un .cpystk   0000 Un format_ 
+  0000 Un aputc_  
+c.lib(fputs   ): code: 98 data: 0 udata: 0  total: 98 (0x62)
+  0000 Pg fputs_    0000 Un .csav     0000 Un .cpystk   0000 Un aputc_  
+c.lib(aputc   ): code: 67 data: 0 udata: 0  total: 67 (0x43)
+  0000 Pg aputc_    0000 Un .csav     0000 Un .cpystk   0000 Un putc_   
+c.lib(fwrite  ): code: 153 data: 0 udata: 0  total: 153 (0x99)
+  0000 Pg fwrite_   0000 Un .csav     0000 Un .mul      0000 Un .cpystk 
+  0000 Un putc_   
+c.lib(putw    ): code: 111 data: 0 udata: 0  total: 111 (0x6f)
+  0000 Pg putw_     0000 Un .csav     0000 Un .cpystk   0000 Un putc_   
+  0000 Un .lsr    
+c.lib(putc    ): code: 773 data: 0 udata: 0  total: 773 (0x305)
+  0000 Pg putc_     0173 Pg flsh__    00a0 Pg fclose_   0000 Un .csav   
+  0000 Un .cpystk   0000 Un Cbuffs_   0000 Un close_    0000 Un free_   
+  0000 Un unlink_   0000 Un cls__     0000 Un write_    0000 Un getbuff_
+c.lib(getbuff ): code: 222 data: 260 udata: 0  total: 482 (0x1e2)
+  0000 Dt Cbuffs_   0000 Pg newstrea  0054 Pg getbuff_  0000 Un .csav   
+  0000 Un .cpystk   0000 Un isatty_   0000 Un malloc_ 
+c.lib(setbuf  ): code: 96 data: 0 udata: 0  total: 96 (0x60)
+  0000 Pg setbuf_   0000 Un .csav   
+c.lib(tmpnam  ): code: 198 data: 15 udata: 40  total: 253 (0xfd)
+  0000 Pg tmpnam_   0000 Un .csav     0000 Un .cpystk   0000 Un strcpy_ 
+  0000 Un strcat_   0000 Un mktemp_ 
+c.lib(mktemp  ): code: 320 data: 0 udata: 0  total: 320 (0x140)
+  0000 Pg mktemp_   0000 Un .csav     0000 Un .cpystk   0000 Un strlen_ 
+  0000 Un _main_    0000 Un .udv      0000 Un .umd      0000 Un access_ 
+c.lib(ungetc  ): code: 99 data: 0 udata: 0  total: 99 (0x63)
+  0000 Pg ungetc_   0000 Un .csav   
+c.lib(getenv  ): code: 323 data: 0 udata: 2  total: 325 (0x145)
+  0000 Pg getenv_   0000 Un .csav     0000 Un _Sp_      0000 Un .cpystk 
+  0000 Un strlen_   0000 Un strncmp_  0000 Un free_     0000 Un malloc_ 
+  0000 Un strcpy_ 
+c.lib(calloc  ): code: 96 data: 0 udata: 0  total: 96 (0x60)
+  0000 Pg calloc_   0000 Un .csav     0000 Un .mul      0000 Un .cpystk 
+  0000 Un malloc_   0000 Un setmem_ 
+c.lib(malloc  ): code: 1014 data: 0 udata: 6  total: 1020 (0x3fc)
+  0000 Pg realloc_  0330 Pg free_     00d1 Pg malloc_   0000 Un .csav   
+  0000 Un .shl      0000 Un .cpystk   0000 Un movmem_   0000 Un .lsr    
+  0000 Un sbrk_   
+c.lib(access  ): code: 349 data: 0 udata: 0  total: 349 (0x15d)
+  0000 Pg access_   0000 Un .csav     0000 Un .cpystk   0000 Un _getfinf
+  0000 Un errno_    0000 Un .fstswt 
+c.lib(data    ): code: 0 data: 32 udata: 0  total: 32 (0x20)
+  0000 Dt _filtab_
+c.lib(execp   ): code: 677 data: 7 udata: 0  total: 684 (0x2ac)
+  0000 Pg execlp_   0028 Pg execvp_   0000 Un .csav     0000 Un .cpystk 
+  0000 Un strcpy_   0000 Un getenv_   0000 Un index_    0000 Un strlen_ 
+  0000 Un strncpy_  0000 Un strcat_   0000 Un _getfinf  0000 Un execv_  
+  0000 Un errno_  
+c.lib(exec    ): code: 882 data: 0 udata: 0  total: 882 (0x372)
+  0000 Pg execl_    0028 Pg execv_    0000 Un .csav     0000 Un .cpystk 
+  0000 Un _Sp_      0000 Un strcpy_   0000 Un ctop_     0000 Un strlen_ 
+  0000 Un .shl      0000 Un .lsr      0000 Un _fil_tab  0000 Un .cpystk2
+c.lib(isatty  ): code: 123 data: 0 udata: 0  total: 123 (0x7b)
+  0000 Pg isatty_   0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+c.lib(open    ): code: 1087 data: 0 udata: 0  total: 1087 (0x43f)
+  0000 Pg creat_    0024 Pg open_     0000 Un .csav     0000 Un .cpystk 
+  0000 Un _fil_tab  0000 Un errno_    0000 Un .lsr      0000 Un _dev_inf
+  0000 Un strequ_   0000 Un toupper_  0000 Un .mul      0000 Un _slot_op
+  0000 Un _get_iob  0000 Un _fixnam_  0000 Un ctop_     0000 Un _sys_par
+  0000 Un _system_  0000 Un close_    0000 Un _seteof_  0000 Un lseek_  
+  0000 Un _getfinf  0000 Un _setfinf
+c.lib(casecvt ): code: 153 data: 0 udata: 0  total: 153 (0x99)
+  0000 Pg toupper_  004d Pg tolower_  0000 Un .csav   
+c.lib(lseek   ): code: 376 data: 0 udata: 0  total: 376 (0x178)
+  0000 Pg lseek_    0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un _sys_par  0000 Un errno_    0000 Un .cpystk   0000 Un _system_
+  0000 Un .swit   
+c.lib(read    ): code: 513 data: 0 udata: 0  total: 513 (0x201)
+  0000 Pg read_     0178 Pg _dev_rea  0000 Un .csav     0000 Un .shl    
+  0000 Un _fil_tab  0000 Un errno_    0000 Un .cpystk   0000 Un _kb_get_
+  0000 Un .mul      0000 Un _dev_inf  0000 Un _sys_par  0000 Un _system_
+  0000 Un .rpush    0000 Un _slot_re  0000 Un .rpull  
+c.lib(write   ): code: 488 data: 0 udata: 0  total: 488 (0x1e8)
+  0000 Pg write_    0177 Pg _dev_wri  0000 Un .csav     0000 Un .shl    
+  0000 Un _fil_tab  0000 Un errno_    0000 Un .cpystk   0000 Un _kb_put_
+  0000 Un .mul      0000 Un _dev_inf  0000 Un _sys_par  0000 Un _system_
+  0000 Un _slot_wr
+c.lib(rename  ): code: 255 data: 0 udata: 0  total: 255 (0xff)
+  0000 Pg rename_   0000 Un .csav     0000 Un .cpystk   0000 Un _fixnam_
+  0000 Un ctop_     0000 Un _sys_par  0000 Un _system_  0000 Un errno_  
+c.lib(geteof  ): code: 187 data: 0 udata: 0  total: 187 (0xbb)
+  0000 Pg get_eof_  0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un _sys_par  0000 Un errno_    0000 Un .cpystk   0000 Un _system_
+c.lib(seteof  ): code: 3 data: 0 udata: 0  total: 3 (0x3)
+  0000 Pg seteof_   0000 Un _seteof_
+c.lib(seteofu ): code: 212 data: 0 udata: 0  total: 212 (0xd4)
+  0000 Pg _seteof_  0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un _sys_par  0000 Un errno_    0000 Un .cpystk   0000 Un _system_
+c.lib(getfinfo): code: 3 data: 0 udata: 0  total: 3 (0x3)
+  0000 Pg getfinfo  0000 Un _getfinf
+c.lib(getfinfu): code: 197 data: 0 udata: 0  total: 197 (0xc5)
+  0000 Pg _getfinf  0000 Un .csav     0000 Un .cpystk   0000 Un _fixnam_
+  0000 Un _sys_par  0000 Un ctop_     0000 Un _system_  0000 Un .move   
+  0000 Un errno_  
+c.lib(setfinfo): code: 3 data: 0 udata: 0  total: 3 (0x3)
+  0000 Pg setfinfo  0000 Un _setfinf
+c.lib(setfinfu): code: 187 data: 0 udata: 0  total: 187 (0xbb)
+  0000 Pg _setfinf  0000 Un .csav     0000 Un .cpystk   0000 Un _fixnam_
+  0000 Un _sys_par  0000 Un ctop_     0000 Un .move     0000 Un _system_
+  0000 Un errno_  
+c.lib(getiob  ): code: 432 data: 0 udata: 0  total: 432 (0x1b0)
+  0000 Pg _get_iob  0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un .cpystk   0000 Un sbrk_     0000 Un errno_  
+c.lib(setiob  ): code: 355 data: 0 udata: 0  total: 355 (0x163)
+  0000 Pg setiob_   0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un .cpystk   0000 Un sbrk_   
+c.lib(mkdir   ): code: 173 data: 0 udata: 0  total: 173 (0xad)
+  0000 Pg mkdir_    0000 Un .csav     0000 Un .cpystk   0000 Un strcpy_ 
+  0000 Un ctop_     0000 Un _sys_par  0000 Un _system_  0000 Un errno_  
+c.lib(rsvstk  ): code: 20 data: 0 udata: 0  total: 20 (0x14)
+  0000 Pg rsvstk_   0000 Un .csav     0000 Un _Stksiz_
+c.lib(brk     ): code: 75 data: 0 udata: 0  total: 75 (0x4b)
+  0000 Pg brk_      0000 Un .csav     0000 Un _Stksiz_  0000 Un errno_  
+  0000 Un _Top_   
+c.lib(sbrk    ): code: 190 data: 0 udata: 0  total: 190 (0xbe)
+  0000 Pg sbrk_     0000 Un .csav     0000 Un _End_     0000 Un _Stksiz_
+  0000 Un _Top_     0000 Un errno_  
+c.lib(crt0    ): code: 108 data: 6 udata: 0  total: 114 (0x72)
+  0002 Gl _Top_     0002 Gl _mbot_    0000 Dt MEMRY     0002 Dt _Stksiz_
+  0004 Dt _End_     0000 Pg .begin    000e Gl acc       000e Gl sec     
+  0000 Un _Corg_    0000 Un _Uorg_    0000 Un _Uend_    0000 Un _main_  
+c.lib(shmain  ): code: 50 data: 0 udata: 0  total: 50 (0x32)
+  0002 Gl _dev_inf  0002 Gl _fil_tab  0002 Gl errno_    0002 Gl _Sp_    
+  0000 Pg _main_    0000 Un main_     0000 Un exit_   
+c.lib(exit    ): code: 125 data: 2 udata: 0  total: 127 (0x7f)
+  0000 Dt cls__     000b Pg exit_     0000 Un .csav     0000 Un .cpystk2
+  0000 Un .shl      0000 Un _fil_tab  0000 Un .cpystk   0000 Un close_  
+  0000 Un _exit_  
+c.lib(close   ): code: 184 data: 0 udata: 0  total: 184 (0xb8)
+  0000 Pg close_    0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un errno_    0000 Un _sys_par  0000 Un .cpystk   0000 Un _system_
+c.lib(unlink  ): code: 162 data: 0 udata: 0  total: 162 (0xa2)
+  0000 Pg unlink_   0000 Un .csav     0000 Un .cpystk   0000 Un _fixnam_
+  0000 Un ctop_     0000 Un _sys_par  0000 Un _system_  0000 Un errno_  
+c.lib(fixnam  ): code: 3 data: 0 udata: 0  total: 3 (0x3)
+  0000 Pg fixnam_   0000 Un _fixnam_
+c.lib(fixnamu ): code: 643 data: 7 udata: 0  total: 650 (0x28a)
+  0000 Pg _fixnam_  0000 Un .csav     0000 Un .cpystk   0000 Un getprefi
+  0000 Un strcat_   0000 Un index_    0000 Un strcpy_   0000 Un strlen_ 
+  0000 Un strcmp_   0000 Un errno_  
+c.lib(setprfx ): code: 106 data: 0 udata: 0  total: 106 (0x6a)
+  0000 Pg setprefi  0000 Un .csav     0000 Un _sys_par  0000 Un .cpystk 
+  0000 Un ctop_     0000 Un _system_  0000 Un ptoc_     0000 Un errno_  
+c.lib(getprfx ): code: 96 data: 0 udata: 0  total: 96 (0x60)
+  0000 Pg getprefi  0000 Un .csav     0000 Un _sys_par  0000 Un .cpystk 
+  0000 Un _system_  0000 Un ptoc_     0000 Un errno_  
+c.lib(strshft ): code: 76 data: 0 udata: 0  total: 76 (0x4c)
+  0000 Pg ctop_     0027 Pg ptoc_   
+c.lib(device  ): code: 2457 data: 109 udata: 3  total: 2569 (0xa09)
+  0000 Pg _kb_get_  03a2 Pg _cget_    03bd Pg _kb_put_  0931 Pg _cput_  
+  0967 Pg _rscrl_   0000 Un .csav     0000 Un _dev_inf  0000 Un .cpystk 
+  0000 Un _exit_    0000 Un movmem_   0000 Un .cpystk2  0000 Un .swit   
+c.lib(exitu   ): code: 72 data: 0 udata: 0  total: 72 (0x48)
+  0000 Pg _exit_    0000 Un .csav     0000 Un _sys_par  0000 Un .cpystk 
+  0000 Un _system_  0000 Un _Sp_      0000 Un .cpystk2
+c.lib(devtab  ): code: 0 data: 218 udata: 0  total: 218 (0xda)
+  0000 Dt _devinfo
+c.lib(gdev    ): code: 494 data: 0 udata: 0  total: 494 (0x1ee)
+  0000 Un _dev_inf  0000 Pg _slot_op  01d2 pg set_slot  001c pg open1   
+  0085 pg open3     002b pg open2     010e pg copy_vec  00de pg do_basic
+  006d pg do_1.0    009b pg open5     00db pg call_R0   00a4 pg init0   
+  00da pg open6     00b3 pg init1     00c2 pg init2     01a2 pg put     
+  00cb pg init3     010b pg x1        00f2 pg loop2     0110 pg loop    
+  011b Pg _slot_re  01c4 pg do_call   0135 pg read1     013c Pg _slot_wr
+  0154 pg wr1       0165 pg wr2       0194 pg wr3       0176 pg tab0    
+  0180 pg tab2      0185 pg tab3      017a pg tab1      018a pg tab4    
+  01b3 pg put1      01b7 pg put2      01c3 pg put3    
+c.lib(ioctl   ): code: 260 data: 0 udata: 0  total: 260 (0x104)
+  0000 Pg ioctl_    0000 Un .csav     0000 Un .shl      0000 Un _fil_tab
+  0000 Un errno_    0000 Un _dev_inf  0000 Un .move   
+c.lib(ctime   ): code: 46 data: 0 udata: 0  total: 46 (0x2e)
+  0000 Pg ctime_    0000 Un .csav     0000 Un .cpystk   0000 Un localtim
+  0000 Un asctime_
+c.lib(asctime ): code: 253 data: 106 udata: 26  total: 385 (0x181)
+  0000 Pg asctime_  0000 Un .csav     0000 Un .shl      0000 Un .cpystk 
+  0000 Un sprintf_
+c.lib(gettime ): code: 98 data: 0 udata: 0  total: 98 (0x62)
+  0000 Pg get_time  0000 Un .csav     0000 Un .cpystk   0000 Un time_   
+  0000 Un localtim  0000 Un .move   
+c.lib(localtim): code: 584 data: 24 udata: 20  total: 628 (0x274)
+  0000 Pg gmtime_   0016 Pg localtim  0000 Un .csav     0000 Un .cpystk 
+  0000 Un .asrx     0000 Un .shl      0000 Un .asr      0000 Un .mod    
+c.lib(time    ): code: 435 data: 0 udata: 0  total: 435 (0x1b3)
+  0000 Pg time_     0000 Un .csav     0000 Un .cpystk   0000 Un _system_
+  0000 Un errno_    0000 Un .shlx     0000 Un .asrx   
+c.lib(system  ): code: 20 data: 0 udata: 0  total: 20 (0x14)
+  0012 Gl _sys_par  0000 Pg _system_
+c.lib(atoi    ): code: 272 data: 0 udata: 0  total: 272 (0x110)
+  0000 Pg atoi_     0000 Un .csav     0000 Un ctp__     0000 Un .mul    
+c.lib(atol    ): code: 368 data: 0 udata: 0  total: 368 (0x170)
+  0000 Pg atol_     0000 Un .csav     0000 Un ctp__     0000 Un .mulx   
+c.lib(qsort   ): code: 775 data: 0 udata: 0  total: 775 (0x307)
+  0000 Pg qsort_    0000 Un .csav     0000 Un .mul      0000 Un .udv    
+  0000 Un .lsr      0000 Un .cpystk2  0000 Un .cpystk   0000 Un swapmem_
+c.lib(sscanf  ): code: 196 data: 0 udata: 3  total: 199 (0xc7)
+  0000 Pg sscanf_   0000 Un .csav     0000 Un .cpystk   0000 Un scanfmt_
+c.lib(scan    ): code: 2210 data: 45 udata: 4  total: 2259 (0x8d3)
+  0000 Pg scanfmt_  05d8 Pg skipblan  063c Pg getnum_   0000 Un .csav   
+  0000 Un ctp__     0000 Un .mul      0000 Un .cpystk   0000 Un .cpystk2
+  0000 Un strchr_   0000 Un .swit     0000 Un .mulx   
+c.lib(sprintf ): code: 133 data: 0 udata: 2  total: 135 (0x87)
+  0000 Pg sprintf_  0000 Un .csav     0000 Un .cpystk   0000 Un format_ 
+c.lib(format  ): code: 2361 data: 17 udata: 0  total: 2378 (0x94a)
+  01e5 Pg format_   0000 Un .csav     0000 Un .umdx     0000 Un .udvx   
+  0000 Un ctp__     0000 Un .mul      0000 Un .cpystk   0000 Un strlen_ 
+  0000 Un .swit     0000 Un .cpystk2
+c.lib(ctype   ): code: 0 data: 129 udata: 0  total: 129 (0x81)
+  0000 Dt ctp__   
+c.lib(swapmem ): code: 40 data: 0 udata: 0  total: 40 (0x28)
+  0000 Pg swapmem_
+c.lib(setmem  ): code: 32 data: 0 udata: 0  total: 32 (0x20)
+  0000 Pg setmem_ 
+c.lib(rindex  ): code: 42 data: 0 udata: 0  total: 42 (0x2a)
+  0000 Pg rindex_ 
+c.lib(strrchr ): code: 46 data: 0 udata: 0  total: 46 (0x2e)
+  0000 Pg strrchr_
+c.lib(strncat ): code: 70 data: 0 udata: 0  total: 70 (0x46)
+  0000 Pg strncat_
+c.lib(fstswt  ): code: 64 data: 0 udata: 0  total: 64 (0x40)
+  0000 Pg .fstswt 
+c.lib(tmpsav  ): code: 91 data: 0 udata: 0  total: 91 (0x5b)
+  0000 Pg .rpush    001b Pg .rpushx   0025 Pg .rpull    0040 Pg .rpullx 
+c.lib(strequ  ): code: 76 data: 0 udata: 0  total: 76 (0x4c)
+  0000 Pg strequ_ 
+c.lib(index   ): code: 45 data: 0 udata: 0  total: 45 (0x2d)
+  0000 Pg index_  
+c.lib(strchr  ): code: 47 data: 0 udata: 0  total: 47 (0x2f)
+  0000 Pg strchr_ 
+c.lib(movmem  ): code: 94 data: 0 udata: 0  total: 94 (0x5e)
+  0000 Pg movmem_ 
+c.lib(move    ): code: 32 data: 0 udata: 0  total: 32 (0x20)
+  0000 Pg .move   
+c.lib(strncpy ): code: 62 data: 0 udata: 0  total: 62 (0x3e)
+  0000 Pg strncpy_
+c.lib(strncmp ): code: 63 data: 0 udata: 0  total: 63 (0x3f)
+  0000 Pg strncmp_
+c.lib(strcat  ): code: 57 data: 0 udata: 0  total: 57 (0x39)
+  0000 Pg strcat_ 
+c.lib(strcmp  ): code: 52 data: 0 udata: 0  total: 52 (0x34)
+  0000 Pg strcmp_ 
+c.lib(strcpy  ): code: 34 data: 0 udata: 0  total: 34 (0x22)
+  0000 Pg strcpy_ 
+c.lib(istack  ): code: 58 data: 0 udata: 0  total: 58 (0x3a)
+  0000 Pg .cpystk2  0000 Un .modstk 
+c.lib(lmath   ): code: 358 data: 0 udata: 0  total: 358 (0x166)
+  0000 Pg .mulx     0053 Pg .udvx     0062 Pg .divx     0087 Pg .umdx   
+  0096 Pg .modx   
+c.lib(strlen  ): code: 31 data: 0 udata: 0  total: 31 (0x1f)
+  0000 Pg strlen_ 
+c.lib(swit    ): code: 81 data: 0 udata: 0  total: 81 (0x51)
+  0000 Pg .swit   
+c.lib(math    ): code: 309 data: 2 udata: 0  total: 311 (0x137)
+  0000 Pg .mul      003e Pg .div      0063 Pg .udv      0075 Pg .umd    
+  0087 Pg .mod    
+c.lib(shift   ): code: 85 data: 0 udata: 0  total: 85 (0x55)
+  0000 Pg .shl      0011 Pg .asr      0025 Pg .lsr    
+c.lib(lshift  ): code: 113 data: 0 udata: 0  total: 113 (0x71)
+  0000 Pg .shlx     0015 Pg .asrx     002d Pg .lsrx   
+c.lib(stack   ): code: 93 data: 0 udata: 0  total: 93 (0x5d)
+  0000 Pg .cpystk   003d Pg .modstk 
+c.lib(sup     ): code: 159 data: 0 udata: 0  total: 159 (0x9f)
+  0000 Pg .csav     0078 Pg .cret   
+c.lib(interp  ): code: 2563 data: 0 udata: 0  total: 2563 (0xa03)
+  0000 Pg .interp   0044 Pg mloop     0803 Pg LTAB      07c9 Pg twolcl  
+  07b2 Pg twoval    04b8 Pg pul0      076f Pg .unknown  0770 Pg brkpnt  
+  0000 Un .ldfld    0000 Un .ldfldu   0000 Un .stfld    0000 Un .fltjmp 
+  0000 Un .jmplng 
+c.lib(fldstar ): code: 172 data: 0 udata: 0  total: 172 (0xac)
+  0000 Pg .ldfldu   0036 Pg .ldfld    005f Pg .stfld  
+c.lib(flt     ): code: 1 data: 0 udata: 0  total: 1 (0x1)
+  0000 Pg .fltjmp 
+c.lib(longs   ): code: 903 data: 0 udata: 0  total: 903 (0x387)
+  0000 Pg .lngused  0000 Pg .jmplng   0000 Un mloop     0000 Un pul0    
+  0000 Un twolcl    0000 Un twoval  
+c.lib(setjmp  ): code: 119 data: 0 udata: 0  total: 119 (0x77)
+  0000 Pg setjmp_   003a Pg longjmp_
+Totals Code: 31867 Data: 1827 Udata: 114  total: 33808 (0x8410)

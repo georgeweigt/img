@@ -1,0 +1,88 @@
+/************************************************/
+/*                                              */
+/*  LESS  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+#include "less.h"
+
+/* #define EDI "VI" */
+#define EDI "ED"
+
+main (argc, argv)
+int argc;
+char **argv;
+{
+    register int c;
+    char *ed;
+    char *getenv();
+
+    if (argc != 2)
+    {
+        printf ("\nusage : less file\n\n");
+        printf ("   LESS is an acronym for...\n");
+        printf ("       L      list file\n");
+        printf ("       E      edit file\n");
+        printf ("       Ss     string search file\n\n");
+        printf ("Keys:   <d> <D>         down 11 lines\n");
+        printf ("        <u> <U>         up 11 lines\n");
+        printf ("        <space> <down arrow>\n");
+        printf ("                        down 22 lines\n");
+        printf ("        <b> <B> <up arrow>\n");
+        printf ("                        up 22 lines\n");
+        printf ("        <e> <E> <v> <V> Edit file\n");
+        printf ("        </>             start search\n");
+        printf ("        <n> <N>         next search\n\n");
+        printf ("        <q> <Q>         exit to shell\n");
+        exit (-1);
+    }
+
+    init();
+    End_buf = Mem_buf;
+    Cur_ptr = Cur_lp = Mem_buf;
+    *Fil_nam = 0;
+    strcpy(Fil_nam, argv[1]);
+    start_screen();
+
+    stats();
+
+    for (;;)
+    {
+        set_param(Cur_lp);
+        mv_curs(6, 23);
+        c = getchar();
+        if (c != '0') c = get_num(c);
+
+        switch (c) {
+        case 'n':case 'N':
+            search(1);
+            break;
+          case '/':
+            search(0);
+            break;
+        case 11 :case 10:
+        case 'b':case 'B':
+        case ' ':
+        case 'd':case 'D':
+        case 'u':case 'U':
+            page(c);
+            break;
+        case 'g':case 'G':
+            goline();
+            break;
+        case 'q':case 'Q':
+            quit();
+            break;
+        case 'e':case 'E':
+        case 'v':case 'V':
+            ed = getenv ("EDITOR");
+            if (ed == 0) execlp (EDI, EDI, Fil_nam, 0);
+            else execlp (ed, ed, Fil_nam, 0);
+            mesg ("can't find editor");
+            break;
+        default:
+            mesg ("");
+            break;
+        }
+    }
+}

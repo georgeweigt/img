@@ -1,0 +1,25 @@
+/**************************************************/
+/*                                                */
+/*  OAPPLE  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+int oapple ()
+{
+#asm
+ROc EQU $08
+	lda $C061
+	clc
+	cmp #$80
+	bcs opentrue
+	ldy #$0
+	sty ROc
+	jmp openend
+opentrue
+	ldy #$1
+	sty ROc
+openend
+	ldy #$0
+	sty ROc+1
+#endasm;
+}

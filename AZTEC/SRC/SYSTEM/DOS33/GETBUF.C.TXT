@@ -1,0 +1,39 @@
+/*	Copyright (c) 1986 by Manx Software Systems	*/
+
+#include	<dos33.h>
+
+struct _buffers *
+_get_buf(p)
+register struct _params *p;
+{
+	register struct _buffers *b, *remember;
+	register struct _wrkbuf *w;
+	register int sl, dr, vo, *ip;
+
+	remember = 0;
+	sl = p->p_range & 0xff;
+	dr = p->p_offset >> 8;
+	vo = ~(p->p_offset & 0xff);
+	ip = (int *)0x3d1;
+	ip = (int *)(*ip & 0xff00);
+	b = (struct _buffers *) *ip;
+	while (b) {
+		w = b->b_work;
+		if (b->b_name[0] && strncmp(p->p_addr, b->b_name, 30) == 0 &&
+				w->w_slot == sl && w->w_drive == dr &&
+				(vo == ~0 || vo == w->w_volume) )
+			return(0);
+		if (remember == 0 && b->b_name[0] == 0)
+			remember = b;
+		b = b->b_next;
+	}
+	if (remember == 0)
+		return(0);
+	b = remember;
+	p->p_work = (char *) b->b_work;
+	p->p_tslist = b->b_tslist;
+	p->p_data = b->b_data;
+	strncpy(b->b_name, p->p_addr, 30);
+	return(b);
+}
+

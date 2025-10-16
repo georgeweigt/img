@@ -1,0 +1,71 @@
+/************************************************/
+/*                                              */
+/*  LESS  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+#include "less.h"
+
+#define EDI "VI"
+
+main (argc, argv)
+int argc;
+char **argv;
+{
+	register int c;
+	char *ed;
+	char *getenv();
+
+	if (argc != 2)
+	{
+		printf ("\nusage : less file\n\n");
+		exit (-1);
+	}
+
+	init();
+	End_buf = Mem_buf;
+	Cur_ptr = Cur_lp = Mem_buf;
+	*Fil_nam = 0;
+	strcpy(Fil_nam, argv[1]);
+	start_screen();
+
+	stats();
+
+	for (;;)
+    {
+		set_param(Cur_lp);
+		mv_curs(6, 23);
+		c = getchar();
+		if (c != '0') c = get_num(c);
+
+		switch (c) {
+		case 'n':
+			search(1);
+			break;
+  		case '/':
+			search(0);
+			break;
+        case 'b':
+        case ' ':
+        case 'd':
+        case 'u':
+			page(c);
+			break;
+		case 'g':
+			goline();
+			break;
+		case 'q':
+			quit();
+			break;
+		case 'v':
+			ed = getenv ("EDITOR");
+			if (ed == 0) execlp (EDI, EDI, Fil_nam, 0);
+			else execlp (ed, ed, Fil_nam, 0);
+			mesg ("can't find editor");
+			break;
+		default:
+			mesg ("");
+			break;
+		}
+	}
+}

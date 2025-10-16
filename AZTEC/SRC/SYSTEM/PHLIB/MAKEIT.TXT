@@ -1,0 +1,21 @@
+echo Building PH.LIB ...
+echo
+cc chilp.c
+cc chrpos.c
+cc click.c
+cc getchar.c
+cc getdir.c
+cc peek.c
+cc poke.c
+cc qprintf.c
+cc scr.c
+cc strtok.c
+cc strtolow.c
+cc strtoup.c
+cc waitkey.c
+cc getkey.c
+lb /aztec/lib/ph.lib -v chilp chrpos click getchar getdir peek poke qprintf scr strtok strtolow strtoup waitkey getkey
+lb /aztec/lib/ph.lib -t
+echo
+echo PH.LIB is created.
+echo

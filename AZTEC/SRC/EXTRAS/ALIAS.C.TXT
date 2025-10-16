@@ -1,0 +1,102 @@
+/*************************************************/
+/*                                               */
+/*  ALIAS  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+/* has to be linked with PH.LIB developed by Phade Software */
+
+#include <stdio.h>
+#include <dir.h>
+
+char *ALIASPATH;
+
+print_alias (adir)
+struct dir_file *adir;
+{
+    static lncnt = 0;
+    FILE *fd;
+    char fname[64];
+    char buf[256];
+
+    if (adir->next)
+    {
+        if (lncnt++ >= 22)
+          {
+            lncnt=0;
+            gotoxy(0,23);
+            printf(" Press any key! ");
+            waitkey();
+            gotoxy(0,23);
+            clr_eol();
+          }
+        strcpy (fname, ALIASPATH);
+        strcat (fname, adir->name);
+        fd = fopen (fname, "r");
+        fgets (buf, 256, fd);
+        fclose (fd);
+
+       strtolow (adir->name);
+        printf ("%-17s", adir->name);
+        printf ("%s", buf);
+        free (fname);
+        free (buf);
+        print_alias (adir->next);
+    }
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+    FILE *fd;
+    char fname[64];
+    int c;
+    char *getenv();
+
+    ALIASPATH = getenv ("ALIASPATH");
+    if (ALIASPATH == 0)
+    {
+        printf ("\nalias: environment variable ALIASPATH is missing\n\n");
+        exit (-1);
+    }
+
+    if (argc == 1)
+    {
+        printf ("\n");
+        print_alias (get_dir (ALIASPATH));
+        printf ("\n");
+        exit (0);
+    }
+
+    if (argc != 3)
+    {
+        printf ("\nusage: alias [name 'def ...']\n\n");
+        exit (-1);
+    }
+
+    if (strlen (argv[1]) > 15)
+    {
+        printf ("\nalias: aliasname too long\n\n");
+        exit (-1);
+    }
+
+    strcpy (fname, ALIASPATH);
+    strcat (fname, argv[1]);
+
+    fd = fopen (fname, "w");
+    if (fd == 0)
+    {
+        printf ("\nalias: can't open \"%s\" !\n\n", fname);
+        exit (-1);
+    }
+
+    fputs (argv[2], fd);
+    fputc ((char)0x0d, fd);
+    fclose (fd);
+
+    printf ("alias: %-17s ", argv[1]);
+    printf ("%s\n", argv[2]);
+
+    exit (0);
+}

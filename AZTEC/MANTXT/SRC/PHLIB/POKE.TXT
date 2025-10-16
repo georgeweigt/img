@@ -1,0 +1,26 @@
+/************************************************/
+/*                                              */
+/*  POKE  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+poke (value, adr)
+int value;
+long adr;
+{
+#asm
+SPO EQU $02
+ROO EQU $08
+	ldy #$0d
+	lda (SPO),y
+	sta ROO
+	iny
+	lda (SPO),y
+	sta ROO+1
+	ldy #$0b
+	lda (SPO),y
+	jsr $fdda
+	ldy #$00
+	sta (ROO),y
+#endasm;
+}

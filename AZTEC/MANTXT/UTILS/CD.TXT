@@ -1,0 +1,9 @@
+cd path
+
+    change the current working directory.
+    this follows the MANX method of using the .. parameter in the
+    path expression.
+    Both of these are valid:
+        cd ..       - backup one directory level.
+        cd ../bin   - backup one dir level and change to the bin subdirectory
+                      under that level.

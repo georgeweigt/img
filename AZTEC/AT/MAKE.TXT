@@ -1,0 +1,3 @@
+cc atreemain.c
+ln -r +c 400 +d 1000 -f atree.files -lsa -lmy -lph -lc -o /aztec/atreemain
+ln about.o /aztec/atreemain.rsm ovbgn.o -lc -o /aztec/about.ovr

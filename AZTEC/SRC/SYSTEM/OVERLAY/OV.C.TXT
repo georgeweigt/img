@@ -1,0 +1,10 @@
+main()
+{
+    int a;
+
+    a = ovloader("ov1", "Hello Bears, Welcome to overlays!");
+    printf("in main. ovly1 returned %d\n", a);
+    a = ovloader("ov2", "what do you think???");
+    printf("in main. ovly2 returned %d\n", a);
+}
+

@@ -1,0 +1,1 @@
+    Library routines to read 80 column text memoryint scr_read80(x,y) /* read a byte from screen */  int x;  int y;int scr_write80(x,y,c) /* write a byte to screen */  int x;  int y;  char c;getbuf(x,y,w,h,bbuf) /* fill buffer from screen */  int x,y,w,h;  char *bbuf;putbuf(x,y,w,h,bbuf) /* write buffer to screen */  int x,y,w,h;  char *bbuf;

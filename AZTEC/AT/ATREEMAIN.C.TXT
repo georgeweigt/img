@@ -1,0 +1,182 @@
+/*
+    Program: Atree
+            A file utility
+
+    libs: my,ph,c
+*/
+
+#include <stdio.h>
+#include <scr.h>
+#include "dirs.h"
+#include "atree.h"
+
+extern char *_Top;
+extern char *_mbot;
+extern char *_End;
+
+int dirindex; /* ptr to current dir in list */
+
+main()
+  {
+    char *malloc();
+
+    struct dir_file *free_tree();
+    struct dir_file *cur_dir;
+    struct dir_file *get_tree();
+
+    char kp; /* get_char required */
+    char *getenv();
+
+    int temp;
+    int done=0;
+    int ttldirs;
+
+    dirindex=0;
+    crt80();
+
+    do_frame(cmd_x,cmd_y,cmd_w,cmd_h,cmd_str);
+    do_frame(dir_x,dir_y,dir_w,dir_h,dir_str);
+    do_frame(fil_x,fil_y,fil_w,fil_h,fil_str);
+    do_frame(inf_x,inf_y,inf_w,inf_h,inf_str);
+
+    printat(cmd_x+3,cmd_y+1,cmd_list1);
+    printat(cmd_x+3,cmd_y+2,cmd_list2);
+    printat(cmd_x+3,cmd_y+3,cmd_list3);
+
+    strcpy(cur_path_name,getenv("HOME"));
+    dirs = get_tree (cur_path_name);
+    cur_dir=dirs;
+
+    count=0;
+    cnt_dirs(dirs);
+    ttldirs=count;
+
+    show_dirs(cur_dir,1);
+
+    /* loop for input */
+    while (!done)
+      {
+        gotoxy(0,23);
+        printf("Path: %s ",cur_path_name);
+        kp=get_char();
+        switch (kp)
+          {
+            case 0x95 :  if (++dirindex >= ttldirs) dirindex=0;
+                        show_dirs(cur_dir,1);
+                        break;
+
+            case 0x88 :  if (dirindex==0)
+                          {
+                            dirindex = --ttldirs;
+                          }
+                        else
+                          {
+                            dirindex--;
+                          }
+                        show_dirs(cur_dir,1);
+                        break;
+
+            case 0xc1 : case 0xe1 :             /* A key */
+                        temp=ovloader("about");
+                        show_info();
+                        break;
+
+            /* this is broken at the moment
+               I seem to be having trouble releasing
+               memory used by the directory routines. */
+            case 0xc6 : case 0xe6 :             /* F key */ 
+                        dirs=free_tree(dirs);
+                        show_dirs(dirs,1);
+                        break;
+
+            case 0xd2 : case 0xf2 :
+                        dirs = get_tree (cur_path_name);
+                        cur_dir=dirs;
+                        break;
+
+            case 0xd1 : case 0xf1 :
+                        done=1;
+                        break;
+            default :
+                        done=0;
+
+          } /* end switch */
+
+      } /* end while */
+
+    /* cleanup & exit program */
+    gotoxy(0,23);
+    clreol();
+    sysexit();
+  }
+
+/* start of functions */
+
+cnt_dirs(di)
+  struct dir_file *di;
+  {
+    if (di->next)
+      {
+        count++;
+        cnt_dirs (di->next);
+      }
+}
+
+show_info()
+  {
+    gotoxy(inf_x+2,inf_y+1);
+    printf("Dir Count = %02d",count);
+    gotoxy(inf_x+24,inf_y+1);
+    printf("Dir Index = %02d",dirindex);
+    gotoxy(inf_x+2,inf_y+3);
+    printf("Top = %x %06d",_Top,*_Top);
+    gotoxy(inf_x+24,inf_y+3);
+    printf("End = %x %06d",_End,*_End);
+    gotoxy(inf_x+2,inf_y+4);
+    printf("mbot = %x %06d",_mbot,*_mbot);
+    gotoxy(inf_x+24,inf_y+4);
+    printf("Memhead = %08x",memhead());
+  }
+
+show_dirs(di,ofs)
+  struct dir_file *di;
+  int ofs; /* ofset into list */
+  {
+    int i;
+
+    if (di)
+      {
+        i=0;
+        while (++i<ofs)
+          {
+            if (di->next) di=di->next;
+          } /* end while */
+ 
+        for (i=0;i<dir_max;i++)
+          {
+            if (i==dirindex)
+              {
+                 putchr(15);
+              }
+            if (di->next)
+              {
+                gotoxy(dir_cx,dir_cy+i);
+                printf("%s",di->name);
+                di=di->next;
+              }
+            if (i==dirindex)
+              {
+                putchr(14);
+              }
+          } /* end for */
+      }
+    else
+      {
+        for(i=0;i<dir_max;i++)
+          {
+            printat(dir_cx,dir_cy+i,"               ");
+          }
+      } /* end if di */
+
+    show_info();
+  } /* end show_dirs */

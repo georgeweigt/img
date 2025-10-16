@@ -1,0 +1,59 @@
+/*
+    display a frame & label
+    link with my.lib
+
+    ex: do_frame (x,y,wid,hgt,titlestr);
+*/
+
+do_frame (x,y,w,h,txtstr)
+    int x;
+    int y;
+    int w;
+    int h;
+    char *txtstr;
+  {
+    int l;
+    int l2;
+    int tmp;
+    int ofset;
+
+    tmp=strlen(txtstr);
+    ofset=(w-tmp-4)/2;
+
+        /* display top of folder */
+    gotoxy(x,y);                          /* top row */
+    mtxton();
+    putstr("Z^");
+    for (l=0;l<=ofset;l++)
+      {
+        putchr('\\');
+      }
+    mtxtoff();
+    itxt();
+    putstr(txtstr);
+    ntxt();
+    mtxton();
+    for (l=0;l<=ofset;l++)
+      {
+        putchr('\\');
+      }
+    putstr("\\E");
+
+    gotoxy(x,y+1);
+    for(l=0;l<h;l++)
+      {
+        gotoxy(x,y+l+1);
+        putchr('Z');
+        mtxtoff();
+        for(l2=0;l2<w;l2++)
+          {
+            putchr(' ');
+          }
+        mtxton();
+        putchr('_');
+      }  
+    gotoxy(x+1,y+h+1);
+    for(l=0;l<w;l++) putchr('L');
+    mtxtoff();
+  }
+

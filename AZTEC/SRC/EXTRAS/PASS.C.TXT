@@ -1,0 +1,172 @@
+/************************************************/
+/*                                              */
+/*  PASS  Copyright (C) 1990 by Phade Software  */
+/*                                              */
+/************************************************/
+
+#define w 5000
+#include <stdio.h>
+
+FILE	*fd1,
+		*fd2;
+
+int		Byte[w];
+
+int		i,
+		pass,
+		pass1,
+		pass2,
+		ok;
+
+int readit()
+{
+	int i;
+	int z=0;
+
+	for (i=1; i<w-1; i++)
+		if (!feof (fd1))
+		{
+			Byte[i] = fgetc (fd1);
+			z++;
+		}
+	if (feof (fd1)) z--;
+	return(z);
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+	int code = 0;
+
+	printf ("\n");
+	if ((argc != 4) && (argc != 5))
+	{
+		printf ("usage   : pass option password(xxx) source [target]\n");
+		printf ("\n");
+		printf ("options : [-s] = save\n");
+		printf ("          [-r] = rebuild\n");
+		printf ("          [-p] = print but don't rebuild\n\n");
+		exit (-1);
+	}
+
+	fd1 = fopen (argv[3], "r");
+	if (fd1 == 0L)
+	{
+		printf ("Can't open %s !\n\n", argv[3]);
+		exit (-1);
+	}
+
+	if (argc == 5)
+	{
+		fd2 = fopen (argv[4], "w");
+		if (fd2 == 0L)
+		{
+			printf ("Can't open %s !\n\n", argv[4]);
+			fclose (fd2);
+			exit (-1);
+		}
+	}
+
+	pass  = *argv[2];
+	pass1 = *++argv[2];
+	pass2 = *++argv[2];
+
+	if (*argv[1] == '-')
+		switch (*++argv[1])
+		{
+			case 's':	if (argc == 5)
+						{
+							save ();
+							printf ("Done.\n\n");
+						}
+						else code = -1;
+						break;
+			case 'r':	if (argc == 5)
+						{
+							rebuild ();
+							printf ("Done.\n\n");
+						}
+						else code = -1;
+						break;
+			case 'p':	if (argc == 4)
+						{
+							print ();
+							printf ("\n");
+						}
+						else code = -1;
+						break;
+			default:	printf ("Wrong option specified.\n\n");
+						code = -1;
+						break;
+		}
+	else
+	{
+		code = -1;
+		printf ("No option specified.\n\n");
+	}
+	fclose (fd1);
+	if (argc == 5) fclose (fd2);
+
+	exit (code);
+}
+
+save ()
+{
+	int i;
+
+	while ((ok = readit ()) != 0)
+	{
+		for (i=1; i<ok+1; i++)
+		{
+			Byte[i] = Byte[i] + pass;
+			if (Byte[i] > 255) Byte[i] = Byte[i] - 256;
+			Byte[i] = Byte[i] + pass1;
+			if (Byte[i] > 255) Byte[i] = Byte[i] - 256;
+			Byte[i] = Byte[i] + pass2;
+			if (Byte[i] > 255) Byte[i] = Byte[i] - 256;
+			fputc (Byte[i], fd2);
+		}
+		if (feof (fd1)) break;
+	}
+}
+
+rebuild ()
+{
+	int i;
+
+	while ((ok = readit()) != 0)
+	{
+		for (i=1; i<ok+1; i++)
+		{
+			Byte[i] = Byte[i] - pass;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			Byte[i] = Byte[i] - pass1;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			Byte[i] = Byte[i] - pass2;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			fputc (Byte[i], fd2);
+		}
+		if (feof (fd1)) break;
+	}
+}
+
+print ()
+{
+	int i;
+
+	while ((ok = readit()) != 0)
+	{
+		for (i=1; i<ok+1; i++)
+		{
+			Byte[i] = Byte[i] - pass;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			Byte[i] = Byte[i] - pass1;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			Byte[i] = Byte[i] - pass2;
+			if (Byte[i] > 255) Byte[i] = Byte[i] + 256;
+			printf ("%c", Byte[i]);
+		}
+		if (feof (fd1)) break;
+	}
+}

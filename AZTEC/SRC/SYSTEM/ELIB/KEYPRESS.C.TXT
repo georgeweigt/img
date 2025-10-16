@@ -1,0 +1,24 @@
+/****************************************************/
+/*                                                  */
+/*  KEYPRESS  Copyright (C) 1990 by Phade Software  */
+/*                                                  */
+/****************************************************/
+
+int keypress ()
+{
+#asm
+ROa EQU $08
+	ldy #$0
+	sty ROa+1
+	lda $C000
+	clc
+	cmp #$80
+	bcs keytrue
+	ldy #$0
+	jmp keyend
+keytrue
+	ldy #$1
+keyend
+	sty ROa
+#endasm;
+}

@@ -1,0 +1,54 @@
+/*************************************************/
+/*                                               */
+/*  DIR.H  Copyright (C) 1990 by Phade Software  */
+/*                                               */
+/*************************************************/
+
+#define        TXT        4
+#define        BIN        6
+#define        DIR        15
+#define        CMD        240
+#define        DAT        241
+#define        PRG        248
+#define        BAS        252
+#define        SYS        255
+
+struct dir_file
+{
+    char *name;                     /* file name */
+    int type;                       /* file type */
+    long size;                      /* file size */
+    long loadadr;                   /* file load adress */
+    char flags[4];                  /* file flags   [0] [1] [2] [3] [4] */
+                                    /*               d   e   b   w   r  */
+    struct dir_file *last;
+    struct dir_file *next;          /* next file */
+};
+
+struct dir_buf
+{
+    char length;                    /* name length */
+    char name[15];                  /* name */
+    char type;                      /* type */
+    char fil1[4];                   /* not used bytes */
+    char l_size;                    /* size low-byte */
+    char h_size;                    /* size high-byte */
+    char fil2[7];                   /* not used bytes */
+    char flags;                     /* flags */
+    char l_adr;                     /* load adress low-byte */
+    char h_adr;                     /* load adress high-byte */
+    char fil3[6];                   /* not used bytes */
+};
+
+struct dir_info
+{
+    unsigned char    access;        /* file information structure */
+    unsigned char    file_type;
+    unsigned short    aux_type;
+    unsigned char    storage_type;
+    unsigned short    blocks_used;
+    unsigned short    mod_date;
+    unsigned short    mod_time;
+    unsigned short    create_date;
+    unsigned short    create_time;
+};

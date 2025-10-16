@@ -1,0 +1,84 @@
+#define MAXFILES 8
+
+#define	READ	0
+#define	WRITE	1
+#define	RDWRT	2
+
+extern int _DSLOT, _DDRIVE, _DVOLUME;
+extern int _SLOT, _DRIVE, _VOLUME;
+extern char _NAME[];
+
+struct _params {
+char	p_cmd,
+		p_sub;
+int		p_record,
+		p_offset,
+		p_range;
+char	*p_addr,
+		p_return,
+		p_unused,
+		*p_work,
+		*p_tslist,
+		*p_data;
+};
+
+struct _buffers {
+char	b_name[30];
+struct _wrkbuf *b_work;
+char	*b_tslist,
+		*b_data;
+struct _buffers *b_next;
+};
+
+struct _wrkbuf {
+char	w_dcnt,
+		w_tst0,
+		w_tss0,
+		w_cts,
+		w_cnt,
+		w_pos,
+		w_ftr,
+		w_fse,
+		w_ctr,
+		w_cse,
+		w_dty,
+		w_tsdty,
+		w_tstr,
+		w_tsse,
+		w_drt,
+		w_dse,
+		*w_dent,
+		w_fill1[7];
+int		w_record,
+		w_offset;
+char	w_fill2[8],
+		w_ftype,
+		w_slot,
+		w_drive,
+		w_volume,
+		w_fill3[4];
+};
+
+struct _fil_buf {
+		char 	unit,			/* DOS return or device nr | 0x80 */
+				flags;			/* r/w flags */
+		struct _buffers	*iob;			/* ptr to DOS buffer for file */
+	};
+
+extern struct _fil_buf *_fil_tab;
+
+struct _params *_get_paramlist();
+struct _buffers *_get_buf();
+
+#define D33_OPEN 1
+#define D33_CLOSE 2
+#define D33_READ 3
+#define D33_WRITE 4
+#define D33_DELETE 5
+#define D33_CATALOG 6
+#define D33_LOCK 7
+#define D33_UNLOCK 8
+#define D33_RENAME 9
+#define D33_POSITION 10
+#define D33_INIT 11
+#define D33_VERIFY 12

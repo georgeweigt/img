@@ -1,0 +1,10 @@
+/*	Copyright (c) 1986 by Manx Software Systems	*/
+
+#include	<dos33.h>
+
+_free_buf(b)
+register struct _buffers *b;
+{
+	b->b_name[0] = 0;
+}
+

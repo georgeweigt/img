@@ -1,0 +1,67 @@
+/******************************************************/
+/*                                                    */
+/*  FORMATOBJ1  Copyright (C) 1990 by Phade Software  */
+/*                                                    */
+/******************************************************/
+
+#include <stdio.h>
+
+set (value)
+{
+#asm
+	instxt <zpage.h>
+	ldy #$0B
+	lda (SP),Y
+	sta $07FF
+#endasm
+}
+
+int get ()
+{
+#asm
+	ldy $07FF
+	sty R0
+	ldy #$00
+	sty R0+1
+#endasm
+}
+
+main (argc, argv)
+int argc;
+char *argv[];
+{
+	int slot;
+	int drive;
+	int value;
+	int rr;
+
+	rr = get ();
+	if ((argc == 2) && (rr == 39)) printf ("error: unable to format\n\n");
+	if ((argc == 2) && (rr == 43)) printf ("error: write-protected\n\n");
+	if ((argc == 2) && (rr == 51)) printf ("error: drive to slow\n\n");
+	if ((argc == 2) && (rr == 52)) printf ("error: drive to fast\n\n");
+	if ((argc == 2) && (rr == 0)) printf ("format completed\n\n");
+	if (argc == 2) exit (-1);
+
+	if (argc != 3)
+	{
+		printf ("\nusage: format slot drive\n\n");
+		exit (-1);
+	}
+
+	slot = atoi (argv[1]);
+	drive = atoi (argv[2]);
+
+	if ((slot < 1) || (slot > 7) || (drive < 1) || (drive > 2))
+	{
+		printf ("\nformat: bad values\n\n");
+		exit (-1);
+	}
+
+	value = slot * 16 + 128 * (drive - 1);
+	set (value);
+	printf ("\nformatting disk in Slot: %d  Drive: %d to /BLANK\n\n"
+			, slot, drive);
+
+	exit (0);
+}

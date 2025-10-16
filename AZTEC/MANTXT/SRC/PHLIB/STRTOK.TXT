@@ -1,0 +1,34 @@
+/**************************************************/
+/*                                                */
+/*  STRTOK  Copyright (C) 1990 by Phade Software  */
+/*                                                */
+/**************************************************/
+
+char *strtok (str,ch)
+char *str;
+char ch;
+{
+	char *malloc ();
+	static char *copy_str;
+	char *ret;
+
+	if (str != (void *)0)
+	{
+		free (copy_str);
+		copy_str = malloc (strlen (str));
+		strcpy (copy_str, str);
+	}
+
+	ret = copy_str;
+	while (*copy_str != '\0')
+	{
+		if (*copy_str == ch)
+		{
+			*copy_str = '\0';
+			copy_str++;
+			return (ret);
+		}
+		copy_str++;
+	}
+	return ((void *)0);
+}
