@@ -131,30 +131,30 @@ Press ESC to toggle between edit and command modes.
 
 Cursor control in edit mode (^ is control key)
 
-^S       Left arrow
-^D       Right arrow
+^S      Left arrow
+^D      Right arrow
 
-^E       Up arrow
-^X       Down arrow
+^E      Up arrow
+^X      Down arrow
 
-^A       Go back 1 word
-^F       Go forward 1 word
+^A      Go back 1 word
+^F      Go forward 1 word
 
-^R       Go back 20 lines
-^C       Go forward 20 lines
+^R      Go back 20 lines
+^C      Go forward 20 lines
 
-^T       Go to top of file
-^V       Go to bottom of file
+^T      Go to top of file
+^V      Go to bottom of file
 
-^Q       Delete to left of cursor
-^G       Delete under cursor
-^Y       Delete current line
+^Q      Delete to left of cursor
+^G      Delete under cursor
+^Y      Delete current line
 
-^W       Find string backward
-^Z       Find string forward
+^W      Find string backward
+^Z      Find string forward
 
-^O       Mark/cut block
-^P       Paste block
+^O      Mark/cut block
+^P      Paste block
 
 Commands in command mode
 
