@@ -1,6 +1,6 @@
-Instructions for use with Virtual ][
+Instructions for use with Virtual II
 
-1. Start a virtual Apple 2e.
+1. Start a virtual Apple IIe.
 
 2. Click the Setup icon and put a SCSI card in Slot 7.
 
